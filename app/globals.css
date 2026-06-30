@@ -61,6 +61,10 @@ main {
   gap: 24px;
 }
 
+.topbarBrand {
+  min-width: 0;
+}
+
 .topbar strong {
   display: block;
   font-family: Georgia, "Times New Roman", serif;
@@ -93,7 +97,8 @@ main {
   gap: 12px;
 }
 
-.topbar button {
+.topbar button,
+.topbar .topbarGift {
   background: transparent;
   color: var(--ink);
   border-color: rgba(248, 243, 234, 0.18);
@@ -170,6 +175,30 @@ h1 {
   font-weight: 700;
 }
 
+.methodSteps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.methodSteps li {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+}
+
+.methodSteps li:not(:last-child)::after {
+  content: "→";
+  margin-left: 8px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
 .onboardingOverlay {
   position: fixed;
   inset: 0;
@@ -178,6 +207,23 @@ h1 {
   display: grid;
   place-items: center;
   padding: 24px;
+}
+
+.onboardingPage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px clamp(16px, 4vw, 32px);
+  background: var(--paper);
+}
+
+.onboardingCardPage {
+  max-height: none;
+}
+
+.onboardingLoading {
+  margin: 0;
+  color: var(--muted);
 }
 
 .onboardingCard {
@@ -1362,18 +1408,135 @@ textarea {
 @media (max-width: 640px) {
   .hero {
     min-height: auto;
+    padding-bottom: 48px;
   }
 
   .topbar {
-    align-items: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
   }
 
-  .topbar a {
-    align-self: flex-start;
+  .topbarBrand {
+    display: block;
+    min-width: 0;
+  }
+
+  .topbar strong {
+    font-size: clamp(26px, 8vw, 34px);
+    line-height: 0.95;
+  }
+
+  .topbarTagline {
+    display: none;
+  }
+
+  .topbarActions {
+    flex-shrink: 0;
+    gap: 8px;
+  }
+
+  .topbar a,
+  .topbar button {
+    padding: 9px 14px;
+    font-size: 13px;
+    white-space: nowrap;
   }
 
   .heroCenter {
-    margin-top: 52px;
+    margin-top: 28px;
+    width: 100%;
+    gap: 0;
+  }
+
+  .heroCenter h1 {
+    max-width: none;
+    font-size: clamp(28px, 8.5vw, 36px);
+    line-height: 1.08;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .heroCenter .lead {
+    max-width: none;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .heroActions {
+    display: flex;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .heroCta {
+    width: 100%;
+    min-height: 50px;
+    padding: 0 18px;
+    font-size: 15px;
+  }
+
+  .methodLine {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 16px;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .methodLine svg {
+    flex-shrink: 0;
+    color: var(--accent);
+  }
+
+  .methodSteps {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+    justify-content: flex-start;
+    width: 100%;
+    min-width: 0;
+    padding-bottom: 2px;
+  }
+
+  .methodSteps::-webkit-scrollbar {
+    display: none;
+  }
+
+  .methodSteps li {
+    flex-shrink: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+
+  .methodSteps li:last-child {
+    grid-column: unset;
+    color: var(--ink);
+    border: none;
+  }
+
+  .methodSteps li:not(:last-child)::after {
+    content: "→";
+    margin: 0 8px;
+    color: rgba(248, 243, 234, 0.28);
+    font-weight: 400;
   }
 
   .introBand,

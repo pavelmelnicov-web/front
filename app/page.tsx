@@ -1,7 +1,8 @@
 "use client";
 
 import { ArrowRight, Check, MessageSquare, Plus, Send, Sparkles, Star } from "lucide-react";
-import { FormEvent, MouseEvent, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { api, ChatMessage, CommunityPost, SessionPayload, Workbook } from "../lib/api";
 import { fallbackChat, fallbackPosts, fallbackWorkbook } from "../lib/fallback";
 
@@ -19,21 +20,6 @@ export default function Home() {
   const [chatMessage, setChatMessage] = useState("");
   const [openFaqId, setOpenFaqId] = useState(faqItems[0].id);
   const [isSaving, setIsSaving] = useState(false);
-  const [onboardingStep, setOnboardingStep] = useState<number | null>(null);
-  const [onboardingName, setOnboardingName] = useState("");
-  const [onboardingAge, setOnboardingAge] = useState("");
-  const [selectedSituationId, setSelectedSituationId] = useState<string>("");
-  const [selectedSubSituations, setSelectedSubSituations] = useState<string[]>([]);
-  const [selectedGender, setSelectedGender] = useState<"male" | "female" | "other" | "">("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
-  const [cardCvc, setCardCvc] = useState("");
-  const [cardName, setCardName] = useState("");
-  const [isGiftFlow, setIsGiftFlow] = useState(false);
-  const [giftMention, setGiftMention] = useState<"mention" | "anonymous" | "">("");
-  const [giftMentionText, setGiftMentionText] = useState("");
-  const [giftSituationId, setGiftSituationId] = useState<string>("");
-  const [giftContact, setGiftContact] = useState("");
 
   useEffect(() => {
     api.getWorkbook().then(setWorkbook).catch(() => setWorkbook(fallbackWorkbook));
@@ -102,101 +88,19 @@ export default function Home() {
     }
   }
 
-  const selectedSituation = workbook.situations.find((item) => item.id === selectedSituationId);
-  const selectedGiftSituation = workbook.situations.find((item) => item.id === giftSituationId);
-  const canContinueOnboarding =
-    onboardingStep === 0
-      ? onboardingName.trim().length > 1 && Number(onboardingAge) > 0
-      : onboardingStep === 2
-      ? Boolean(selectedSituationId)
-      : onboardingStep === 3
-      ? selectedSubSituations.length > 0
-      : onboardingStep === 4
-      ? Boolean(selectedGender)
-      : onboardingStep === 20
-      ? Boolean(giftMention)
-      : onboardingStep === 21
-      ? Boolean(giftSituationId)
-      : onboardingStep === 22
-      ? giftContact.trim().length > 5
-      : onboardingStep === 23
-      ? cardNumber.replace(/\s+/g, "").length >= 16 && /^\d{2}\/\d{2}$/.test(cardExpiry) && /^(\d{3,4})$/.test(cardCvc) && cardName.trim().length > 2
-      : onboardingStep === 14
-      ? cardNumber.replace(/\s+/g, "").length >= 16 && /^\d{2}\/\d{2}$/.test(cardExpiry) && /^(\d{3,4})$/.test(cardCvc) && cardName.trim().length > 2
-      : true;
-
-  function startOnboarding(event: MouseEvent<HTMLAnchorElement>) {
-    event.preventDefault();
-    setIsGiftFlow(false);
-    setOnboardingStep(0);
-  }
-
-  function openPaywall() {
-    setIsGiftFlow(false);
-    setOnboardingStep(14);
-  }
-
-  function openGiftFlow() {
-    setIsGiftFlow(true);
-    setGiftMention("");
-    setGiftSituationId("");
-    setGiftContact("");
-    setCardNumber("");
-    setCardExpiry("");
-    setCardCvc("");
-    setCardName("");
-    setOnboardingStep(20);
-  }
-
-  function goBackOnboarding() {
-    if (onboardingStep === null) return;
-    if (onboardingStep === 0) {
-      setOnboardingStep(null);
-      return;
-    }
-    setOnboardingStep(onboardingStep - 1);
-  }
-
-  function goNextOnboarding() {
-    if (onboardingStep === null) return;
-    if (!canContinueOnboarding) return;
-    setOnboardingStep(onboardingStep + 1);
-  }
-
-  function toggleSubSituation(value: string) {
-    setSelectedSubSituations((current) =>
-      current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
-    );
-  }
-
-  function finishOnboarding() {
-    setOnboardingStep(null);
-    if (typeof window !== "undefined") {
-      document.getElementById("workbook")?.scrollIntoView({ behavior: "smooth" });
-    }
-  }
-
-  function formatCardNumber(value: string) {
-    return value
-      .replace(/\D/g, "")
-      .slice(0, 16)
-      .replace(/(.{4})/g, "$1 ")
-      .trim();
-  }
-
   return (
     <main>
       <section className="hero">
         <nav className="topbar" aria-label="Main">
-          <div>
+          <div className="topbarBrand">
             <strong>{workbook.brand}</strong>
-            <span>{workbook.tagline}</span>
+            <span className="topbarTagline">{workbook.tagline}</span>
           </div>
           <div className="topbarActions">
-            <button className="topbarGift" type="button" onClick={openGiftFlow}>
+            <Link className="topbarGift" href="/onboarding/gift">
               Подарить
-            </button>
-            <a href="#workbook">Начать</a>
+            </Link>
+            <Link href="/onboarding/0">Начать</Link>
           </div>
         </nav>
 
@@ -207,391 +111,21 @@ export default function Home() {
             будет отражать тебя и поддерживать жизнь, которую ты хочешь жить.
           </p>
           <div className="heroActions">
-            <a className="heroCta" href="#workbook" onClick={openPaywall}>
+            <Link className="heroCta" href="/onboarding/0">
               Начать исследование
               <ArrowRight size={18} />
-            </a>
+            </Link>
           </div>
           <div className="methodLine">
-            <Sparkles size={18} />
-            <span>{workbook.method}</span>
+            <Sparkles size={18} aria-hidden="true" />
+            <ul className="methodSteps">
+              {workbook.method.split(" -> ").map((step, index) => (
+                <li key={`${step}-${index}`}>{step}</li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
-
-      {onboardingStep !== null && (
-        <section className="onboardingOverlay" aria-modal="true" role="dialog">
-          <div className="onboardingCard">
-            <div className="onboardingHeader">
-              <div>
-                <span>Онбординг</span>
-                <strong>Начни исследование</strong>
-              </div>
-              <button type="button" onClick={finishOnboarding} aria-label="Закрыть онбординг">
-                ✕
-              </button>
-            </div>
-            <div className="onboardingBody">
-              {onboardingStep === 0 && (
-                <div>
-                  <h2>Расскажи немного о себе</h2>
-                  <p>Имя и возраст помогут сделать квиз персональным.</p>
-                  <label>
-                    Имя
-                    <input
-                      value={onboardingName}
-                      onChange={(event) => setOnboardingName(event.target.value)}
-                      placeholder="Ваше имя"
-                    />
-                  </label>
-                  <label>
-                    Возраст
-                    <input
-                      value={onboardingAge}
-                      onChange={(event) => setOnboardingAge(event.target.value)}
-                      placeholder="Ваш возраст"
-                      inputMode="numeric"
-                    />
-                  </label>
-                </div>
-              )}
-
-              {onboardingStep === 1 && (
-                <div>
-                  <h2>Пока другие откладывают, ты движешься вперед</h2>
-                  <div className="onboardingStats">
-                    <div>
-                      <strong>72%</strong>
-                      <p>людей так и не начинают ремонт</p>
-                    </div>
-                    <div>
-                      <strong>58%</strong>
-                      <p>не довольны результатом ремонта</p>
-                    </div>
-                    <div>
-                      <strong>65%</strong>
-                      <p>начинают изменения без четкого плана</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {onboardingStep === 2 && (
-                <div>
-                  <h2>В какой ситуации вы находитесь?</h2>
-                  <p>Выбери одну категорию, чтобы мы поняли твой старт.</p>
-                  <div className="onboardingOptions">
-                    {workbook.situations.map((item) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        className={item.id === selectedSituationId ? "active" : ""}
-                        onClick={() => setSelectedSituationId(item.id)}
-                      >
-                        <strong>{item.title}</strong>
-                        <small>{item.description}</small>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {onboardingStep === 3 && (
-                <div>
-                  <h2>Выбери точные сигналы</h2>
-                  <p>Какие из этих ситуаций лучше всего описывают ваш контекст?</p>
-                  <div className="onboardingOptions">
-                    {selectedSituation?.examples.map((example) => (
-                      <button
-                        key={example}
-                        type="button"
-                        className={selectedSubSituations.includes(example) ? "active" : ""}
-                        onClick={() => toggleSubSituation(example)}
-                      >
-                        {example}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {onboardingStep === 4 && (
-                <div>
-                  <h2>Для кого это будет удобно</h2>
-                  <p>Выбери вариант, который звучит ближе.</p>
-                  <div className="onboardingOptions">
-                    {[
-                      { value: "male", label: "Для мужчины" },
-                      { value: "female", label: "Для женщины" },
-                      { value: "other", label: "Мне важна нейтральная версия" },
-                    ].map((item) => (
-                      <button
-                        type="button"
-                        key={item.value}
-                        className={selectedGender === item.value ? "active" : ""}
-                        onClick={() => setSelectedGender(item.value as "male" | "female" | "other")}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {onboardingStep === 5 && (
-                <div>
-                  <h2>Понимаем твой контекст</h2>
-                  <p>
-                    {onboardingName
-                      ? `${onboardingName}, ты сейчас переходишь к новому этапу жизни и меняешь своё пространство.`
-                      : "Похоже, ты сейчас переходишь к новому этапу жизни и меняешь своё пространство."}
-                  </p>
-                  <p>
-                    Удалённая работа влияет на дом: он должен быть и рабочим, и уютным.
-                    Сейчас важно сделать пространство таким, чтобы оно поддерживало твой ритм и помогало сосредоточиться.
-                  </p>
-                </div>
-              )}
-
-              {onboardingStep === 6 && (
-                <div>
-                  <h2>Как будет происходить</h2>
-                  <div className="onboardingCards">
-                    <article>
-                      <strong>Будут вопросы</strong>
-                      <p>Мы спросим о вашем ритме, целях и том, как вы живете.</p>
-                    </article>
-                    <article>
-                      <strong>Можно отправлять фото</strong>
-                      <p>Покажите текущее пространство и детали, которые вам важны.</p>
-                    </article>
-                    <article>
-                      <strong>Можно записывать голосовые</strong>
-                      <p>Расскажите, как вам комфортнее — текстом или голосом.</p>
-                    </article>
-                  </div>
-                </div>
-              )}
-
-              {onboardingStep === 7 && (
-                <div>
-                  <h2>Как заполнять</h2>
-                  <p>Сначала сядь в specialty кофейне и запиши первые мысли о доме и своей жизни.</p>
-                </div>
-              )}
-
-              {onboardingStep === 8 && (
-                <div>
-                  <h2>Как заполнять</h2>
-                  <p>На выходной день расслабься в постели и представь, как хочешь, чтобы дом работал для тебя.</p>
-                </div>
-              )}
-
-              {onboardingStep === 9 && (
-                <div>
-                  <h2>Как заполнять</h2>
-                  <p>Закрепи окончательные мысли позже, когда идеи станут яснее и не нужно спешить.</p>
-                </div>
-              )}
-
-              {onboardingStep === 10 && (
-                <div>
-                  <h2>Поймешь лучше себя</h2>
-                  <p>На этом этапе ты увидишь, что важно именно тебе и зачем ты меняешь пространство.</p>
-                </div>
-              )}
-
-              {onboardingStep === 11 && (
-                <div>
-                  <h2>Определишься, нужен ли ремонт или перестановка</h2>
-                  <p>Мы поможем понять, где достаточно перестановки, а где стоит задуматься о ремонте.</p>
-                </div>
-              )}
-
-              {onboardingStep === 12 && (
-                <div>
-                  <h2>Получишь информацию для дизайнера</h2>
-                  <p>В результате появится понятный контекст, который можно передать специалисту.</p>
-                </div>
-              )}
-
-              {onboardingStep === 13 && (
-                <div>
-                  <h2>Твоё пространство будет отражать тебя</h2>
-                  <p>Мы соберем всё так, чтобы дом начал работать на твой ритм и ощущения.</p>
-                </div>
-              )}
-
-              {isGiftFlow && onboardingStep === 20 && (
-                <div>
-                  <h2>Воркбук — хороший и глубокий подарок</h2>
-                  <p>
-                    Мы отправим красивое письмо на почту или в одну из социальных сетей вашему другу.
-                    Можно сделать упоминание от вашего имени или отправить анонимно.
-                  </p>
-                  <div className="onboardingOptions">
-                    <button
-                      type="button"
-                      className={giftMention === "mention" ? "active" : ""}
-                      onClick={() => setGiftMention("mention")}
-                    >
-                      С упоминанием вас
-                    </button>
-                    <button
-                      type="button"
-                      className={giftMention === "anonymous" ? "active" : ""}
-                      onClick={() => setGiftMention("anonymous")}
-                    >
-                      Без упоминания
-                    </button>
-                  </div>
-                  {giftMention === "mention" && (
-                    <label>
-                      Как вы хотите представить себя?
-                      <input
-                        value={giftMentionText}
-                        onChange={(event) => setGiftMentionText(event.target.value)}
-                        placeholder="Например: Твой друг из архитектуры"
-                      />
-                    </label>
-                  )}
-                </div>
-              )}
-
-              {isGiftFlow && onboardingStep === 21 && (
-                <div>
-                  <h2>В какой ситуации находится ваш друг?</h2>
-                  <p>Выберите один вариант, чтобы письмо было точнее.</p>
-                  <div className="onboardingOptions">
-                    {workbook.situations.map((item) => {
-                      const friendCopy: Record<string, { title: string; description: string }> = {
-                        "new-stage": {
-                          title: "Друг переезжает или начинает новый этап жизни",
-                          description: "У него старое пространство уже не подходит — нужно понять, каким должно быть новое.",
-                        },
-                        "self-expression": {
-                          title: "Друг хочет, чтобы пространство отражало его",
-                          description: "Ему важно, чтобы дом говорил о нём и поддерживал его стиль жизни.",
-                        },
-                        "renovation-fear": {
-                          title: "Друг хочет ремонт, но боится ошибиться",
-                          description: "Ремонт дорогой, и он ищет уверенность в стиле, потребностях и результате.",
-                        },
-                        "no-designer-budget": {
-                          title: "У друга нет бюджета на дизайнера",
-                          description: "Он хочет понять, что можно изменить уже сейчас без больших затрат.",
-                        },
-                      };
-                      const friendText = friendCopy[item.id] ?? {
-                        title: item.title,
-                        description: item.description,
-                      };
-
-                      return (
-                        <button
-                          key={item.id}
-                          type="button"
-                          className={giftSituationId === item.id ? "active" : ""}
-                          onClick={() => setGiftSituationId(item.id)}
-                        >
-                          <strong>{friendText.title}</strong>
-                          <small>{friendText.description}</small>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {isGiftFlow && onboardingStep === 22 && (
-                <div>
-                  <h2>Куда отправить письмо и ссылку?</h2>
-                  <p>Укажите email или аккаунт в социальной сети, чтобы мы отправили подарок.</p>
-                  <label>
-                    Email или социальный аккаунт
-                    <input
-                      value={giftContact}
-                      onChange={(event) => setGiftContact(event.target.value)}
-                      placeholder="example@domain.com или @username"
-                    />
-                  </label>
-                </div>
-              )}
-
-              {isGiftFlow && onboardingStep === 23 && (
-                <div>
-                  <h2>Оплата подарка</h2>
-                  <p>Введите данные карты, чтобы отправить доступ вашему другу.</p>
-                  <div className="paywallForm">
-                    <label>
-                      Номер карты
-                      <input
-                        value={cardNumber}
-                        onChange={(event) => setCardNumber(formatCardNumber(event.target.value))}
-                        placeholder="0000 0000 0000 0000"
-                      />
-                    </label>
-                    <div className="paywallRow">
-                      <label>
-                        Срок действия
-                        <input
-                          value={cardExpiry}
-                          onChange={(event) => {
-                            const value = event.target.value.replace(/\D/g, "").slice(0, 4);
-                            setCardExpiry(value.replace(/(.{2})/, "$1/").trim());
-                          }}
-                          placeholder="MM/YY"
-                        />
-                      </label>
-                      <label>
-                        CVC
-                        <input
-                          value={cardCvc}
-                          onChange={(event) => setCardCvc(event.target.value.replace(/\D/g, "").slice(0, 4))}
-                          placeholder="000"
-                        />
-                      </label>
-                    </div>
-                    <label>
-                      Имя на карте
-                      <input
-                        value={cardName}
-                        onChange={(event) => setCardName(event.target.value)}
-                        placeholder="Иван Иванов"
-                      />
-                    </label>
-                    <div className="paywallSummary">
-                      <span>Тариф «Начать исследование»</span>
-                      <strong>390 ₽</strong>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {isGiftFlow && onboardingStep === 24 && (
-                <div>
-                  <h2>Подарок готов</h2>
-                  <p>
-                    Мы подготовили письмо для вашего друга. После оплаты он получит доступ к воркбуку и красивую ссылку.
-                  </p>
-                </div>
-              )}
-            </div>
-            <div className="onboardingNav">
-              <button type="button" onClick={goBackOnboarding}>
-                {onboardingStep === 0 ? "Отмена" : "Назад"}
-              </button>
-              <button
-                type="button"
-                onClick={isGiftFlow && onboardingStep === 24 ? finishOnboarding : goNextOnboarding}
-                disabled={!canContinueOnboarding}
-              >
-                {isGiftFlow && onboardingStep === 24 ? "Готово" : onboardingStep === 14 ? "Оплатить и перейти к воркбуку" : "Дальше"}
-              </button>
-            </div>
-          </div>
-        </section>
-      )}
 
       <section className="band introBand">
         {workbook.intro.map((item, index) => (
@@ -671,9 +205,9 @@ export default function Home() {
                       <span key={point}>{point}</span>
                     ))}
                   </div>
-                  <button className="primaryButton" type="button" onClick={openPaywall}>
+                  <Link className="primaryButton" href="/onboarding/14">
                     Оплатить
-                  </button>
+                  </Link>
                 </div>
               </article>
             ))}
@@ -782,7 +316,7 @@ export default function Home() {
             Если ты пока не уверен, с чего начать, эти ответы помогут понять формат воркбука и
             выбрать первый шаг.
           </p>
-          <a href="#workbook">Начать воркбук</a>
+          <Link href="/onboarding/0">Начать воркбук</Link>
         </div>
         <div className="faqList">
           {faqItems.map((item) => {
