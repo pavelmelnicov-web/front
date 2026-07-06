@@ -194,9 +194,9 @@ export default function Home() {
             interior where you are truly comfortable.
           </p>
           <p className="heroIntroNote">
-            <span>Without a designer.</span>
-            <span>Without extra costs.</span>
-            <span>With meaning.</span>
+            <span>Without a designer</span>
+            <span>Without a renovation</span>
+            <span>With meaning</span>
           </p>
 
           <div className="methodLine" aria-label="Workbook method">
