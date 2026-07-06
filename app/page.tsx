@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { HeroFloatCards } from "../components/landing/HeroFloatCards";
 import { IntroStackSection } from "../components/landing/IntroStackSection";
+import { SituationsSection } from "../components/landing/SituationsSection";
 import { api, ChatMessage, CommunityPost, SessionPayload, Workbook } from "../lib/api";
 import { fallbackChat, fallbackPosts, fallbackWorkbook } from "../lib/fallback";
 
@@ -222,27 +223,11 @@ export default function Home() {
 
       <IntroStackSection items={workbook.intro} />
 
-      <section className="band situationsBand" id="situations">
-        <div className="sectionTitle">
-          <p>When it helps</p>
-          <h2>Why people choose this workbook</h2>
-        </div>
-        <div className="situationsGrid">
-          {workbook.situations.map((item) => (
-            <button
-              className={situations.includes(item.id) ? "situation selected" : "situation"}
-              key={item.id}
-              onClick={() => toggleSituation(item.id)}
-              type="button"
-            >
-              <span>{situations.includes(item.id) && <Check size={16} />}</span>
-              <strong>{item.title}</strong>
-              <small>{item.description}</small>
-              <em>{item.examples.join(" / ")}</em>
-            </button>
-          ))}
-        </div>
-      </section>
+      <SituationsSection
+        onToggle={toggleSituation}
+        selectedIds={situations}
+        situations={workbook.situations}
+      />
 
       <section className="variantsBand" id="variants">
         <div className="sectionTitle">
