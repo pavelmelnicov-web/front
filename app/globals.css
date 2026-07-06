@@ -50,18 +50,383 @@ main {
 }
 
 .hero {
-  --hero-bg: #f8f8f6;
+  --hero-bg: #f5f2ed;
   --hero-ink: #111110;
-  --hero-muted: #777776;
+  --hero-muted: #6f6c66;
   --hero-line: rgba(17, 17, 16, 0.1);
-  min-height: min(100svh, 920px);
-  padding: clamp(16px, 3vw, 28px) var(--page-gutter) clamp(40px, 8vh, 80px);
-  border-bottom: 1px solid var(--hero-line);
+  --hero-card: rgba(255, 255, 255, 0.94);
+  padding: 0;
+  border-bottom: none;
   background: var(--hero-bg);
   color: var(--hero-ink);
   font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
   display: flex;
   flex-direction: column;
+}
+
+.heroShowcase {
+  position: relative;
+  width: 100%;
+  min-height: clamp(520px, 92vw, 680px);
+  overflow: hidden;
+  background: #ddd8cf;
+}
+
+.heroShowcaseImage {
+  object-fit: cover;
+  object-position: center 42%;
+}
+
+.heroShowcaseScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(245, 242, 237, 0.52) 0%, rgba(245, 242, 237, 0.1) 34%, rgba(17, 17, 16, 0.04) 100%);
+  pointer-events: none;
+}
+
+.heroNav {
+  position: absolute;
+  top: clamp(12px, 2.5vw, 20px);
+  right: var(--page-gutter);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.heroNav a {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.heroNavGift {
+  background: #d62828;
+  color: #fff;
+  border-color: #d62828;
+}
+
+.heroNavGift:hover,
+.heroNavGift:focus-visible {
+  background: #bc2222;
+  border-color: #bc2222;
+  color: #fff;
+}
+
+.heroNavStart {
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--hero-ink);
+  border-color: rgba(17, 17, 16, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+.heroNavStart:hover,
+.heroNavStart:focus-visible {
+  background: #fff;
+}
+
+.heroShowcaseCopy {
+  position: absolute;
+  top: clamp(12px, 2.5vw, 20px);
+  left: var(--page-gutter);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  max-width: calc(100% - 180px);
+}
+
+.heroShowcaseLogo {
+  margin: 0;
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-size: clamp(20px, 5.5vw, 26px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--hero-ink);
+  white-space: nowrap;
+}
+
+.heroFloatCards {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.heroFloatCard {
+  position: absolute;
+  width: clamp(110px, 28vw, 152px);
+  padding: 9px 9px 11px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 2px 6px rgba(17, 17, 16, 0.06),
+    0 14px 32px rgba(17, 17, 16, 0.12);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
+}
+
+.heroFloatCard h2 {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--hero-ink);
+}
+
+.heroFloatCard p {
+  margin: 5px 0 0;
+  font-size: 9px;
+  line-height: 1.35;
+  color: var(--hero-muted);
+}
+
+.heroFloatCardNumber {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(17, 17, 16, 0.42);
+}
+
+.heroFloatCard--tl {
+  top: 34%;
+  left: 4%;
+}
+
+.heroFloatCard--tr {
+  top: 18%;
+  right: 4%;
+}
+
+.heroFloatCard--bl {
+  bottom: 10%;
+  left: 5%;
+}
+
+.heroFloatCard--br {
+  bottom: 8%;
+  right: 4%;
+}
+
+.heroFloatProgress {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 3px;
+  margin-top: 8px;
+}
+
+.heroFloatProgress span {
+  height: 3px;
+  border-radius: 999px;
+  background: #111110;
+}
+
+.heroFloatProgress span.isMuted {
+  background: rgba(17, 17, 16, 0.12);
+}
+
+.heroFloatPlan {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  margin-top: 6px;
+  min-height: 58px;
+  padding: 6px;
+  border-radius: 8px;
+  background: #f3efe8;
+}
+
+.heroFloatPlan span {
+  border: 1px solid rgba(17, 17, 16, 0.08);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.heroFloatPlan span:nth-child(1) {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.heroFloatThumb {
+  position: relative;
+  height: 36px;
+  margin-top: 6px;
+  border-radius: 6px;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, #d8d0c4 0%, #b8aa98 100%);
+}
+
+.heroFloatThumbImage {
+  object-fit: cover;
+}
+
+.heroFloatGrid--image {
+  position: relative;
+  min-height: 58px;
+  overflow: hidden;
+}
+
+.heroFloatGridImage {
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.heroFloatSwatches {
+  display: flex;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.heroFloatSwatches span {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 16, 0.08);
+}
+
+.heroFloatGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+  margin-top: 6px;
+}
+
+.heroFloatGrid span {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #ece7df 0%, #cfc6ba 100%);
+}
+
+.heroIntro {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(28px, 6vw, 48px) var(--page-gutter) clamp(36px, 7vw, 56px);
+  text-align: center;
+}
+
+.heroIntroTitle {
+  margin: 0;
+  max-width: 16ch;
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-size: clamp(1.75rem, 7vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--hero-ink);
+}
+
+.heroIntroLead {
+  margin: 16px 0 0;
+  max-width: 34rem;
+  font-size: clamp(15px, 2.4vw, 17px);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: var(--hero-muted);
+}
+
+.heroIntroNote {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(6px, 1.8vw, 12px);
+  width: 100%;
+  margin: 14px 0 0;
+  font-size: clamp(11px, 2.8vw, 13px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: rgba(17, 17, 16, 0.72);
+}
+
+.heroIntroNote span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.heroIntroNote span::before {
+  content: "•";
+  color: rgba(17, 17, 16, 0.38);
+  font-weight: 700;
+}
+
+@media (max-width: 380px) {
+  .heroIntroNote {
+    gap: 4px;
+    font-size: 10px;
+  }
+
+  .heroIntroNote span {
+    gap: 3px;
+  }
+}
+
+.heroIntro .methodLine {
+  margin: clamp(18px, 4vw, 24px) 0 0;
+  padding: clamp(10px, 2vw, 12px) clamp(14px, 3vw, 18px);
+  border: 1px solid var(--hero-line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.heroIntroActions {
+  width: 100%;
+  max-width: 420px;
+  margin-top: clamp(20px, 4vw, 28px);
+}
+
+.heroIntroCta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 52px;
+  border-radius: 999px;
+  background: var(--hero-ink);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: background-color 180ms ease;
+}
+
+.heroIntroCta:hover,
+.heroIntroCta:focus-visible {
+  background: #2a2a28;
+}
+
+.heroIntroLogin {
+  margin: 14px 0 0;
+  font-size: 14px;
+  color: var(--hero-muted);
+}
+
+.heroIntroLogin a {
+  color: var(--hero-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .topbar {
@@ -83,25 +448,12 @@ main {
   color: var(--ink);
 }
 
-.hero .topbar strong {
-  font-family: var(--font-display), Georgia, "Times New Roman", serif;
-  font-size: clamp(1.75rem, 5.5vw, 2.625rem);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--hero-ink);
-}
-
 .topbar span,
 .topbarTagline {
   display: none;
   margin-top: 8px;
   color: var(--muted);
   font-size: 13px;
-}
-
-.hero .topbarTagline {
-  display: none;
 }
 
 .topbar a,
@@ -117,44 +469,6 @@ main {
   white-space: nowrap;
 }
 
-.hero .topbar a,
-.hero .topbar button {
-  min-height: 40px;
-  padding: 0 18px;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
-}
-
-.hero .topbar .topbarGift {
-  background: #d62828;
-  color: #fff;
-  border-color: #d62828;
-}
-
-.hero .topbar .topbarGift:hover,
-.hero .topbar .topbarGift:focus-visible {
-  background: #bc2222;
-  border-color: #bc2222;
-  color: #fff;
-}
-
-.hero .topbarActions a:not(.topbarGift) {
-  background: var(--hero-ink);
-  color: var(--hero-bg);
-  border-color: var(--hero-ink);
-}
-
-.hero .topbarActions a:not(.topbarGift):hover {
-  background: #2a2a28;
-  border-color: #2a2a28;
-}
-
 .topbarActions {
   display: flex;
   align-items: center;
@@ -166,20 +480,6 @@ main {
   background: transparent;
   color: var(--ink);
   border-color: rgba(248, 243, 234, 0.18);
-}
-
-.heroCenter {
-  display: grid;
-  justify-items: center;
-  width: 100%;
-  max-width: 1120px;
-  margin: clamp(28px, 5vh, 48px) auto 0;
-  text-align: center;
-  gap: 0;
-}
-
-.hero .heroCenter {
-  margin-top: clamp(24px, 4vh, 40px);
 }
 
 .eyebrow {
@@ -205,31 +505,11 @@ h1 {
   margin-bottom: 14px;
 }
 
-.hero h1 {
-  max-width: 14ch;
-  font-family: var(--font-display), Georgia, "Times New Roman", serif;
-  font-size: clamp(2rem, 7vw, 3.75rem);
-  font-weight: 400;
-  line-height: 0.98;
-  letter-spacing: -0.035em;
-  margin-bottom: 16px;
-  color: var(--hero-ink);
-}
-
 .lead {
   max-width: none;
   color: var(--muted);
   font-size: 16px;
   line-height: 1.45;
-}
-
-.hero .lead {
-  max-width: 34rem;
-  color: var(--hero-muted);
-  font-size: clamp(15px, 2.2vw, 17px);
-  font-weight: 400;
-  line-height: 1.55;
-  letter-spacing: -0.01em;
 }
 
 .heroCta {
@@ -248,27 +528,11 @@ h1 {
   text-decoration: none;
 }
 
-.hero .heroCta {
-  width: auto;
-  min-height: 44px;
-  padding: 0 22px;
-  background: var(--hero-ink);
-  color: var(--hero-bg);
-  font-weight: 400;
-  font-size: 14px;
-  letter-spacing: -0.01em;
-}
-
 .heroActions {
   display: flex;
   width: 100%;
   align-items: center;
   margin-top: 20px;
-}
-
-.hero .heroActions {
-  justify-content: center;
-  margin-top: 24px;
 }
 
 .methodLine {
@@ -324,42 +588,9 @@ h1 {
   font-weight: 400;
 }
 
-.heroStage {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
-  padding: clamp(12px, 3vh, 28px) 0;
-  gap: clamp(16px, 3vh, 28px);
-}
-
 .hero .methodLine {
   align-items: center;
-  align-self: center;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-}
-
-.heroVisual {
-  position: relative;
-  width: min(72vw, 320px);
-  aspect-ratio: 38 / 52;
-  border-radius: clamp(24px, 6vw, 32px);
-  overflow: hidden;
-  background: #ececea;
-  box-shadow:
-    0 1px 2px rgba(17, 17, 16, 0.04),
-    0 24px 64px rgba(17, 17, 16, 0.08);
-}
-
-.heroVisualImage {
-  object-fit: cover;
-  object-position: 50% 50%;
+  justify-content: center;
 }
 
 .hero .methodSteps {
@@ -368,10 +599,10 @@ h1 {
 }
 
 .hero .methodSteps li {
-  font-family: var(--font-display), Georgia, "Times New Roman", serif;
-  font-weight: 400;
-  font-size: clamp(1.125rem, 4.5vw, 2rem);
-  letter-spacing: -0.025em;
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-weight: 500;
+  font-size: clamp(11px, 2.8vw, 13px);
+  letter-spacing: -0.01em;
   color: var(--hero-muted);
 }
 
@@ -1680,67 +1911,59 @@ textarea {
     --section-y: 72px;
   }
 
-  .hero {
-    min-height: min(100svh, 920px);
-    padding-bottom: clamp(40px, 8vh, 80px);
+  .heroShowcase {
+    min-height: clamp(560px, 52vw, 760px);
   }
 
-  .hero .topbar strong {
-    font-size: clamp(2.25rem, 4vw, 3.5rem);
+  .heroShowcaseCopy {
+    top: clamp(16px, 2vw, 20px);
   }
 
-  .hero .heroCenter {
-    margin-top: clamp(32px, 6vh, 64px);
+  .heroShowcaseLogo {
+    font-size: clamp(26px, 2.8vw, 32px);
   }
 
-  .hero h1 {
-    max-width: 16ch;
-    font-size: clamp(2.75rem, 6vw, 4.5rem);
-    margin-bottom: 20px;
+  .heroFloatCard--tl {
+    top: 30%;
+    left: 8%;
   }
 
-  .hero .lead {
-    max-width: 36rem;
-    font-size: clamp(16px, 1.6vw, 20px);
-    line-height: 1.5;
+  .heroFloatCard {
+    width: clamp(128px, 11vw, 164px);
+    padding: 11px 11px 13px;
+    border-radius: 17px;
   }
 
-  .heroStage {
-    max-width: 480px;
-    gap: clamp(20px, 4vh, 36px);
+  .heroFloatCard h2 {
+    font-size: 12px;
   }
 
-  .heroVisual {
-    width: min(320px, 34vw);
+  .heroFloatCard p {
+    font-size: 10px;
   }
 
-  .hero .methodLine {
-    width: fit-content;
-    max-width: calc(100% - 32px);
-    padding: clamp(10px, 1.5vw, 14px) clamp(16px, 2.5vw, 24px);
-    border: 1px solid var(--hero-line);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.72);
+  .heroFloatCard--tr {
+    top: 16%;
+    right: 8%;
   }
 
-  .hero .methodSteps {
-    gap: 6px clamp(4px, 1.2vw, 8px);
-    row-gap: 10px;
-    width: auto;
+  .heroFloatCard--bl {
+    bottom: 12%;
+    left: 10%;
   }
 
-  .hero .methodSteps li {
-    font-size: clamp(1.125rem, 2.2vw, 1.75rem);
-    color: var(--hero-muted);
+  .heroFloatCard--br {
+    bottom: 10%;
+    right: 9%;
   }
 
-  .hero .methodSteps li:last-child {
-    color: var(--hero-ink);
+  .heroIntroTitle {
+    max-width: none;
+    font-size: clamp(2.5rem, 4.5vw, 3.25rem);
   }
 
-  .hero .methodSteps li:not(:last-child)::after {
-    margin: 0 clamp(8px, 1.5vw, 12px);
-    color: rgba(17, 17, 16, 0.28);
+  .heroIntroLead {
+    font-size: 18px;
   }
 
   .topbar {
@@ -1780,19 +2003,6 @@ textarea {
     max-width: 720px;
     font-size: clamp(19px, 2vw, 28px);
     line-height: 1.26;
-  }
-
-  .hero .heroActions {
-    display: inline-flex;
-    width: auto;
-    margin-top: 24px;
-  }
-
-  .hero .heroCta {
-    width: auto;
-    min-height: 48px;
-    padding: 0 24px;
-    font-size: 15px;
   }
 
   .introBand {

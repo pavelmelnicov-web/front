@@ -4,6 +4,7 @@ import { ArrowRight, Check, MessageSquare, Plus, Send, Star } from "lucide-react
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { HeroFloatCards } from "../components/landing/HeroFloatCards";
 import { api, ChatMessage, CommunityPost, SessionPayload, Workbook } from "../lib/api";
 import { fallbackChat, fallbackPosts, fallbackWorkbook } from "../lib/fallback";
 
@@ -157,20 +158,47 @@ export default function Home() {
   return (
     <main>
       <section className="hero">
-        <nav className="topbar" aria-label="Main">
-          <div className="topbarBrand">
-            <strong>{workbook.brand}</strong>
-            <span className="topbarTagline">{workbook.tagline}</span>
-          </div>
-          <div className="topbarActions">
-            <Link className="topbarGift" href="/onboarding/gift">
+        <div className="heroShowcase">
+          <Image
+            src="/hero-visual.jpg"
+            alt=""
+            fill
+            priority
+            quality={100}
+            unoptimized
+            sizes="100vw"
+            className="heroShowcaseImage"
+          />
+          <div className="heroShowcaseScrim" aria-hidden="true" />
+
+          <nav className="heroNav" aria-label="Main">
+            <Link className="heroNavGift" href="/onboarding/gift">
               Gift it
             </Link>
-            <Link href="/onboarding/0">Start</Link>
-          </div>
-        </nav>
+            <Link className="heroNavStart" href="/onboarding/0">
+              Start
+            </Link>
+          </nav>
 
-        <div className="heroStage">
+          <div className="heroShowcaseCopy">
+            <h1 className="heroShowcaseLogo">{workbook.brand}</h1>
+          </div>
+
+          <HeroFloatCards />
+        </div>
+
+        <div className="heroIntro">
+          <h2 className="heroIntroTitle">{workbook.headline}</h2>
+          <p className="heroIntroLead">
+            A step-by-step system of exercises that helps you understand yourself and create an
+            interior where you are truly comfortable.
+          </p>
+          <p className="heroIntroNote">
+            <span>Without a designer.</span>
+            <span>Without extra costs.</span>
+            <span>With meaning.</span>
+          </p>
+
           <div className="methodLine" aria-label="Workbook method">
             <ul className="methodSteps">
               {workbook.method.split(" -> ").map((step, index) => (
@@ -179,29 +207,14 @@ export default function Home() {
             </ul>
           </div>
 
-          <div className="heroVisual">
-            <Image
-              src="/hero-visual.png"
-              alt=""
-              fill
-              priority
-              sizes="(max-width: 640px) 72vw, 320px"
-              className="heroVisualImage"
-            />
-          </div>
-        </div>
-
-        <div className="heroCenter">
-          <h1>{workbook.headline}</h1>
-          <p className="lead">
-            Through roles, life scenarios, states, and objects you will build a space that reflects
-            you and supports the life you want to live.
-          </p>
-          <div className="heroActions">
-            <Link className="heroCta" href="/onboarding/0">
-              Start exploring
-              <ArrowRight size={18} />
+          <div className="heroIntroActions">
+            <Link className="heroIntroCta" href="/onboarding/0">
+              Start work
             </Link>
+            <p className="heroIntroLogin">
+              Already have an account?{" "}
+              <Link href="/onboarding/0">Log in</Link>
+            </p>
           </div>
         </div>
       </section>
