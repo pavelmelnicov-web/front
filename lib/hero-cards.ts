@@ -4,11 +4,16 @@
  */
 
 /** Set to true to show cards 01–04 on the hero image again. */
-export const heroFloatCardsVisible = false;
+export const heroFloatCardsVisible = true;
 
 export type HeroCardPosition = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
-export type HeroCardVariant = "progress" | "plan" | "swatches" | "grid";
+export type HeroCardVariant = "quiz" | "plan" | "states" | "objects";
+
+export type HeroGridImage = {
+  id: string;
+  src: string;
+};
 
 export type HeroFloatCard = {
   id: string;
@@ -17,12 +22,10 @@ export type HeroFloatCard = {
   title: string;
   description?: string;
   variant: HeroCardVariant;
-  /** Used when variant is "progress". How many of 5 segments are filled. */
-  progressFilled?: number;
-  /** Used when variant is "swatches". */
-  swatches?: string[];
-  /** Optional image path for swatches or grid cards, e.g. "/hero-card-chair.jpg". */
+  /** Single cover image for quiz, plan, and states cards. */
   image?: string;
+  /** 2x2 object grid for card 04. */
+  gridImages?: HeroGridImage[];
 };
 
 export const heroFloatCards: HeroFloatCard[] = [
@@ -31,40 +34,89 @@ export const heroFloatCards: HeroFloatCard[] = [
     position: "top-left",
     number: "01",
     title: "Understand yourself",
-    description: "Name your roles, habits, and real needs before choosing anything.",
-    variant: "progress",
-    progressFilled: 3,
+    description: "Start with a short psychological quiz about how you live at home.",
+    variant: "quiz",
+    image: "/hero-cards/card-01-quiz.jpg",
   },
   {
     id: "plan-mindfully",
     position: "top-right",
     number: "02",
     title: "Plan mindfully",
-    description: "Map scenarios, zones, and flow before you move a single object.",
+    description: "Map zones for work, rest, sleep, and everyday rituals.",
     variant: "plan",
+    image: "/hero-cards/card-02-plan.jpg",
   },
   {
     id: "choose-with-meaning",
     position: "bottom-left",
     number: "03",
-    title: "Choose with meaning",
-    description: "Pick materials, colors, and objects that support the life you want.",
-    variant: "swatches",
-    swatches: ["#ddd5c8", "#c8bfb0", "#9a9488", "#2f2f2d"],
+    title: "Choose states",
+    description: "Name the feelings each room should support before you change anything.",
+    variant: "states",
+    image: "/hero-cards/card-03-states.jpg",
   },
   {
     id: "find-your-style",
     position: "bottom-right",
     number: "04",
-    title: "Find your style",
-    description: "Collect references that feel like you—not like a mood board template.",
-    variant: "grid",
+    title: "Pick your objects",
+    description: "Choose items that activate the life you want in your space.",
+    variant: "objects",
+    gridImages: [
+      { id: "ball", src: "/hero-cards/card-04-ball.jpg" },
+      { id: "coffee", src: "/hero-cards/card-04-coffee.jpg" },
+      { id: "sneaker", src: "/hero-cards/card-04-sneaker.jpg" },
+      { id: "candle", src: "/hero-cards/card-04-candle.jpg" },
+    ],
   },
 ];
 
 export const heroCardPositionClass: Record<HeroCardPosition, string> = {
-  "top-left": "heroFloatCard--tl",
-  "top-right": "heroFloatCard--tr",
-  "bottom-left": "heroFloatCard--bl",
-  "bottom-right": "heroFloatCard--br",
+  "top-left": "heroFloatCardOrbit--tl",
+  "top-right": "heroFloatCardOrbit--tr",
+  "bottom-left": "heroFloatCardOrbit--bl",
+  "bottom-right": "heroFloatCardOrbit--br",
+};
+
+export type HeroCardOrbitDirection = "cw" | "ccw";
+
+export type HeroCardOrbitMotion = {
+  duration: string;
+  delay: string;
+  radius: string;
+  direction: HeroCardOrbitDirection;
+  bobDuration: string;
+};
+
+/** Per-card orbital motion tuned to feel like Cosmos hero drift. */
+export const heroCardOrbitMotion: Record<string, HeroCardOrbitMotion> = {
+  "understand-yourself": {
+    duration: "24s",
+    delay: "0s",
+    radius: "clamp(16px, 3.6vw, 28px)",
+    direction: "cw",
+    bobDuration: "7s",
+  },
+  "plan-mindfully": {
+    duration: "28s",
+    delay: "-6s",
+    radius: "clamp(18px, 4vw, 32px)",
+    direction: "ccw",
+    bobDuration: "8.5s",
+  },
+  "choose-with-meaning": {
+    duration: "26s",
+    delay: "-11s",
+    radius: "clamp(14px, 3.2vw, 26px)",
+    direction: "ccw",
+    bobDuration: "6.5s",
+  },
+  "find-your-style": {
+    duration: "30s",
+    delay: "-4s",
+    radius: "clamp(20px, 4.4vw, 34px)",
+    direction: "cw",
+    bobDuration: "9s",
+  },
 };

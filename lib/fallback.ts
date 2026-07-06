@@ -12,7 +12,7 @@ export const fallbackWorkbook: Workbook = {
     },
     {
       title: "You do not always need a renovation",
-      body: "Sometimes it is enough to edit what you own, rethink storage, and see your home with fresh eyes.",
+      body: "Sometimes a space starts working after general cleaning, new storage logic, and a different arrangement of objects.",
     },
     {
       title: "A good interior starts with understanding yourself",

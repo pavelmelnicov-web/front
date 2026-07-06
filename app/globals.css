@@ -74,7 +74,7 @@ main {
 
 .heroShowcaseImage {
   object-fit: cover;
-  object-position: center 42%;
+  object-position: center center;
 }
 
 .heroShowcaseScrim {
@@ -149,7 +149,7 @@ main {
 
 .heroShowcaseLogo {
   margin: 0;
-  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(20px, 5.5vw, 26px);
   font-weight: 600;
   line-height: 1;
@@ -163,11 +163,74 @@ main {
   inset: 0;
   z-index: 4;
   pointer-events: none;
+  transform: translate3d(var(--hero-parallax-x, 0), var(--hero-parallax-y, 0), 0);
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.heroFloatCardOrbit {
+  position: absolute;
+  width: clamp(128px, 30vw, 176px);
+  transform: translate3d(0, 0, 0);
+  animation: heroFloatOrbit var(--orbit-duration, 24s) linear infinite;
+  animation-delay: var(--orbit-delay, 0s);
+  will-change: transform;
+}
+
+.heroFloatCardOrbit--cw {
+  animation-name: heroFloatOrbitCW;
+}
+
+.heroFloatCardOrbit--ccw {
+  animation-name: heroFloatOrbitCCW;
+}
+
+.heroFloatCardOrbit.isStatic {
+  animation: none;
+}
+
+.heroFloatCardOrbit--tl {
+  top: 34%;
+  left: 4%;
+}
+
+.heroFloatCardOrbit--tr {
+  top: 18%;
+  right: 4%;
+}
+
+.heroFloatCardOrbit--bl {
+  bottom: 10%;
+  left: 5%;
+}
+
+.heroFloatCardOrbit--br {
+  bottom: 8%;
+  right: 4%;
+}
+
+@keyframes heroFloatOrbitCW {
+  0% {
+    transform: rotate(0deg) translateX(var(--orbit-radius, 24px)) rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg) translateX(var(--orbit-radius, 24px)) rotate(-360deg);
+  }
+}
+
+@keyframes heroFloatOrbitCCW {
+  0% {
+    transform: rotate(0deg) translateX(var(--orbit-radius, 24px)) rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(-360deg) translateX(var(--orbit-radius, 24px)) rotate(360deg);
+  }
 }
 
 .heroFloatCard {
-  position: absolute;
-  width: clamp(110px, 28vw, 152px);
+  position: relative;
+  width: 100%;
   padding: 9px 9px 11px;
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.82);
@@ -177,6 +240,12 @@ main {
     0 14px 32px rgba(17, 17, 16, 0.12);
   backdrop-filter: blur(12px);
   pointer-events: auto;
+  animation: heroFloatBob var(--bob-duration, 7s) ease-in-out infinite;
+  will-change: transform;
+}
+
+.heroFloatCardOrbit.isStatic .heroFloatCard {
+  animation: none;
 }
 
 .heroFloatCard h2 {
@@ -203,115 +272,75 @@ main {
   color: rgba(17, 17, 16, 0.42);
 }
 
-.heroFloatCard--tl {
-  top: 34%;
-  left: 4%;
+@keyframes heroFloatBob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -7px, 0);
+  }
 }
 
-.heroFloatCard--tr {
-  top: 18%;
-  right: 4%;
+@media (prefers-reduced-motion: reduce) {
+  .heroFloatCards {
+    transform: none;
+    transition: none;
+  }
+
+  .heroFloatCardOrbit,
+  .heroFloatCard {
+    animation: none !important;
+  }
 }
 
-.heroFloatCard--bl {
-  bottom: 10%;
-  left: 5%;
-}
-
-.heroFloatCard--br {
-  bottom: 8%;
-  right: 4%;
-}
-
-.heroFloatProgress {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 3px;
+.heroFloatCover {
+  position: relative;
   margin-top: 8px;
-}
-
-.heroFloatProgress span {
-  height: 3px;
-  border-radius: 999px;
-  background: #111110;
-}
-
-.heroFloatProgress span.isMuted {
-  background: rgba(17, 17, 16, 0.12);
-}
-
-.heroFloatPlan {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 3px;
-  margin-top: 6px;
-  min-height: 58px;
-  padding: 6px;
-  border-radius: 8px;
+  min-height: 92px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(17, 17, 16, 0.08);
   background: #f3efe8;
 }
 
-.heroFloatPlan span {
-  border: 1px solid rgba(17, 17, 16, 0.08);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.72);
+.heroFloatCover--quiz {
+  min-height: 96px;
 }
 
-.heroFloatPlan span:nth-child(1) {
-  grid-column: span 2;
-  grid-row: span 2;
+.heroFloatCover--plan {
+  min-height: 98px;
 }
 
-.heroFloatThumb {
-  position: relative;
-  height: 36px;
-  margin-top: 6px;
-  border-radius: 6px;
-  overflow: hidden;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0)),
-    linear-gradient(180deg, #d8d0c4 0%, #b8aa98 100%);
+.heroFloatCover--states {
+  min-height: 104px;
 }
 
-.heroFloatThumbImage {
+.heroFloatCoverImage {
   object-fit: cover;
+  object-position: center center;
 }
 
-.heroFloatGrid--image {
-  position: relative;
-  min-height: 58px;
-  overflow: hidden;
-}
-
-.heroFloatGridImage {
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.heroFloatSwatches {
-  display: flex;
-  gap: 5px;
-  margin-top: 6px;
-}
-
-.heroFloatSwatches span {
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(17, 17, 16, 0.08);
-}
-
-.heroFloatGrid {
+.heroFloatObjects {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 3px;
-  margin-top: 6px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  margin-top: 8px;
 }
 
-.heroFloatGrid span {
+.heroFloatObjectCell {
+  position: relative;
   aspect-ratio: 1;
-  border-radius: 6px;
-  background: linear-gradient(180deg, #ece7df 0%, #cfc6ba 100%);
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(17, 17, 16, 0.08);
+  background: #f7f4ef;
+}
+
+.heroFloatObjectImage {
+  object-fit: cover;
+  object-position: center center;
 }
 
 .heroIntro {
@@ -327,9 +356,9 @@ main {
 .heroIntroTitle {
   margin: 0;
   max-width: 16ch;
-  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(1.75rem, 7vw, 2.75rem);
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.02;
   letter-spacing: -0.03em;
   color: var(--hero-ink);
@@ -825,31 +854,196 @@ h1 {
   padding: var(--section-y) var(--page-gutter);
 }
 
-.introBand {
+.introStackSection {
+  --hero-bg: #f5f2ed;
+  --hero-ink: #111110;
+  --hero-muted: #6f6c66;
+  --hero-line: rgba(17, 17, 16, 0.1);
+  --hero-card: rgba(255, 255, 255, 0.94);
+  position: relative;
+  height: calc(var(--intro-stack-count, 4) * var(--intro-scroll-step-vh, 128) * 1dvh);
+  background: var(--hero-bg);
+  border-bottom: 1px solid var(--hero-line);
+  color: var(--hero-ink);
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+}
+
+.introStackSticky {
+  position: sticky;
+  top: 0;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 100dvh;
+  padding: clamp(20px, 4vw, 40px) var(--page-gutter) clamp(16px, 3vw, 28px);
+  overflow: hidden;
 }
 
-.introItem {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 20px;
-  background: var(--surface);
+.introStackHeader {
+  position: relative;
+  z-index: 2;
+  max-width: 980px;
 }
 
-.introItem span {
-  color: var(--accent);
+.introStackEyebrow {
+  margin: 0 0 10px;
+  color: rgba(17, 17, 16, 0.52);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.introStackTitle {
+  margin: 0;
+  max-width: 12ch;
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(28px, 7vw, 56px);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--hero-ink);
+}
+
+.introStackStage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+  min-height: clamp(360px, 58dvh, 520px);
+}
+
+.introStackCard {
+  position: absolute;
+  inset: auto 0;
+  width: 100%;
+  min-height: clamp(360px, 58dvh, 520px);
+  overflow: hidden;
+  border: 1px solid rgba(17, 17, 16, 0.1);
+  border-radius: clamp(20px, 3.2vw, 30px);
+  background: #ddd8cf;
+  box-shadow:
+    0 2px 6px rgba(17, 17, 16, 0.05),
+    0 18px 42px rgba(17, 17, 16, 0.1);
+  transform-origin: center top;
+  will-change: transform, opacity;
+  transition: box-shadow 0.55s ease;
+}
+
+.introStackCard:not(.isActive) {
+  pointer-events: none;
+}
+
+.introStackCard.isActive {
+  box-shadow:
+    0 4px 10px rgba(17, 17, 16, 0.06),
+    0 28px 64px rgba(17, 17, 16, 0.14);
+}
+
+.introStackCard.isPast {
+  filter: saturate(0.88) brightness(0.96);
+}
+
+.introStackCardMedia {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.introStackCardImage {
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.introStackCardScrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.08) 0%, rgba(17, 17, 16, 0.02) 34%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.24) 0%, transparent 48%);
+  pointer-events: none;
+}
+
+.introStackCardGlow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--intro-card-accent) 14%, transparent), transparent 62%);
+  pointer-events: none;
+}
+
+.introStackCardContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(360px, 58dvh, 520px);
+  padding: clamp(22px, 4vw, 34px);
+}
+
+.introStackCardIndex {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  margin-bottom: 14px;
+  color: #fff;
+  font-size: clamp(12px, 2.8vw, 14px);
   font-weight: 800;
+  letter-spacing: 0.12em;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
 }
 
-.introItem h2 {
-  font-size: 24px;
-  line-height: 1.12;
-  color: var(--ink);
+.introStackCard h3 {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 12px;
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(24px, 5.4vw, 40px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
 }
 
-.introItem p,
+.introStackCard p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  max-width: 52ch;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(15px, 2.6vw, 18px);
+  line-height: 1.5;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.24);
+}
+
+.introStackProgress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: clamp(12px, 2vw, 20px);
+}
+
+.introStackProgress span {
+  width: clamp(28px, 8vw, 44px);
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(17, 17, 16, 0.12);
+  transition: background-color 0.35s ease, transform 0.35s ease;
+}
+
+.introStackProgress span.isFilled {
+  background: var(--hero-ink);
+  transform: scaleX(1.04);
+}
+
 .questionBlock small {
   color: var(--muted);
   line-height: 1.45;
@@ -1852,7 +2046,6 @@ textarea {
     font-size: 14px;
   }
 
-  .introBand,
   .situationsGrid,
   .postsGrid,
   .testimonialsGrid {
@@ -1923,13 +2116,24 @@ textarea {
     font-size: clamp(26px, 2.8vw, 32px);
   }
 
-  .heroFloatCard--tl {
+  .heroFloatCardOrbit--tl {
     top: 30%;
     left: 8%;
   }
 
+  .heroFloatCardOrbit {
+    width: clamp(148px, 12vw, 188px);
+  }
+
+  .heroFloatCover {
+    min-height: 108px;
+  }
+
+  .heroFloatCover--states {
+    min-height: 118px;
+  }
+
   .heroFloatCard {
-    width: clamp(128px, 11vw, 164px);
     padding: 11px 11px 13px;
     border-radius: 17px;
   }
@@ -1942,17 +2146,17 @@ textarea {
     font-size: 10px;
   }
 
-  .heroFloatCard--tr {
+  .heroFloatCardOrbit--tr {
     top: 16%;
     right: 8%;
   }
 
-  .heroFloatCard--bl {
+  .heroFloatCardOrbit--bl {
     bottom: 12%;
     left: 10%;
   }
 
-  .heroFloatCard--br {
+  .heroFloatCardOrbit--br {
     bottom: 10%;
     right: 9%;
   }
@@ -2005,9 +2209,23 @@ textarea {
     line-height: 1.26;
   }
 
-  .introBand {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+  .introStackTitle {
+    max-width: 14ch;
+    font-size: clamp(40px, 4.8vw, 72px);
+  }
+
+  .introStackStage {
+    max-width: 900px;
+    min-height: clamp(400px, 54dvh, 580px);
+  }
+
+  .introStackCard,
+  .introStackCardContent {
+    min-height: clamp(400px, 54dvh, 580px);
+  }
+
+  .introStackCard h3 {
+    font-size: clamp(32px, 3.6vw, 48px);
   }
 
   .situationsGrid,

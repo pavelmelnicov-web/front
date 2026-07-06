@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { HeroFloatCards } from "../components/landing/HeroFloatCards";
+import { IntroStackSection } from "../components/landing/IntroStackSection";
 import { api, ChatMessage, CommunityPost, SessionPayload, Workbook } from "../lib/api";
 import { fallbackChat, fallbackPosts, fallbackWorkbook } from "../lib/fallback";
 
@@ -219,15 +220,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="band introBand">
-        {workbook.intro.map((item, index) => (
-          <article className="introItem" key={item.title}>
-            <span>{index + 1}</span>
-            <h2>{item.title}</h2>
-            <p>{item.body}</p>
-          </article>
-        ))}
-      </section>
+      <IntroStackSection items={workbook.intro} />
 
       <section className="band situationsBand" id="situations">
         <div className="sectionTitle">
