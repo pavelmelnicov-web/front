@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowRight, Check, MessageSquare, Plus, Send, Sparkles, Star } from "lucide-react";
+import { ArrowRight, Check, MessageSquare, Plus, Send, Star } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { api, ChatMessage, CommunityPost, SessionPayload, Workbook } from "../lib/api";
 import { fallbackChat, fallbackPosts, fallbackWorkbook } from "../lib/fallback";
 
@@ -15,16 +16,70 @@ export default function Home() {
   const [version, setVersion] = useState<"system" | "atmosphere">("system");
   const [situations, setSituations] = useState<string[]>(["new-stage"]);
   const [answers, setAnswers] = useState<Answers>({});
-  const [name, setName] = useState("Гость");
+  const [name, setName] = useState("Guest");
   const [summary, setSummary] = useState<Record<string, string | string[]> | null>(null);
   const [chatMessage, setChatMessage] = useState("");
   const [openFaqId, setOpenFaqId] = useState(faqItems[0].id);
   const [isSaving, setIsSaving] = useState(false);
+  const variantViewportRef = useRef<HTMLDivElement>(null);
+  const [variantSlideWidth, setVariantSlideWidth] = useState(0);
 
   useEffect(() => {
-    api.getWorkbook().then(setWorkbook).catch(() => setWorkbook(fallbackWorkbook));
-    api.getCommunity().then((data) => setPosts(data.posts)).catch(() => setPosts(fallbackPosts));
-    api.getChat().then(setChat).catch(() => setChat(fallbackChat));
+    console.log("[home] Loading landing page data");
+
+    api
+      .getWorkbook()
+      .then((data) => {
+        console.log("[home] Workbook loaded", { headline: data.headline });
+        setWorkbook(data);
+      })
+      .catch((error) => {
+        console.error("[home] Workbook load failed, using fallback", { error });
+        setWorkbook(fallbackWorkbook);
+      });
+
+    api
+      .getCommunity()
+      .then((data) => {
+        console.log("[home] Community posts loaded", { count: data.posts.length });
+        setPosts(data.posts);
+      })
+      .catch((error) => {
+        console.error("[home] Community load failed, using fallback", { error });
+        setPosts(fallbackPosts);
+      });
+
+    api
+      .getChat()
+      .then((data) => {
+        console.log("[home] Chat messages loaded", { count: data.length });
+        setChat(data);
+      })
+      .catch((error) => {
+        console.error("[home] Chat load failed, using fallback", { error });
+        setChat(fallbackChat);
+      });
+  }, []);
+
+  useLayoutEffect(() => {
+    const node = variantViewportRef.current;
+    if (!node) {
+      console.warn("[home] Variant viewport ref is not available yet");
+      return;
+    }
+
+    const updateWidth = () => {
+      const width = node.clientWidth;
+      console.log("[home] Variant viewport width updated", { width });
+      setVariantSlideWidth(width);
+    };
+
+    updateWidth();
+
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(node);
+
+    return () => observer.disconnect();
   }, []);
 
   const progress = useMemo(() => {
@@ -38,12 +93,14 @@ export default function Home() {
   );
 
   function toggleSituation(id: string) {
+    console.log("[home] Toggling situation", { id });
     setSituations((current) =>
       current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
     );
   }
 
   async function saveWorkbook() {
+    console.log("[home] Saving workbook session", { name, version, situations, progress });
     setIsSaving(true);
     const payload: SessionPayload = {
       name,
@@ -57,9 +114,12 @@ export default function Home() {
 
     try {
       const session = await api.createSession(payload);
+      console.log("[home] Session created", { sessionId: session.id });
       const nextSummary = await api.getSummary(session.id);
+      console.log("[home] Session summary loaded", { sessionId: session.id, title: nextSummary.title });
       setSummary(nextSummary);
-    } catch {
+    } catch (error) {
+      console.error("[home] Session save failed, building local summary", { error });
       setSummary(buildLocalSummary(payload, workbook));
     } finally {
       setIsSaving(false);
@@ -68,22 +128,28 @@ export default function Home() {
 
   async function submitChat(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!chatMessage.trim()) return;
+    if (!chatMessage.trim()) {
+      console.warn("[home] Chat submit ignored because message is empty");
+      return;
+    }
 
     const optimistic: ChatMessage = {
       id: `local-${Date.now()}`,
-      author: name || "Гость",
+      author: name || "Guest",
       message: chatMessage,
       created_at: new Date().toISOString(),
     };
 
+    console.log("[home] Submitting chat message", { author: optimistic.author, messageLength: chatMessage.length });
     setChat((current) => [...current, optimistic]);
     setChatMessage("");
 
     try {
       const saved = await api.postChat(optimistic.author, optimistic.message);
+      console.log("[home] Chat message saved", { messageId: saved.id });
       setChat((current) => current.map((item) => (item.id === optimistic.id ? saved : item)));
-    } catch {
+    } catch (error) {
+      console.error("[home] Chat message save failed, keeping optimistic message", { error });
       setChat((current) => current);
     }
   }
@@ -98,31 +164,44 @@ export default function Home() {
           </div>
           <div className="topbarActions">
             <Link className="topbarGift" href="/onboarding/gift">
-              Подарить
+              Gift it
             </Link>
-            <Link href="/onboarding/0">Начать</Link>
+            <Link href="/onboarding/0">Start</Link>
           </div>
         </nav>
 
-        <div className="heroCenter">
-          <h1>{workbook.headline}</h1>
-          <p className="lead">
-            Через роли, сценарии жизни, состояния и предметы ты соберёшь пространство, которое
-            будет отражать тебя и поддерживать жизнь, которую ты хочешь жить.
-          </p>
-          <div className="heroActions">
-            <Link className="heroCta" href="/onboarding/0">
-              Начать исследование
-              <ArrowRight size={18} />
-            </Link>
-          </div>
-          <div className="methodLine">
-            <Sparkles size={18} aria-hidden="true" />
+        <div className="heroStage">
+          <div className="methodLine" aria-label="Workbook method">
             <ul className="methodSteps">
               {workbook.method.split(" -> ").map((step, index) => (
                 <li key={`${step}-${index}`}>{step}</li>
               ))}
             </ul>
+          </div>
+
+          <div className="heroVisual">
+            <Image
+              src="/hero-visual.png"
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 640px) 72vw, 320px"
+              className="heroVisualImage"
+            />
+          </div>
+        </div>
+
+        <div className="heroCenter">
+          <h1>{workbook.headline}</h1>
+          <p className="lead">
+            Through roles, life scenarios, states, and objects you will build a space that reflects
+            you and supports the life you want to live.
+          </p>
+          <div className="heroActions">
+            <Link className="heroCta" href="/onboarding/0">
+              Start exploring
+              <ArrowRight size={18} />
+            </Link>
           </div>
         </div>
       </section>
@@ -139,8 +218,8 @@ export default function Home() {
 
       <section className="band situationsBand" id="situations">
         <div className="sectionTitle">
-          <p>В каких ситуациях поможет</p>
-          <h2>Почему выбирают этот воркбук</h2>
+          <p>When it helps</p>
+          <h2>Why people choose this workbook</h2>
         </div>
         <div className="situationsGrid">
           {workbook.situations.map((item) => (
@@ -161,16 +240,19 @@ export default function Home() {
 
       <section className="variantsBand" id="variants">
         <div className="sectionTitle">
-          <p>Варианты воркбука</p>
+          <p>Workbook versions</p>
           <h2>{workbookVariants[activeVariantIndex].headline}</h2>
         </div>
-        <div className="variantTabs" role="tablist" aria-label="Версии воркбука">
+        <div className="variantTabs" role="tablist" aria-label="Workbook versions">
           {workbookVariants.map((item) => (
             <button
               aria-selected={version === item.id}
               className={version === item.id ? "variantTab active" : "variantTab"}
               key={item.id}
-              onClick={() => setVersion(item.id)}
+              onClick={() => {
+                console.log("[home] Variant tab selected", { version: item.id });
+                setVersion(item.id);
+              }}
               role="tab"
               type="button"
             >
@@ -179,22 +261,32 @@ export default function Home() {
             </button>
           ))}
         </div>
-        <div className="variantViewport">
+        <div
+          className="variantViewport"
+          ref={variantViewportRef}
+          style={
+            variantSlideWidth
+              ? ({ "--variant-slide-width": `${variantSlideWidth}px` } as React.CSSProperties)
+              : undefined
+          }
+        >
           <div
             className="variantTrack"
-            style={{ transform: `translateX(-${activeVariantIndex * 100}%)` }}
+            style={{
+              transform: `translateX(-${activeVariantIndex * variantSlideWidth}px)`,
+            }}
           >
             {workbookVariants.map((item) => (
               <article className="variantScreen" key={item.id}>
                 <div className="variantCopy">
                   <span>{item.kicker}</span>
                   <h3>{item.title}</h3>
-                  <p>{item.description}</p>
                   <div className="variantQuestions">
                     {item.questions.map((question) => (
                       <em key={question}>{question}</em>
                     ))}
                   </div>
+                  <p>{item.description}</p>
                 </div>
                 <div className="variantCard" aria-hidden="true">
                   <div className="phoneTop" />
@@ -206,7 +298,7 @@ export default function Home() {
                     ))}
                   </div>
                   <Link className="primaryButton" href="/onboarding/14">
-                    Оплатить
+                    Pay
                   </Link>
                 </div>
               </article>
@@ -217,8 +309,8 @@ export default function Home() {
 
       <section className="howLinkedBand" id="how-linked">
         <div className="sectionTitle">
-          <p>Как это работает</p>
-          <h2>Как всё связано</h2>
+          <p>How it works</p>
+          <h2>How it all connects</h2>
         </div>
         <div className="linkFlow">
           {connectionSteps.map((item, index) => (
@@ -233,13 +325,13 @@ export default function Home() {
 
       <section className="testimonialsBand" id="testimonials">
         <div className="sectionTitle">
-          <p>Отзывы</p>
-          <h2>Любят те, кто уже пересобрал пространство под себя</h2>
+          <p>Testimonials</p>
+          <h2>Loved by people who reshaped their space around themselves</h2>
         </div>
         <div className="testimonialsGrid">
           {testimonials.map((item) => (
             <article className="testimonialCard" key={item.name}>
-              <div className="stars" aria-label="5 из 5">
+              <div className="stars" aria-label="5 out of 5">
                 {Array.from({ length: 5 }).map((_, index) => (
                   <Star fill="currentColor" key={index} size={16} />
                 ))}
@@ -257,12 +349,10 @@ export default function Home() {
         </div>
       </section>
 
-
-
       {summary && (
         <section className="resultBand">
           <div>
-            <p className="eyebrow">Результат прохождения</p>
+            <p className="eyebrow">Workbook result</p>
             <h2>{summary.title}</h2>
             <p>{summary.core_question}</p>
           </div>
@@ -280,7 +370,7 @@ export default function Home() {
       <section className="communityBand" id="community">
         <div className="sectionTitle">
           <p>Community</p>
-          <h2>Люди, которые изменили своё пространство</h2>
+          <h2>People who changed their space</h2>
         </div>
         <div className="postsGrid">
           {posts.map((post) => (
@@ -289,7 +379,7 @@ export default function Home() {
                 <div className="postAvatar">{post.author[0]}</div>
                 <div>
                   <strong>{post.author}</strong>
-                  <span>Telegram · 2 ч назад</span>
+                  <span>Telegram · 2h ago</span>
                 </div>
               </div>
               <p>{post.title}</p>
@@ -299,11 +389,11 @@ export default function Home() {
         </div>
         <div className="channelInvite">
           <div>
-            <p>Присоединяйся к нашему Telegram-каналу</p>
-            <strong>Смотри, как люди меняют своё пространство под себя</strong>
+            <p>Join our Telegram channel</p>
+            <strong>See how people reshape their space around themselves</strong>
           </div>
           <a className="primaryButton" href="https://t.me/space_self" target="_blank" rel="noreferrer">
-            В канал
+            Join channel
           </a>
         </div>
       </section>
@@ -311,12 +401,12 @@ export default function Home() {
       <section className="faqBand" id="faq">
         <div className="faqIntro">
           <p className="eyebrow">FAQ</p>
-          <h2>Часто задаваемые вопросы</h2>
+          <h2>Frequently asked questions</h2>
           <p>
-            Если ты пока не уверен, с чего начать, эти ответы помогут понять формат воркбука и
-            выбрать первый шаг.
+            If you are not sure where to start, these answers explain the workbook format and help
+            you choose a first step.
           </p>
-          <Link href="/onboarding/0">Начать воркбук</Link>
+          <Link href="/onboarding/0">Start the workbook</Link>
         </div>
         <div className="faqList">
           {faqItems.map((item) => {
@@ -338,7 +428,7 @@ export default function Home() {
                   type="button"
                 >
                   <span>
-                    {item.featured && <em>важно</em>}
+                    {item.featured && <em>important</em>}
                     {item.question}
                   </span>
                   <Plus size={20} />
@@ -356,8 +446,8 @@ export default function Home() {
         <div className="footerBrand">
           <strong>{workbook.brand}</strong>
           <p>
-            Digital workbook для тех, кто хочет начать менять дом с понимания себя,
-            а не с чужих картинок.
+            A digital workbook for people who want to change their home by understanding
+            themselves—not by copying someone else&apos;s pictures.
           </p>
         </div>
         <nav className="footerLinks" aria-label="Footer navigation">
@@ -382,90 +472,90 @@ export default function Home() {
 }
 
 const resultLabels: Record<string, string> = {
-  roles: "Роли",
-  scenarios: "Сценарии",
-  states: "Состояния",
-  objects: "Предметы и среда",
-  plan: "План",
+  roles: "Roles",
+  scenarios: "Scenarios",
+  states: "States",
+  objects: "Objects and environment",
+  plan: "Plan",
 };
 
 const workbookVariants = [
   {
     id: "system" as const,
-    tab: "Версия для мужчин",
-    kicker: "роль -> действие -> результат",
-    headline: "Две версии воркбука под разные способы принятия решений",
-    title: "Мужчины начинают с вопросов",
+    tab: "Men's version",
+    kicker: "role -> action -> outcome",
+    headline: "Two workbook versions for different decision styles",
+    title: "Men start with questions",
     description:
-      "Эта версия помогает смотреть на пространство как на систему: какие цели оно должно поддерживать, какие сценарии жизни должны происходить здесь и как сделать среду понятной, эффективной и работающей на результат.",
-    model: "пространство как система",
-    result: "роль -> действие -> результат",
+      "This version helps you see space as a system: which goals it should support, which life scenarios should happen here, and how to make the environment clear, effective, and outcome-driven.",
+    model: "space as a system",
+    result: "role -> action -> outcome",
     questions: [
-      "какие цели должно поддерживать пространство",
-      "какие сценарии жизни должны происходить здесь",
-      "как сделать среду более эффективной",
+      "what goals does the space solve",
+      "which life scenarios matter to me",
+      "how to make the environment more effective",
     ],
-    points: ["цели", "сценарии", "результат"],
+    points: ["goals", "scenarios", "outcome"],
   },
   {
     id: "atmosphere" as const,
-    tab: "Версия для женщин",
-    kicker: "состояние -> атмосфера -> опыт",
-    headline: "Две версии воркбука под разные способы чувствовать дом",
-    title: "Женщины начинают с вопросов",
+    tab: "Women's version",
+    kicker: "state -> atmosphere -> experience",
+    headline: "Two workbook versions for different ways of feeling at home",
+    title: "Women start with questions",
     description:
-      "Эта версия помогает идти от ощущений: какое состояние хочется чувствовать дома, какие отношения и атмосфера должны возникать в пространстве и как сделать так, чтобы дом отражал меня и давал ощущение себя.",
-    model: "пространство как проживание",
-    result: "состояние -> атмосфера -> проживание опыта",
+      "This version starts from feeling: what state you want at home, what relationships and atmosphere should emerge in the space, and how to make home reflect you and feel like yours.",
+    model: "space as lived experience",
+    result: "state -> atmosphere -> lived experience",
     questions: [
-      "какое состояние хочется чувствовать дома",
-      "какая атмосфера должна возникать",
-      "как пространство отражает меня",
+      "what state do I want to feel at home",
+      "what atmosphere should emerge",
+      "how does the space reflect me",
     ],
-    points: ["состояние", "атмосфера", "опыт"],
+    points: ["state", "atmosphere", "experience"],
   },
 ];
 
 const connectionSteps = [
   {
-    title: "Ты и роли",
-    body: "Сначала пространство собирается не от стиля, а от тебя: кто ты в этом месте, как живёшь каждый день и какие роли дом должен поддерживать.",
+    title: "You and roles",
+    body: "Space is built from you first—not from style: who you are in this place, how you live every day, and which roles home should support.",
   },
   {
-    title: "Сценарии",
-    body: "Потом ты смотришь на реальные повторяющиеся сценарии: где работаешь, отдыхаешь, восстанавливаешься, общаешься, остаёшься наедине с собой.",
+    title: "Scenarios",
+    body: "Then you look at real repeating scenarios: where you work, rest, recover, connect, and spend time with yourself.",
   },
   {
-    title: "Состояния",
-    body: "Для каждого сценария важно понять, какое состояние он должен включать: фокус, спокойствие, энергию, устойчивость, близость или ощущение своего места.",
+    title: "States",
+    body: "For each scenario it helps to name the state it should activate: focus, calm, energy, steadiness, closeness, or belonging.",
   },
   {
-    title: "Вещи и зоны",
-    body: "Дальше вещи, свет, порядок, маршруты и расстановка становятся инструментами: они либо поддерживают выбранные состояния и сценарии, либо забирают силы.",
+    title: "Objects and zones",
+    body: "Then objects, light, order, routes, and layout become tools: they either support the chosen states and scenarios—or drain you.",
   },
 ];
 
 const testimonials = [
   {
-    initials: "АК",
-    name: "Алина К.",
-    role: "переезд в новую квартиру",
+    initials: "AK",
+    name: "Alina K.",
+    role: "moving into a new apartment",
     quote:
-      "Я думала, что мне нужен дизайнер и большой ремонт. После воркбука стало ясно, какие сценарии мне важны, и первые изменения я сделала за выходные.",
+      "I thought I needed a designer and a big renovation. After the workbook I knew which scenarios mattered, and I made the first changes over one weekend.",
   },
   {
-    initials: "МР",
-    name: "Марк Р.",
-    role: "удалённая работа дома",
+    initials: "MR",
+    name: "Mark R.",
+    role: "working remotely from home",
     quote:
-      "Самым полезным оказалось смотреть на дом через роли и состояния. Рабочее место перестало захватывать всю квартиру, а вечер снова стал вечером.",
+      "The most useful part was looking at home through roles and states. Work stopped taking over the whole apartment, and evenings felt like evenings again.",
   },
   {
-    initials: "НС",
-    name: "Ника С.",
-    role: "пространство для контента и гостей",
+    initials: "NS",
+    name: "Nika S.",
+    role: "space for content and guests",
     quote:
-      "Воркбук помог собрать не красивую картинку из Pinterest, а пространство, которое правда похоже на меня. Гости теперь сразу это считывают.",
+      "The workbook helped me build a space that actually feels like me—not a Pinterest board. Guests pick up on it immediately now.",
   },
 ];
 
@@ -473,39 +563,39 @@ const faqItems = [
   {
     id: "why-it-works",
     featured: true,
-    question: "Почему это работает",
+    question: "Why this works",
     answer:
-      "Наш мозг постоянно считывает окружающую среду. Мы не просто видим предметы - мы мгновенно приписываем им смысл, функцию и возможность действия с ними. В психологии восприятия есть понятие affordance - «возможность действия», которую предмет или среда как будто предлагают человеку. Если пространство не настроено осознанно - оно будет включать человека случайно. Из того, что есть. А не из того, что нужно. Через: роли -> сценарии жизни -> состояния -> предметы ты соберешь пространство, которое будут отражать тебя и поддерживать ту жизнь, которой ты хочешь жить.",
+      "Our brain constantly reads the environment. We do not just see objects—we instantly assign meaning, function, and possible action to them. In perception psychology this is affordance: the action a thing or space seems to offer. If space is not shaped intentionally, it activates you randomly—from what is there, not from what you need. Through roles -> life scenarios -> states -> objects, you build a space that reflects you and supports the life you want.",
   },
   {
     id: "what-is",
-    question: "Что я получу после прохождения воркбука?",
+    question: "What do I get after finishing the workbook?",
     answer:
-      "Ты соберёшь личную концепцию пространства: роли, сценарии, состояния, предметы и первые действия, которые можно сделать без хаотичного поиска референсов.",
+      "You build a personal space concept: roles, scenarios, states, objects, and first actions you can take without chaotic reference hunting.",
   },
   {
     id: "renovation",
-    question: "Это только для тех, кто делает ремонт?",
+    question: "Is this only for people doing a renovation?",
     answer:
-      "Нет. Воркбук подходит и для ремонта, и для мягкой пересборки дома: перестановки, хранения, света, рабочих зон и предметов, которые поддерживают нужный образ жизни.",
+      "No. The workbook works for renovation and for a softer reset: rearranging, storage, light, work zones, and objects that support the life you want.",
   },
   {
     id: "designer",
-    question: "Можно ли использовать результат с дизайнером?",
+    question: "Can I use the result with a designer?",
     answer:
-      "Да. Итог воркбука можно передать дизайнеру как более честный бриф: не только стиль и комнаты, а то, как ты живёшь и что пространство должно включать.",
+      "Yes. The workbook output becomes a more honest brief—not only style and rooms, but how you live and what the space should activate.",
   },
   {
     id: "time",
-    question: "Сколько времени занимает заполнение?",
+    question: "How long does it take to complete?",
     answer:
-      "Можно пройти за один спокойный вечер или возвращаться к вопросам постепенно. Лучше не торопиться: ответы становятся точнее, когда ты наблюдаешь за своим домом в реальной жизни.",
+      "You can finish in one calm evening or return to the questions over time. Answers get sharper when you observe your home in real life instead of rushing.",
   },
   {
     id: "budget",
-    question: "Нужен ли бюджет на большие изменения?",
+    question: "Do I need budget for big changes?",
     answer:
-      "Нет. Первый результат часто появляется после небольших шагов: убрать лишнее, изменить сценарии света, пересобрать хранение или выделить одну важную зону.",
+      "No. The first result often comes from small steps: remove what is extra, change light scenarios, rebuild storage, or define one important zone.",
   },
 ];
 
@@ -513,19 +603,19 @@ const footerColumns = [
   {
     title: "Workbook",
     links: [
-      { label: "Начать", href: "#workbook" },
-      { label: "Ситуации", href: "#situations" },
-      { label: "Варианты", href: "#variants" },
-      { label: "Как связано", href: "#how-linked" },
+      { label: "Start", href: "#workbook" },
+      { label: "Situations", href: "#situations" },
+      { label: "Versions", href: "#variants" },
+      { label: "How it connects", href: "#how-linked" },
       { label: "FAQ", href: "#faq" },
     ],
   },
   {
     title: "Community",
     links: [
-      { label: "Истории", href: "#community" },
+      { label: "Stories", href: "#community" },
       { label: "Live chat", href: "#chat" },
-      { label: "Отзывы", href: "#testimonials" },
+      { label: "Testimonials", href: "#testimonials" },
     ],
   },
   {
@@ -543,13 +633,13 @@ function buildLocalSummary(payload: SessionPayload, workbook: Workbook) {
   const selectedVersion = workbook.versions.find((item) => item.id === payload.version);
 
   return {
-    title: "Личная концепция пространства",
+    title: "Personal space concept",
     version: selectedVersion?.title ?? "",
-    core_question: "Какую жизнь я хочу жить в этом пространстве?",
-    roles: answerMap.roles || "Роли пока не заполнены",
-    scenarios: answerMap.scenarios || "Сценарии пока не заполнены",
-    states: answerMap.states || "Состояния пока не заполнены",
-    objects: answerMap.objects || "Предметы пока не заполнены",
-    plan: answerMap.plan || "План пока не заполнен",
+    core_question: "What life do I want to live in this space?",
+    roles: answerMap.roles || "Roles not filled in yet",
+    scenarios: answerMap.scenarios || "Scenarios not filled in yet",
+    states: answerMap.states || "States not filled in yet",
+    objects: answerMap.objects || "Objects not filled in yet",
+    plan: answerMap.plan || "Plan not filled in yet",
   };
 }

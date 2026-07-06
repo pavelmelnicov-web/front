@@ -41,7 +41,12 @@ export type SessionPayload = {
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_URL}${path}`, {
+  const method = options?.method ?? "GET";
+  const url = `${API_URL}${path}`;
+
+  console.log("[api] Request started", { method, url, hasBody: Boolean(options?.body) });
+
+  const response = await fetch(url, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -50,11 +55,21 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     cache: "no-store",
   });
 
+  console.log("[api] Response received", {
+    method,
+    url,
+    status: response.status,
+    ok: response.ok,
+  });
+
   if (!response.ok) {
+    console.error("[api] Request failed", { method, url, status: response.status });
     throw new Error(`API request failed: ${response.status}`);
   }
 
-  return response.json() as Promise<T>;
+  const data = (await response.json()) as T;
+  console.log("[api] Request succeeded", { method, url });
+  return data;
 }
 
 export const api = {

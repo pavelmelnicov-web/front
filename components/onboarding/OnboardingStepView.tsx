@@ -30,8 +30,18 @@ export function OnboardingStepView({ flow, step }: OnboardingStepViewProps) {
   const [workbook, setWorkbook] = useState<Workbook>(fallbackWorkbook);
 
   useEffect(() => {
-    api.getWorkbook().then(setWorkbook).catch(() => setWorkbook(fallbackWorkbook));
-  }, []);
+    console.log("[onboarding] Loading workbook data for step view", { flow, step });
+    api
+      .getWorkbook()
+      .then((data) => {
+        console.log("[onboarding] Workbook loaded successfully", { flow, step, headline: data.headline });
+        setWorkbook(data);
+      })
+      .catch((error) => {
+        console.error("[onboarding] Workbook load failed, using fallback", { flow, step, error });
+        setWorkbook(fallbackWorkbook);
+      });
+  }, [flow, step]);
 
   const isValidStep = flow === "gift" ? isGiftOnboardingStep(step) : isRegularOnboardingStep(step);
 
@@ -56,8 +66,10 @@ export function OnboardingStepView({ flow, step }: OnboardingStepViewProps) {
   }
 
   function handleBack() {
+    console.log("[onboarding] Back button clicked", { flow, step });
     const previousStep = getPreviousOnboardingStep(flow, step);
     if (previousStep === null) {
+      console.log("[onboarding] Leaving onboarding to home", { flow, step });
       router.push("/");
       return;
     }
@@ -66,25 +78,30 @@ export function OnboardingStepView({ flow, step }: OnboardingStepViewProps) {
   }
 
   function handleNext() {
+    console.log("[onboarding] Next button clicked", { flow, step, canContinue });
     if (!canContinue) {
+      console.warn("[onboarding] Continue blocked by validation", { flow, step, state });
       return;
     }
 
     if (isOnboardingFinishStep(flow, step)) {
+      console.log("[onboarding] Finish step reached, redirecting to workbook", { flow, step });
       router.push("/#workbook");
       return;
     }
 
     const nextStep = getNextOnboardingStep(flow, step);
     if (nextStep === null) {
-      console.error("Next onboarding step is missing:", { flow, step });
+      console.error("[onboarding] Next onboarding step is missing", { flow, step });
       return;
     }
 
+    console.log("[onboarding] Navigating to next step", { flow, step, nextStep });
     router.push(getOnboardingPath(flow, nextStep));
   }
 
   function handleClose() {
+    console.log("[onboarding] Close button clicked", { flow, step });
     router.push("/");
   }
 
@@ -103,8 +120,8 @@ export function OnboardingStepView({ flow, step }: OnboardingStepViewProps) {
       <section className="onboardingCard onboardingCardPage">
         <div className="onboardingHeader">
           <div>
-            <span>Онбординг</span>
-            <strong>{flow === "gift" ? "Подарить воркбук" : "Начни исследование"}</strong>
+            <span>Onboarding</span>
+            <strong>{flow === "gift" ? "Gift the workbook" : "Start exploring"}</strong>
           </div>
           <button type="button" onClick={handleClose} aria-label="Close onboarding">
             ✕

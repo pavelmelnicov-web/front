@@ -1,18 +1,18 @@
 export const friendSituationCopy: Record<string, { title: string; description: string }> = {
   "new-stage": {
-    title: "Друг переезжает или начинает новый этап жизни",
-    description: "У него старое пространство уже не подходит — нужно понять, каким должно быть новое.",
+    title: "Your friend is moving or starting a new chapter",
+    description: "Their old space no longer fits—they need clarity on what the new one should be.",
   },
   "self-expression": {
-    title: "Друг хочет, чтобы пространство отражало его",
-    description: "Ему важно, чтобы дом говорил о нём и поддерживал его стиль жизни.",
+    title: "Your friend wants their space to reflect them",
+    description: "It matters that home speaks about them and supports how they live.",
   },
   "renovation-fear": {
-    title: "Друг хочет ремонт, но боится ошибиться",
-    description: "Ремонт дорогой, и он ищет уверенность в стиле, потребностях и результате.",
+    title: "Your friend wants a renovation but fears getting it wrong",
+    description: "Renovations are expensive, and they want confidence in style, needs, and outcome.",
   },
   "no-designer-budget": {
-    title: "У друга нет бюджета на дизайнера",
-    description: "Он хочет понять, что можно изменить уже сейчас без больших затрат.",
+    title: "Your friend does not have budget for a designer",
+    description: "They want to know what can change now without a big spend.",
   },
 };

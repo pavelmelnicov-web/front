@@ -29,22 +29,22 @@ export function OnboardingStepContent({
       case 0:
         return (
           <div>
-            <h2>Расскажи немного о себе</h2>
-            <p>Имя и возраст помогут сделать квиз персональным.</p>
+            <h2>Tell us a little about yourself</h2>
+            <p>Your name and age help personalize the quiz.</p>
             <label>
-              Имя
+              Name
               <input
                 value={state.name}
                 onChange={(event) => onUpdate({ name: event.target.value })}
-                placeholder="Ваше имя"
+                placeholder="Your name"
               />
             </label>
             <label>
-              Возраст
+              Age
               <input
                 value={state.age}
                 onChange={(event) => onUpdate({ age: event.target.value })}
-                placeholder="Ваш возраст"
+                placeholder="Your age"
                 inputMode="numeric"
               />
             </label>
@@ -53,19 +53,19 @@ export function OnboardingStepContent({
       case 1:
         return (
           <div>
-            <h2>Пока другие откладывают, ты движешься вперед</h2>
+            <h2>While others postpone, you move forward</h2>
             <div className="onboardingStats">
               <div>
                 <strong>72%</strong>
-                <p>людей так и не начинают ремонт</p>
+                <p>of people never start a renovation</p>
               </div>
               <div>
                 <strong>58%</strong>
-                <p>не довольны результатом ремонта</p>
+                <p>are unhappy with renovation results</p>
               </div>
               <div>
                 <strong>65%</strong>
-                <p>начинают изменения без четкого плана</p>
+                <p>start changes without a clear plan</p>
               </div>
             </div>
           </div>
@@ -73,8 +73,8 @@ export function OnboardingStepContent({
       case 2:
         return (
           <div>
-            <h2>В какой ситуации вы находитесь?</h2>
-            <p>Выбери одну категорию, чтобы мы поняли твой старт.</p>
+            <h2>What situation are you in?</h2>
+            <p>Pick one category so we understand your starting point.</p>
             <div className="onboardingOptions">
               {workbook.situations.map((item) => (
                 <button
@@ -93,8 +93,8 @@ export function OnboardingStepContent({
       case 3:
         return (
           <div>
-            <h2>Выбери точные сигналы</h2>
-            <p>Какие из этих ситуаций лучше всего описывают ваш контекст?</p>
+            <h2>Choose the specific signals</h2>
+            <p>Which of these best describe your context?</p>
             <div className="onboardingOptions">
               {selectedSituation?.examples.map((example) => (
                 <button
@@ -112,13 +112,13 @@ export function OnboardingStepContent({
       case 4:
         return (
           <div>
-            <h2>Для кого это будет удобно</h2>
-            <p>Выбери вариант, который звучит ближе.</p>
+            <h2>Who is this best for</h2>
+            <p>Choose the option that feels closest.</p>
             <div className="onboardingOptions">
               {[
-                { value: "male", label: "Для мужчины" },
-                { value: "female", label: "Для женщины" },
-                { value: "other", label: "Мне важна нейтральная версия" },
+                { value: "male", label: "For men" },
+                { value: "female", label: "For women" },
+                { value: "other", label: "I prefer a neutral version" },
               ].map((item) => (
                 <button
                   type="button"
@@ -137,35 +137,34 @@ export function OnboardingStepContent({
       case 5:
         return (
           <div>
-            <h2>Понимаем твой контекст</h2>
+            <h2>We understand your context</h2>
             <p>
               {state.name
-                ? `${state.name}, ты сейчас переходишь к новому этапу жизни и меняешь своё пространство.`
-                : "Похоже, ты сейчас переходишь к новому этапу жизни и меняешь своё пространство."}
+                ? `${state.name}, you are moving into a new chapter and reshaping your space.`
+                : "It looks like you are moving into a new chapter and reshaping your space."}
             </p>
             <p>
-              Удалённая работа влияет на дом: он должен быть и рабочим, и уютным. Сейчас важно
-              сделать пространство таким, чтобы оно поддерживало твой ритм и помогало
-              сосредоточиться.
+              Remote work changes what home needs to do: it has to support both work and rest. Now
+              is the time to shape a space that supports your rhythm and helps you focus.
             </p>
           </div>
         );
       case 6:
         return (
           <div>
-            <h2>Как будет происходить</h2>
+            <h2>How it will work</h2>
             <div className="onboardingCards">
               <article>
-                <strong>Будут вопросы</strong>
-                <p>Мы спросим о вашем ритме, целях и том, как вы живете.</p>
+                <strong>There will be questions</strong>
+                <p>We will ask about your rhythm, goals, and how you live.</p>
               </article>
               <article>
-                <strong>Можно отправлять фото</strong>
-                <p>Покажите текущее пространство и детали, которые вам важны.</p>
+                <strong>You can send photos</strong>
+                <p>Show your current space and the details that matter to you.</p>
               </article>
               <article>
-                <strong>Можно записывать голосовые</strong>
-                <p>Расскажите, как вам комфортнее — текстом или голосом.</p>
+                <strong>You can record voice notes</strong>
+                <p>Share however feels easier—text or voice.</p>
               </article>
             </div>
           </div>
@@ -173,60 +172,59 @@ export function OnboardingStepContent({
       case 7:
         return (
           <div>
-            <h2>Как заполнять</h2>
-            <p>Сначала сядь в specialty кофейне и запиши первые мысли о доме и своей жизни.</p>
+            <h2>How to fill it out</h2>
+            <p>Start at a specialty coffee shop and capture your first thoughts about home and your life.</p>
           </div>
         );
       case 8:
         return (
           <div>
-            <h2>Как заполнять</h2>
+            <h2>How to fill it out</h2>
             <p>
-              На выходной день расслабься в постели и представь, как хочешь, чтобы дом работал для
-              тебя.
+              On a weekend morning, relax in bed and imagine how you want home to work for you.
             </p>
           </div>
         );
       case 9:
         return (
           <div>
-            <h2>Как заполнять</h2>
-            <p>Закрепи окончательные мысли позже, когда идеи станут яснее и не нужно спешить.</p>
+            <h2>How to fill it out</h2>
+            <p>Finalize your thoughts later, when ideas are clearer and there is no rush.</p>
           </div>
         );
       case 10:
         return (
           <div>
-            <h2>Поймешь лучше себя</h2>
-            <p>На этом этапе ты увидишь, что важно именно тебе и зачем ты меняешь пространство.</p>
+            <h2>You will understand yourself better</h2>
+            <p>At this stage you will see what matters to you and why you are changing your space.</p>
           </div>
         );
       case 11:
         return (
           <div>
-            <h2>Определишься, нужен ли ремонт или перестановка</h2>
-            <p>Мы поможем понять, где достаточно перестановки, а где стоит задуматься о ремонте.</p>
+            <h2>You will know if you need a renovation or a reset</h2>
+            <p>We help you see where rearranging is enough and where renovation is worth considering.</p>
           </div>
         );
       case 12:
         return (
           <div>
-            <h2>Получишь информацию для дизайнера</h2>
-            <p>В результате появится понятный контекст, который можно передать специалисту.</p>
+            <h2>You will get material for a designer</h2>
+            <p>The result becomes clear context you can hand to a specialist.</p>
           </div>
         );
       case 13:
         return (
           <div>
-            <h2>Твоё пространство будет отражать тебя</h2>
-            <p>Мы соберем всё так, чтобы дом начал работать на твой ритм и ощущения.</p>
+            <h2>Your space will reflect you</h2>
+            <p>We bring it together so home starts working for your rhythm and how you feel.</p>
           </div>
         );
       case 14:
         return (
           <PaywallStep
-            title="Оплата доступа к воркбуку"
-            description="Введите данные карты, чтобы перейти к исследованию пространства."
+            title="Workbook access payment"
+            description="Enter your card details to start exploring your space."
             state={state}
             onUpdate={onUpdate}
           />
@@ -240,10 +238,10 @@ export function OnboardingStepContent({
     case 20:
       return (
         <div>
-          <h2>Воркбук — хороший и глубокий подарок</h2>
+          <h2>The workbook is a thoughtful gift</h2>
           <p>
-            Мы отправим красивое письмо на почту или в одну из социальных сетей вашему другу. Можно
-            сделать упоминание от вашего имени или отправить анонимно.
+            We will send a beautiful message by email or social DM. You can mention your name or
+            send it anonymously.
           </p>
           <div className="onboardingOptions">
             <button
@@ -251,23 +249,23 @@ export function OnboardingStepContent({
               className={state.giftMention === "mention" ? "active" : ""}
               onClick={() => onUpdate({ giftMention: "mention" })}
             >
-              С упоминанием вас
+              With your name
             </button>
             <button
               type="button"
               className={state.giftMention === "anonymous" ? "active" : ""}
               onClick={() => onUpdate({ giftMention: "anonymous" })}
             >
-              Без упоминания
+              Anonymous
             </button>
           </div>
           {state.giftMention === "mention" && (
             <label>
-              Как вы хотите представить себя?
+              How should we introduce you?
               <input
                 value={state.giftMentionText}
                 onChange={(event) => onUpdate({ giftMentionText: event.target.value })}
-                placeholder="Например: Твой друг из архитектуры"
+                placeholder="For example: Your friend from architecture school"
               />
             </label>
           )}
@@ -276,8 +274,8 @@ export function OnboardingStepContent({
     case 21:
       return (
         <div>
-          <h2>В какой ситуации находится ваш друг?</h2>
-          <p>Выберите один вариант, чтобы письмо было точнее.</p>
+          <h2>What situation is your friend in?</h2>
+          <p>Pick one option so the message feels more precise.</p>
           <div className="onboardingOptions">
             {workbook.situations.map((item) => {
               const friendText = friendSituationCopy[item.id] ?? {
@@ -303,14 +301,14 @@ export function OnboardingStepContent({
     case 22:
       return (
         <div>
-          <h2>Куда отправить письмо и ссылку?</h2>
-          <p>Укажите email или аккаунт в социальной сети, чтобы мы отправили подарок.</p>
+          <h2>Where should we send the message and link?</h2>
+          <p>Enter an email or social handle so we can deliver the gift.</p>
           <label>
-            Email или социальный аккаунт
+            Email or social handle
             <input
               value={state.giftContact}
               onChange={(event) => onUpdate({ giftContact: event.target.value })}
-              placeholder="example@domain.com или @username"
+              placeholder="example@domain.com or @username"
             />
           </label>
         </div>
@@ -318,8 +316,8 @@ export function OnboardingStepContent({
     case 23:
       return (
         <PaywallStep
-          title="Оплата подарка"
-          description="Введите данные карты, чтобы отправить доступ вашему другу."
+          title="Gift payment"
+          description="Enter your card details to send access to your friend."
           state={state}
           onUpdate={onUpdate}
         />
@@ -327,10 +325,10 @@ export function OnboardingStepContent({
     case 24:
       return (
         <div>
-          <h2>Подарок готов</h2>
+          <h2>Your gift is ready</h2>
           <p>
-            Мы подготовили письмо для вашего друга. После оплаты он получит доступ к воркбуку и
-            красивую ссылку.
+            We prepared a message for your friend. After payment they will get workbook access and
+            a beautiful link.
           </p>
         </div>
       );
@@ -356,7 +354,7 @@ function PaywallStep({
       <p>{description}</p>
       <div className="paywallForm">
         <label>
-          Номер карты
+          Card number
           <input
             value={state.cardNumber}
             onChange={(event) => onUpdate({ cardNumber: formatCardNumber(event.target.value) })}
@@ -365,7 +363,7 @@ function PaywallStep({
         </label>
         <div className="paywallRow">
           <label>
-            Срок действия
+            Expiration
             <input
               value={state.cardExpiry}
               onChange={(event) => onUpdate({ cardExpiry: formatCardExpiry(event.target.value) })}
@@ -384,16 +382,16 @@ function PaywallStep({
           </label>
         </div>
         <label>
-          Имя на карте
+          Name on card
           <input
             value={state.cardName}
             onChange={(event) => onUpdate({ cardName: event.target.value })}
-            placeholder="Иван Иванов"
+            placeholder="Alex Johnson"
           />
         </label>
         <div className="paywallSummary">
-          <span>Тариф «Начать исследование»</span>
-          <strong>390 ₽</strong>
+          <span>Start Exploring plan</span>
+          <strong>$7</strong>
         </div>
       </div>
     </div>

@@ -44,19 +44,19 @@ export function getNextOnboardingStep(flow: OnboardingFlow, step: number) {
 
 export function getOnboardingNextLabel(flow: OnboardingFlow, step: number) {
   if (flow === "gift" && step === 24) {
-    return "Готово";
+    return "Done";
   }
 
   if (flow === "regular" && step === 14) {
-    return "Оплатить и перейти к воркбуку";
+    return "Pay and open the workbook";
   }
 
-  return "Дальше";
+  return "Next";
 }
 
 export function getOnboardingBackLabel(flow: OnboardingFlow, step: number) {
   const isFirstStep = flow === "gift" ? step === 20 : step === 0;
-  return isFirstStep ? "Отмена" : "Назад";
+  return isFirstStep ? "Cancel" : "Back";
 }
 
 export function isOnboardingFinishStep(flow: OnboardingFlow, step: number) {
