@@ -293,6 +293,24 @@ main {
   .heroFloatCard {
     animation: none !important;
   }
+
+  .situationSquareBackdropWrap::before,
+  .situationSquareBackdropWrap::after,
+  .situationSquare--newStage .situationSquareBackdropWrap,
+  .situationSquare--newStage .situationSquareContent::before,
+  .situationSquareBlob,
+  .situationPhotoLayer,
+  .situationPhotoStreak,
+  .situationVisualLine,
+  .situationVisualOrb,
+  .situationVisualCard,
+  .situationSquareGrain {
+    animation: none !important;
+  }
+
+  .situationSquareBackdrop {
+    opacity: 0.55;
+  }
 }
 
 .heroFloatCover {
@@ -1056,26 +1074,24 @@ h1 {
 }
 
 .situationsBand {
-  --situations-bg: #e3e1dc;
+  --situations-bg: #f5f2ed;
   --situations-ink: #111110;
   --situations-card: #faf9f6;
   background: var(--situations-bg);
-  border-block: 1px solid rgba(17, 17, 16, 0.08);
+  border-block: 1px solid rgba(17, 17, 16, 0.1);
   overflow: hidden;
 }
 
 .situationSquare {
   position: relative;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: 14px;
+  display: block;
   aspect-ratio: 1;
   min-height: 0;
-  padding: clamp(16px, 3.2vw, 22px);
+  padding: 0;
+  overflow: hidden;
   border: 1px solid rgba(17, 17, 16, 0.12);
   border-radius: clamp(14px, 2.4vw, 18px);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), var(--situations-card));
+  background: #f4f3ef;
   color: var(--situations-ink);
   text-align: left;
   box-shadow:
@@ -1085,6 +1101,809 @@ h1 {
     border-color 0.28s ease,
     box-shadow 0.28s ease,
     transform 0.28s ease;
+}
+
+.situationSquareBackdropWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 24% 18%, rgba(188, 54, 27, 0.2), transparent 32%),
+    linear-gradient(135deg, #f8f4eb 0%, #ded6ca 100%);
+  pointer-events: none;
+}
+
+.situationSquareBackdropWrap::before,
+.situationSquareBackdropWrap::after {
+  position: absolute;
+  inset: -18%;
+  z-index: 2;
+  content: "";
+  pointer-events: none;
+}
+
+.situationSquareBackdropWrap::before {
+  background:
+    linear-gradient(90deg, rgba(96, 58, 34, 0.38) 0%, transparent 18%, transparent 62%, rgba(120, 63, 30, 0.48) 100%),
+    radial-gradient(circle at 42% 48%, rgba(245, 239, 226, 0.28), transparent 34%);
+  filter: blur(18px);
+  opacity: 0.82;
+  animation: situationWarmVeil 12s ease-in-out infinite alternate;
+  mix-blend-mode: multiply;
+}
+
+.situationSquareBackdropWrap::after {
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.28) 28%, transparent 44%),
+    linear-gradient(180deg, transparent 0%, rgba(17, 17, 16, 0.1) 52%, transparent 70%);
+  filter: blur(22px);
+  opacity: 0.58;
+  animation: situationLensSweep 9s ease-in-out infinite;
+}
+
+.situationSquareBlob {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(28px);
+  opacity: 0.9;
+  will-change: transform;
+  animation: situationBlobDrift 16s ease-in-out infinite alternate;
+}
+
+.situationSquareBlob--one {
+  top: -18%;
+  left: -16%;
+  width: 72%;
+  height: 72%;
+  background: rgba(188, 54, 27, 0.18);
+}
+
+.situationSquareBlob--two {
+  right: -14%;
+  bottom: -20%;
+  width: 68%;
+  height: 68%;
+  background: rgba(17, 17, 16, 0.14);
+  animation-duration: 19s;
+  animation-delay: -5s;
+}
+
+.situationSquareBlob--three {
+  top: 34%;
+  left: 28%;
+  width: 46%;
+  height: 46%;
+  background: rgba(210, 160, 92, 0.18);
+  animation-duration: 14s;
+  animation-delay: -9s;
+}
+
+.situationSquareBackdropWrap--v2 .situationSquareBlob--one {
+  top: 8%;
+  left: -22%;
+}
+
+.situationSquareBackdropWrap--v2 .situationSquareBlob--two {
+  right: -20%;
+  bottom: 6%;
+}
+
+.situationSquareBackdropWrap--v3 .situationSquareBlob--one {
+  top: -8%;
+  left: 18%;
+}
+
+.situationSquareBackdropWrap--v3 .situationSquareBlob--three {
+  top: 52%;
+  left: -6%;
+}
+
+@keyframes situationBlobDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(8%, -6%, 0) scale(1.08);
+  }
+
+  100% {
+    transform: translate3d(-7%, 9%, 0) scale(0.94);
+  }
+}
+
+.situationSquareBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  opacity: 0.34;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.situationPhotoScene {
+  position: absolute;
+  inset: -8%;
+  z-index: 2;
+  overflow: hidden;
+  filter: contrast(1.08) saturate(0.92);
+  transform: translate3d(0, 0, 0);
+}
+
+.situationPhotoLayer,
+.situationPhotoStreak {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  will-change: transform, opacity, filter;
+}
+
+.situationPhotoLayer {
+  border-radius: 18px;
+  box-shadow: 0 26px 70px rgba(17, 17, 16, 0.2);
+  filter: blur(8px);
+  opacity: 0.74;
+  animation: situationPhotoDrift 16s ease-in-out infinite alternate;
+}
+
+.situationPhotoLayer--back {
+  top: 8%;
+  left: -8%;
+  width: 76%;
+  height: 54%;
+  background:
+    linear-gradient(90deg, rgba(88, 77, 63, 0.7), rgba(225, 217, 202, 0.24) 46%, rgba(60, 49, 39, 0.52)),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.2) 0 7px, rgba(17, 17, 16, 0.08) 8px 12px);
+}
+
+.situationPhotoLayer--middle {
+  top: 28%;
+  right: -18%;
+  width: 82%;
+  height: 74%;
+  background:
+    radial-gradient(circle at 35% 38%, rgba(245, 237, 219, 0.42), transparent 28%),
+    linear-gradient(90deg, rgba(99, 52, 27, 0.72), rgba(155, 91, 42, 0.42) 44%, rgba(34, 29, 24, 0.4)),
+    repeating-linear-gradient(90deg, transparent 0 22px, rgba(255, 255, 255, 0.16) 23px 28px);
+  animation-duration: 18s;
+  animation-delay: -5s;
+}
+
+.situationPhotoLayer--front {
+  left: 18%;
+  bottom: -12%;
+  width: 66%;
+  height: 38%;
+  background:
+    linear-gradient(90deg, rgba(59, 49, 40, 0.54), rgba(234, 226, 211, 0.28), rgba(105, 63, 34, 0.46)),
+    repeating-linear-gradient(0deg, rgba(17, 17, 16, 0.16) 0 4px, transparent 5px 18px);
+  filter: blur(10px);
+  animation-duration: 13s;
+  animation-delay: -8s;
+}
+
+.situationPhotoStreak {
+  left: -20%;
+  width: 140%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.46);
+  filter: blur(6px);
+  opacity: 0.5;
+  animation: situationMotionStreak 4.8s ease-in-out infinite;
+}
+
+.situationPhotoStreak--one {
+  top: 24%;
+  animation-delay: -1.2s;
+}
+
+.situationPhotoStreak--two {
+  top: 56%;
+  height: 12px;
+  background: rgba(17, 17, 16, 0.16);
+  animation-duration: 5.8s;
+  animation-delay: -2.8s;
+}
+
+.situationPhotoStreak--three {
+  top: 74%;
+  height: 6px;
+  background: rgba(245, 235, 216, 0.42);
+  animation-duration: 6.6s;
+  animation-delay: -4.4s;
+}
+
+.situationVisualStage {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  opacity: 0.64;
+}
+
+.situationVisualLine,
+.situationVisualOrb,
+.situationVisualCard {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.situationVisualLine {
+  height: 1px;
+  background: rgba(17, 17, 16, 0.22);
+  transform-origin: left center;
+}
+
+.situationVisualOrb {
+  border-radius: 999px;
+  background: #bc361b;
+  box-shadow: 0 10px 30px rgba(188, 54, 27, 0.24);
+}
+
+.situationVisualCard {
+  border: 1px solid rgba(17, 17, 16, 0.16);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 18px 42px rgba(17, 17, 16, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.situationSquareBackdropWrap--move .situationVisualLine--one {
+  --route-rotation: -18deg;
+  top: 58%;
+  left: 16%;
+  width: 68%;
+  transform: rotate(-18deg);
+  animation: situationRoutePulse 4.8s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--move .situationPhotoLayer--back {
+  background:
+    linear-gradient(90deg, rgba(70, 63, 52, 0.72), rgba(220, 212, 195, 0.26) 42%, rgba(50, 43, 35, 0.54)),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.22) 0 10px, rgba(17, 17, 16, 0.09) 11px 16px);
+  animation-name: situationWindowRide;
+}
+
+.situationSquareBackdropWrap--move .situationPhotoLayer--middle {
+  background:
+    linear-gradient(90deg, rgba(112, 58, 30, 0.78), rgba(164, 94, 47, 0.4) 48%, rgba(64, 47, 35, 0.44)),
+    repeating-linear-gradient(90deg, transparent 0 24px, rgba(255, 255, 255, 0.18) 25px 31px);
+}
+
+.situationSquareBackdropWrap--move .situationVisualLine--two {
+  --route-rotation: 34deg;
+  top: 44%;
+  left: 34%;
+  width: 42%;
+  transform: rotate(34deg);
+  animation: situationRoutePulse 5.6s ease-in-out infinite reverse;
+}
+
+.situationSquareBackdropWrap--move .situationVisualOrb--one {
+  top: 24%;
+  left: 18%;
+  width: 16px;
+  height: 16px;
+  animation: situationMoveDot 6.4s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--move .situationVisualOrb--two {
+  right: 18%;
+  bottom: 24%;
+  width: 22px;
+  height: 22px;
+  background: #111110;
+  animation: situationSoftFloat 7s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--move .situationVisualCard--one {
+  top: 14%;
+  right: 16%;
+  width: 34%;
+  height: 24%;
+  transform: rotate(7deg);
+  animation: situationCardPack 7.2s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--move .situationVisualCard--two {
+  left: 12%;
+  bottom: 16%;
+  width: 32%;
+  height: 22%;
+  transform: rotate(-8deg);
+  animation: situationCardPack 8s ease-in-out infinite reverse;
+}
+
+.situationSquareBackdropWrap--self {
+  background:
+    radial-gradient(circle at 18% 24%, rgba(188, 54, 27, 0.24), transparent 28%),
+    radial-gradient(circle at 82% 20%, rgba(47, 95, 87, 0.2), transparent 24%),
+    linear-gradient(135deg, #fbfaf6 0%, #eee9df 100%);
+}
+
+.situationSquareBackdropWrap--self .situationPhotoLayer--back {
+  background:
+    radial-gradient(circle at 30% 42%, rgba(188, 54, 27, 0.72), transparent 22%),
+    radial-gradient(circle at 68% 32%, rgba(47, 95, 87, 0.62), transparent 24%),
+    linear-gradient(135deg, rgba(246, 238, 222, 0.72), rgba(90, 66, 49, 0.34));
+}
+
+.situationSquareBackdropWrap--self .situationPhotoLayer--middle {
+  background:
+    linear-gradient(135deg, rgba(188, 54, 27, 0.62), rgba(210, 160, 92, 0.32)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.18) 0 18px, transparent 19px 38px);
+}
+
+.situationSquareBackdropWrap--self .situationPhotoLayer--front {
+  background:
+    radial-gradient(circle at 24% 52%, rgba(47, 95, 87, 0.56), transparent 24%),
+    linear-gradient(90deg, rgba(245, 237, 219, 0.48), rgba(188, 54, 27, 0.28), rgba(17, 17, 16, 0.18));
+}
+
+.situationSquareBackdropWrap--self .situationVisualOrb--one {
+  top: 18%;
+  left: 14%;
+  width: 56px;
+  height: 56px;
+  animation: situationColorSearch 6s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--self .situationVisualOrb--two {
+  top: 26%;
+  right: 16%;
+  width: 46px;
+  height: 46px;
+  background: #2f5f57;
+  animation: situationColorSearch 7s ease-in-out infinite reverse;
+}
+
+.situationSquareBackdropWrap--self .situationVisualOrb--three {
+  left: 34%;
+  bottom: 18%;
+  width: 72px;
+  height: 72px;
+  background: #d2a05c;
+  animation: situationColorSearch 8s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--self .situationVisualCard--one,
+.situationSquareBackdropWrap--self .situationVisualCard--two,
+.situationSquareBackdropWrap--self .situationVisualCard--three {
+  width: 26%;
+  height: 26%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.42);
+  animation: situationVisualSimilarity 7.8s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--self .situationVisualCard--one {
+  top: 12%;
+  left: 42%;
+}
+
+.situationSquareBackdropWrap--self .situationVisualCard--two {
+  top: 42%;
+  left: 18%;
+  animation-delay: -2.4s;
+}
+
+.situationSquareBackdropWrap--self .situationVisualCard--three {
+  right: 12%;
+  bottom: 18%;
+  animation-delay: -4s;
+}
+
+.situationSquareBackdropWrap--renovation {
+  background:
+    linear-gradient(90deg, rgba(17, 17, 16, 0.06) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(17, 17, 16, 0.06) 1px, transparent 1px),
+    linear-gradient(135deg, #fbfaf6 0%, #eeeae1 100%);
+  background-size: 34px 34px, 34px 34px, auto;
+}
+
+.situationSquareBackdropWrap--renovation .situationPhotoLayer--back {
+  background:
+    linear-gradient(90deg, rgba(78, 70, 61, 0.58), rgba(233, 226, 210, 0.34), rgba(105, 84, 63, 0.42)),
+    repeating-linear-gradient(90deg, rgba(17, 17, 16, 0.16) 0 2px, transparent 3px 34px),
+    repeating-linear-gradient(0deg, rgba(17, 17, 16, 0.12) 0 2px, transparent 3px 34px);
+  filter: blur(6px);
+}
+
+.situationSquareBackdropWrap--renovation .situationPhotoLayer--middle {
+  background:
+    linear-gradient(90deg, rgba(222, 212, 195, 0.48), rgba(123, 89, 58, 0.38)),
+    linear-gradient(90deg, transparent 0 34%, rgba(17, 17, 16, 0.2) 35% 37%, transparent 38%),
+    linear-gradient(0deg, transparent 0 56%, rgba(17, 17, 16, 0.2) 57% 59%, transparent 60%);
+}
+
+.situationSquareBackdropWrap--renovation .situationPhotoLayer--front {
+  background:
+    linear-gradient(135deg, rgba(188, 54, 27, 0.26), rgba(246, 238, 222, 0.42)),
+    repeating-linear-gradient(90deg, rgba(17, 17, 16, 0.12) 0 12px, transparent 13px 24px);
+}
+
+.situationSquareBackdropWrap--renovation .situationVisualLine--one {
+  top: 20%;
+  left: 18%;
+  width: 64%;
+  transform: rotate(0deg);
+  animation: situationBlueprintScan 5.8s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--renovation .situationVisualLine--two {
+  top: 72%;
+  left: 18%;
+  width: 62%;
+  transform: rotate(0deg);
+  animation: situationBlueprintScan 6.8s ease-in-out infinite reverse;
+}
+
+.situationSquareBackdropWrap--renovation .situationVisualCard--one {
+  top: 18%;
+  left: 16%;
+  width: 28%;
+  height: 38%;
+  animation: situationPlanNudge 6.2s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--renovation .situationVisualCard--two {
+  top: 30%;
+  right: 14%;
+  width: 34%;
+  height: 28%;
+  animation: situationPlanNudge 7s ease-in-out infinite reverse;
+}
+
+.situationSquareBackdropWrap--renovation .situationVisualCard--three {
+  left: 34%;
+  bottom: 14%;
+  width: 42%;
+  height: 22%;
+  border-color: rgba(188, 54, 27, 0.38);
+  animation: situationPlanNudge 7.6s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--renovation .situationVisualOrb--one {
+  top: 16%;
+  right: 18%;
+  width: 18px;
+  height: 18px;
+  animation: situationDecisionPing 2.8s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--budget {
+  background:
+    radial-gradient(circle at 80% 18%, rgba(188, 54, 27, 0.2), transparent 28%),
+    linear-gradient(135deg, #fbfaf6 0%, #efece4 100%);
+}
+
+.situationSquareBackdropWrap--budget .situationPhotoLayer--back {
+  background:
+    linear-gradient(90deg, rgba(86, 69, 52, 0.58), rgba(238, 229, 211, 0.34), rgba(126, 80, 45, 0.36)),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.16) 0 12px, rgba(17, 17, 16, 0.08) 13px 20px);
+}
+
+.situationSquareBackdropWrap--budget .situationPhotoLayer--middle {
+  background:
+    linear-gradient(90deg, rgba(188, 54, 27, 0.48), rgba(222, 211, 190, 0.36)),
+    repeating-linear-gradient(0deg, transparent 0 18px, rgba(255, 255, 255, 0.26) 19px 24px);
+}
+
+.situationSquareBackdropWrap--budget .situationPhotoLayer--front {
+  background:
+    linear-gradient(90deg, rgba(245, 238, 222, 0.52), rgba(93, 70, 51, 0.32)),
+    repeating-linear-gradient(90deg, rgba(17, 17, 16, 0.16) 0 16px, transparent 17px 32px);
+}
+
+.situationSquareBackdropWrap--budget .situationVisualCard--one,
+.situationSquareBackdropWrap--budget .situationVisualCard--two,
+.situationSquareBackdropWrap--budget .situationVisualCard--three {
+  height: 18%;
+  border-radius: 999px;
+  animation: situationBudgetStack 6.8s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--budget .situationVisualCard--one {
+  top: 20%;
+  left: 14%;
+  width: 58%;
+}
+
+.situationSquareBackdropWrap--budget .situationVisualCard--two {
+  top: 42%;
+  right: 14%;
+  width: 52%;
+  animation-delay: -1.8s;
+}
+
+.situationSquareBackdropWrap--budget .situationVisualCard--three {
+  bottom: 18%;
+  left: 18%;
+  width: 66%;
+  border-color: rgba(188, 54, 27, 0.28);
+  animation-delay: -3.2s;
+}
+
+.situationSquareBackdropWrap--budget .situationVisualOrb--one {
+  top: 24%;
+  right: 18%;
+  width: 30px;
+  height: 30px;
+  background: #111110;
+  animation: situationBudgetDot 5.4s ease-in-out infinite;
+}
+
+.situationSquareBackdropWrap--budget .situationVisualOrb--two {
+  left: 18%;
+  bottom: 24%;
+  width: 20px;
+  height: 20px;
+  animation: situationDecisionPing 3.4s ease-in-out infinite;
+}
+
+@keyframes situationWarmVeil {
+  0% {
+    transform: translate3d(-4%, 0, 0) scale(1);
+    opacity: 0.68;
+  }
+
+  50% {
+    transform: translate3d(3%, -2%, 0) scale(1.06);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translate3d(5%, 2%, 0) scale(1.02);
+    opacity: 0.76;
+  }
+}
+
+@keyframes situationLensSweep {
+  0%,
+  100% {
+    transform: translate3d(-18%, -4%, 0) rotate(-4deg);
+    opacity: 0.34;
+  }
+
+  50% {
+    transform: translate3d(12%, 4%, 0) rotate(3deg);
+    opacity: 0.72;
+  }
+}
+
+@keyframes situationPhotoDrift {
+  0% {
+    transform: translate3d(-3%, -2%, 0) scale(1.04) rotate(-2deg);
+    opacity: 0.64;
+  }
+
+  50% {
+    transform: translate3d(5%, 2%, 0) scale(1.1) rotate(1deg);
+    opacity: 0.82;
+  }
+
+  100% {
+    transform: translate3d(-1%, 4%, 0) scale(1.06) rotate(2deg);
+    opacity: 0.72;
+  }
+}
+
+@keyframes situationWindowRide {
+  0% {
+    transform: translate3d(-12%, -2%, 0) scale(1.08);
+    opacity: 0.62;
+  }
+
+  50% {
+    transform: translate3d(8%, 2%, 0) scale(1.14);
+    opacity: 0.86;
+  }
+
+  100% {
+    transform: translate3d(14%, -1%, 0) scale(1.1);
+    opacity: 0.68;
+  }
+}
+
+@keyframes situationMotionStreak {
+  0%,
+  100% {
+    transform: translate3d(-18%, 0, 0) scaleX(0.58);
+    opacity: 0.16;
+  }
+
+  45% {
+    transform: translate3d(4%, 0, 0) scaleX(1);
+    opacity: 0.58;
+  }
+
+  70% {
+    transform: translate3d(16%, 0, 0) scaleX(0.78);
+    opacity: 0.24;
+  }
+}
+
+@keyframes situationRoutePulse {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: rotate(var(--route-rotation, -18deg)) scaleX(0.62);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: rotate(var(--route-rotation, -18deg)) scaleX(1);
+  }
+}
+
+@keyframes situationMoveDot {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(180%, 120%, 0) scale(1.25);
+  }
+}
+
+@keyframes situationSoftFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(-18%, -24%, 0);
+  }
+}
+
+@keyframes situationCardPack {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(7deg);
+  }
+
+  50% {
+    transform: translate3d(8%, -8%, 0) rotate(-4deg);
+  }
+}
+
+@keyframes situationColorSearch {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: saturate(1);
+  }
+
+  50% {
+    transform: translate3d(16%, -10%, 0) scale(1.14);
+    filter: saturate(1.35);
+  }
+}
+
+@keyframes situationVisualSimilarity {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(0.84);
+    opacity: 0.28;
+  }
+
+  50% {
+    transform: translate3d(10%, -8%, 0) scale(1);
+    opacity: 0.62;
+  }
+}
+
+@keyframes situationBlueprintScan {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: translate3d(-8%, 0, 0) scaleX(0.6);
+  }
+
+  50% {
+    opacity: 0.54;
+    transform: translate3d(8%, 0, 0) scaleX(1);
+  }
+}
+
+@keyframes situationPlanNudge {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(6%, -5%, 0);
+  }
+}
+
+@keyframes situationDecisionPing {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.28);
+  }
+}
+
+@keyframes situationBudgetStack {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.56;
+  }
+
+  50% {
+    transform: translate3d(8%, 0, 0);
+    opacity: 0.86;
+  }
+}
+
+@keyframes situationBudgetDot {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-120%, 210%, 0) scale(0.72);
+  }
+}
+
+.situationSquareScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 38%, rgba(255, 255, 255, 0.5) 100%);
+  pointer-events: none;
+}
+
+.situationSquareGrain {
+  position: absolute;
+  inset: -30%;
+  z-index: 2;
+  opacity: 0.34;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(17, 17, 16, 0.22) 0.6px, transparent 0.7px),
+    radial-gradient(rgba(17, 17, 16, 0.14) 0.5px, transparent 0.6px);
+  background-size: 3px 3px, 5px 5px;
+  background-position: 0 0, 2px 1px;
+  animation: situationGrainDrift 14s linear infinite;
+  mix-blend-mode: multiply;
+}
+
+@keyframes situationGrainDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-12%, -8%, 0);
+  }
+}
+
+.situationSquareContent {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 14px;
+  height: 100%;
+  padding: clamp(16px, 3.2vw, 22px);
 }
 
 .situationSquare:hover,
@@ -1103,31 +1922,126 @@ h1 {
     0 18px 40px rgba(17, 17, 16, 0.1);
 }
 
-.situationSquareTop {
-  display: flex;
-  justify-content: flex-end;
-  min-height: 28px;
+.situationSquare--newStage {
+  border-color: rgba(255, 230, 0, 0.46);
+  background: #21170f;
+  box-shadow:
+    0 2px 10px rgba(17, 17, 16, 0.1),
+    0 22px 54px rgba(60, 38, 24, 0.22);
 }
 
-.situationSquareCheck {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid rgba(17, 17, 16, 0.14);
+.situationSquare--newStage .situationSquareBackdropWrap {
+  background:
+    linear-gradient(180deg, rgba(35, 24, 15, 0.04) 0%, rgba(35, 24, 15, 0.26) 44%, rgba(35, 24, 15, 0.78) 100%),
+    linear-gradient(90deg, rgba(255, 230, 0, 0.1), transparent 42%),
+    url("/situations/new-stage-photo.png");
+  background-position: center center;
+  background-size: 118%;
+  animation: situationNewStagePhotoMove 17s ease-in-out infinite alternate;
+}
+
+.situationSquare--newStage .situationSquareBackdropWrap::before {
+  background:
+    linear-gradient(90deg, rgba(72, 40, 18, 0.42) 0%, transparent 26%, transparent 58%, rgba(109, 58, 24, 0.58) 100%),
+    radial-gradient(circle at 54% 36%, rgba(255, 230, 0, 0.14), transparent 30%);
+  filter: blur(12px);
+  opacity: 0.8;
+}
+
+.situationSquare--newStage .situationSquareBackdropWrap::after {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.05) 0%, rgba(17, 17, 16, 0.36) 64%, rgba(17, 17, 16, 0.74) 100%),
+    linear-gradient(90deg, transparent 0%, rgba(255, 230, 0, 0.24) 40%, transparent 58%);
+  filter: blur(16px);
+  opacity: 0.66;
+}
+
+.situationSquare--newStage .situationSquareBackdrop,
+.situationSquare--newStage .situationPhotoScene,
+.situationSquare--newStage .situationVisualStage {
+  opacity: 0.18;
+}
+
+.situationSquare--newStage .situationSquareScrim {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.02) 0%, rgba(17, 17, 16, 0.18) 40%, rgba(17, 17, 16, 0.76) 100%);
+}
+
+.situationSquare--newStage .situationSquareContent {
+  grid-template-rows: auto 1fr auto;
+  padding: clamp(15px, 3.2vw, 20px);
+  color: #ffe600;
+  text-shadow: 0 2px 18px rgba(17, 17, 16, 0.42);
+}
+
+.situationSquare--newStage .situationSquareContent::before {
+  content: "NEW CHAPTER";
+  align-self: start;
+  width: max-content;
+  max-width: 100%;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 230, 0, 0.72);
   border-radius: 999px;
-  color: #111110;
-  background: rgba(255, 255, 255, 0.88);
-  transition:
-    background-color 0.28s ease,
-    border-color 0.28s ease,
-    color 0.28s ease;
+  color: #ffe600;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  animation: situationNewStageLabelPulse 3.8s ease-in-out infinite;
 }
 
-.situationSquare.selected .situationSquareCheck {
-  border-color: #111110;
-  background: #111110;
-  color: #fff;
+.situationSquare--newStage .situationSquareBody {
+  justify-content: end;
+  gap: 8px;
+}
+
+.situationSquare--newStage .situationSquareBody strong {
+  max-width: 9ch;
+  color: #ffe600;
+  font-size: clamp(36px, 11vw, 58px);
+  font-weight: 900;
+  line-height: 0.82;
+  letter-spacing: -0.08em;
+  text-transform: uppercase;
+}
+
+.situationSquare--newStage .situationSquareBody small {
+  max-width: 26ch;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(11px, 2vw, 13px);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+@keyframes situationNewStagePhotoMove {
+  0% {
+    background-position: 48% 50%;
+    background-size: 118%;
+  }
+
+  45% {
+    background-position: 54% 46%;
+    background-size: 126%;
+  }
+
+  100% {
+    background-position: 44% 54%;
+    background-size: 122%;
+  }
+}
+
+@keyframes situationNewStageLabelPulse {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate3d(0, -2px, 0);
+  }
 }
 
 .situationSquareBody {
@@ -1207,17 +2121,27 @@ h1 {
   background: rgba(17, 17, 16, 0.07);
 }
 
-.situationsBand .sectionTitle {
-  margin-bottom: clamp(18px, 4vw, 28px);
+.situationSquare--newStage .situationSlashLine {
+  color: #fff;
+  font-size: clamp(10px, 1.9vw, 12px);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
-.situationsBand .sectionTitle p {
-  margin: 0 0 10px;
-  color: rgba(17, 17, 16, 0.48);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.situationSquare--newStage .situationSlashDivider,
+.situationSquare--newStage .situationSlashWord,
+.situationSquare--newStage .situationSlashWord.isActive {
+  color: #fff;
+  opacity: 1;
+}
+
+.situationSquare--newStage .situationSlashWord.isActive {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.situationsBand .sectionTitle {
+  margin-bottom: clamp(18px, 4vw, 28px);
 }
 
 .situationsBand .sectionTitle h2 {

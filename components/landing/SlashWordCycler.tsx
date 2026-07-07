@@ -124,37 +124,35 @@ export function SlashWordCycler({
     return null;
   }
 
-  let globalIndex = 0;
+  const rowStartIndices = rows.map((_, rowIndex) =>
+    rows.slice(0, rowIndex).reduce((total, row) => total + row.length, 0),
+  );
 
   return (
     <div className="situationSlashBlock" aria-live="polite">
       {rows.map((row, rowIndex) => {
-        const rowStartIndex = globalIndex;
-
-        const rowContent = row.map((word, wordIndex) => {
-          const currentIndex = rowStartIndex + wordIndex;
-
-          return (
-            <span className="situationSlashGroup" key={`${word}-${currentIndex}`}>
-              {wordIndex > 0 ? <span className="situationSlashDivider">/</span> : null}
-              <span
-                className={
-                  currentIndex === activeIndex
-                    ? "situationSlashWord isActive"
-                    : "situationSlashWord"
-                }
-              >
-                {word}
-              </span>
-            </span>
-          );
-        });
-
-        globalIndex += row.length;
+        const rowStartIndex = rowStartIndices[rowIndex];
 
         return (
           <p className="situationSlashLine" key={`slash-row-${rowIndex}`}>
-            {rowContent}
+            {row.map((word, wordIndex) => {
+              const currentIndex = rowStartIndex + wordIndex;
+
+              return (
+                <span className="situationSlashGroup" key={`${word}-${currentIndex}`}>
+                  {wordIndex > 0 ? <span className="situationSlashDivider">/</span> : null}
+                  <span
+                    className={
+                      currentIndex === activeIndex
+                        ? "situationSlashWord isActive"
+                        : "situationSlashWord"
+                    }
+                  >
+                    {word}
+                  </span>
+                </span>
+              );
+            })}
           </p>
         );
       })}

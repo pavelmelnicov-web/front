@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { SituationVideoBackdrop } from "./SituationVideoBackdrop";
 import { SlashWordCycler } from "./SlashWordCycler";
 
 type SituationItem = {
@@ -24,7 +24,6 @@ export function SituationsSection({
   return (
     <section className="band situationsBand" id="situations">
       <div className="sectionTitle">
-        <p>When it helps</p>
         <h2>Why people choose this workbook</h2>
       </div>
 
@@ -32,9 +31,17 @@ export function SituationsSection({
         {situations.map((item, index) => {
           const isSelected = selectedIds.includes(item.id);
 
+          const squareClassName = [
+            "situationSquare",
+            isSelected ? "selected" : "",
+            item.id === "new-stage" ? "situationSquare--newStage" : "",
+          ]
+            .filter(Boolean)
+            .join(" ");
+
           return (
             <button
-              className={isSelected ? "situationSquare selected" : "situationSquare"}
+              className={squareClassName}
               key={item.id}
               onClick={() => {
                 console.log("[situations] Square toggled", { id: item.id, wasSelected: isSelected });
@@ -42,22 +49,21 @@ export function SituationsSection({
               }}
               type="button"
             >
-              <div className="situationSquareTop">
-                <span className="situationSquareCheck" aria-hidden="true">
-                  {isSelected ? <Check size={14} /> : null}
-                </span>
-              </div>
+              <SituationVideoBackdrop seed={index + 1} situationId={item.id} />
+              <div className="situationSquareScrim" aria-hidden="true" />
 
-              <div className="situationSquareBody">
-                <strong>{item.title}</strong>
-                <small>{item.description}</small>
-              </div>
+              <div className="situationSquareContent">
+                <div className="situationSquareBody">
+                  <strong>{item.title}</strong>
+                  <small>{item.description}</small>
+                </div>
 
-              <SlashWordCycler
-                words={item.examples}
-                intervalMs={2600}
-                startDelayMs={index * 420}
-              />
+                <SlashWordCycler
+                  words={item.examples}
+                  intervalMs={2600}
+                  startDelayMs={index * 420}
+                />
+              </div>
             </button>
           );
         })}
