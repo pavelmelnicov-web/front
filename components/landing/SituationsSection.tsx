@@ -35,6 +35,9 @@ export function SituationsSection({
             "situationSquare",
             isSelected ? "selected" : "",
             item.id === "new-stage" ? "situationSquare--newStage" : "",
+            item.id === "self-expression" ? "situationSquare--selfExpression" : "",
+            item.id === "renovation-fear" ? "situationSquare--renovationFear" : "",
+            item.id === "no-designer-budget" ? "situationSquare--noDesignerBudget" : "",
           ]
             .filter(Boolean)
             .join(" ");
@@ -60,7 +63,7 @@ export function SituationsSection({
 
                 <SlashWordCycler
                   words={item.examples}
-                  intervalMs={2600}
+                  intervalMs={2000}
                   startDelayMs={index * 420}
                 />
               </div>

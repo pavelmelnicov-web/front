@@ -34,11 +34,11 @@ export const fallbackWorkbook: Workbook = {
       id: "self-expression",
       title: "I want my space to reflect me",
       description: "Home should speak about you and support the life you are building.",
-      examples: ["home content", "guests", "self-expression"],
+      examples: ["home content", "space speaks about me"],
     },
     {
       id: "renovation-fear",
-      title: "I want a renovation but fear getting it wrong",
+      title: "I want a renovation but fear mistakes",
       description: "You want clarity on what you actually need before spending big.",
       examples: ["style", "needs", "outcome"],
     },
