@@ -308,6 +308,10 @@ main {
     animation: none !important;
   }
 
+  .variantSearchQuery {
+    animation: none !important;
+  }
+
   .situationSquareBackdrop {
     opacity: 0.55;
   }
@@ -3290,16 +3294,69 @@ h1 {
 }
 
 .variantQuestions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 6px;
+  width: 100%;
   margin: 12px 0 14px;
 }
 
 .situationPills em,
 .variantQuestions em {
   font-style: normal;
+}
+
+.variantSearchBar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 30px;
+  padding: 0 6px;
+  border: none;
+  border-radius: 999px;
+  background: #f7f4ed;
+  box-shadow: none;
+}
+
+.variantSearchIcon {
+  flex: 0 0 auto;
+  color: rgba(17, 17, 16, 0.44);
+}
+
+.variantSearchQuery {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: rgba(17, 17, 16, 0.86);
+  font-size: clamp(4.2px, 1.05vw, 5.2px);
+  font-weight: 200;
+  line-height: 1.05;
+  letter-spacing: -0.075em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  animation: variantSearchQueryIn 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.variantSearchQuery::before,
+.variantSearchQuery::after {
+  display: none !important;
+  content: none !important;
+}
+
+@keyframes variantSearchQueryIn {
+  0% {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .situationPills em {
@@ -3329,6 +3386,19 @@ h1 {
   font-size: 12px;
   line-height: 1.3;
   text-wrap: balance;
+}
+
+.variantsBand .variantSearchBar {
+  background: #f7f4ed;
+}
+
+.variantsBand .variantScreen:nth-child(1) .variantSearchBar {
+  background: #f7f4ed;
+  box-shadow: none;
+}
+
+.variantsBand .variantScreen:nth-child(1) .variantSearchQuery {
+  color: rgba(17, 17, 16, 0.86);
 }
 
 .variantsBand .variantQuestions em {
@@ -3365,6 +3435,7 @@ h1 {
   flex-direction: column;
   justify-content: flex-end;
   min-height: 448px;
+  padding-top: 42%;
   border-color: rgba(247, 244, 237, 0.18);
   border-radius: 20px;
   background:
@@ -3379,6 +3450,7 @@ h1 {
 .variantsBand .variantCard::before {
   position: absolute;
   inset: 0;
+  z-index: 0;
   background:
     linear-gradient(180deg, rgba(5, 5, 5, 0.02) 0%, rgba(5, 5, 5, 0.18) 42%, rgba(5, 5, 5, 0.84) 100%),
     var(--variant-card-photo);
@@ -3389,19 +3461,36 @@ h1 {
   transform: scale(1.03);
 }
 
+.variantsBand .variantScreen:nth-child(1) .variantCard::before {
+  display: none;
+}
+
+.variantCardVideo {
+  position: absolute;
+  inset: 0;
+  z-index: 0 !important;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
 .variantsBand .variantCard::after {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background:
-    radial-gradient(circle at 28% 18%, rgba(247, 244, 237, 0.22), transparent 28%),
-    linear-gradient(135deg, rgba(188, 54, 27, 0.24), transparent 46%),
-    linear-gradient(180deg, transparent 0%, rgba(5, 5, 5, 0.74) 100%);
+    radial-gradient(circle at 28% 18%, rgba(247, 244, 237, 0.12), transparent 28%),
+    linear-gradient(135deg, rgba(188, 54, 27, 0.12), transparent 46%),
+    linear-gradient(180deg, transparent 0%, rgba(5, 5, 5, 0.42) 72%, rgba(5, 5, 5, 0.78) 100%);
   content: "";
 }
 
-.variantsBand .variantCard > * {
+.variantsBand .variantCard > *:not(.variantCardVideo) {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .phoneTop {
@@ -3413,19 +3502,18 @@ h1 {
 }
 
 .variantsBand .phoneTop {
-  width: 72px;
-  height: 7px;
-  margin: 0 0 auto;
-  background: rgba(247, 244, 237, 0.72);
+  display: none;
 }
 
 .variantsBand .variantCard strong {
-  margin-top: 130px;
+  margin-top: 0;
+  margin-bottom: 6px;
   color: var(--variants-ink);
   font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
-  font-weight: 850;
-  letter-spacing: -0.065em;
-  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.32);
+  font-size: clamp(14px, 4vw, 18px);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.32);
 }
 
 .situationPhone strong,
@@ -3517,25 +3605,56 @@ h1 {
   font-weight: 800;
 }
 
-.variantsBand .phoneList span {
-  border: 1px solid rgba(247, 244, 237, 0.2);
-  background: rgba(247, 244, 237, 0.12);
-  color: var(--variants-ink);
-  font-weight: 850;
-  letter-spacing: -0.025em;
-  backdrop-filter: blur(14px);
+.variantsBand .phoneList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 14px;
 }
 
-.variantsBand .phoneList span:first-child {
-  border-color: rgba(188, 54, 27, 0.48);
-  background: rgba(188, 54, 27, 0.72);
-  color: var(--variants-ink);
+.variantsBand .variantCardPointGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.variantsBand .variantScreen:nth-child(1) .phoneList span:first-child {
-  border-color: rgba(140, 191, 173, 0.72);
-  background: rgba(140, 191, 173, 0.88);
+.variantsBand .variantCardPointItem {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  background: rgba(247, 244, 237, 0.94);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(12px);
+}
+
+.variantsBand .phoneList .variantCardPoint,
+.variantsBand .phoneList .variantCardArrow {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.variantsBand .variantCardPoint {
   color: #111110;
+  font-size: clamp(9px, 2.2vw, 11px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-shadow: none;
+  text-transform: lowercase;
+}
+
+.variantsBand .variantCardArrow {
+  color: rgba(247, 244, 237, 0.82);
+  font-size: clamp(8px, 2vw, 10px);
+  font-weight: 500;
+  line-height: 1;
 }
 
 .postCard {
@@ -3718,19 +3837,19 @@ textarea {
 }
 
 .variantsBand .variantCard .primaryButton {
-  margin-top: 22px;
-  border-color: rgba(247, 244, 237, 0.88);
-  background: var(--variants-ink);
-  color: var(--variants-card-ink);
+  margin-top: 0;
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(247, 244, 237, 0.94);
+  color: #111110;
   font-weight: 900;
   letter-spacing: -0.02em;
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
 }
 
 .variantsBand .variantScreen:nth-child(1) .variantCard .primaryButton {
-  border-color: rgba(17, 17, 16, 0.88);
-  background: #111110;
-  color: #f7f4ed;
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(247, 244, 237, 0.94);
+  color: #111110;
 }
 
 .variantCard button.primaryButton {

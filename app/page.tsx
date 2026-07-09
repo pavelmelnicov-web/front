@@ -7,6 +7,7 @@ import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from
 import { HeroFloatCards } from "../components/landing/HeroFloatCards";
 import { IntroStackSection } from "../components/landing/IntroStackSection";
 import { SituationsSection } from "../components/landing/SituationsSection";
+import { VariantSearchCycler } from "../components/landing/VariantSearchCycler";
 import { api, ChatMessage, CommunityPost, SessionPayload, Workbook } from "../lib/api";
 import { fallbackChat, fallbackPosts, fallbackWorkbook } from "../lib/fallback";
 
@@ -271,19 +272,36 @@ export default function Home() {
                 <div className="variantCopy">
                   <h3>{item.title}</h3>
                   <div className="variantQuestions">
-                    {item.questions.map((question) => (
-                      <em key={question}>{question}</em>
-                    ))}
+                    <VariantSearchCycler queries={item.questions} />
                   </div>
                   <p>{item.description}</p>
                 </div>
                 <div className="variantCard" aria-hidden="true">
+                  {item.id === "system" ? (
+                    <video
+                      autoPlay
+                      className="variantCardVideo"
+                      loop
+                      muted
+                      playsInline
+                      preload="metadata"
+                      src="/variants/men-version-card.mp4"
+                    />
+                  ) : null}
                   <div className="phoneTop" />
                   <strong>{item.model}</strong>
-                  <p>{item.result}</p>
                   <div className="phoneList">
-                    {item.points.map((point) => (
-                      <span key={point}>{point}</span>
+                    {item.points.map((point, index) => (
+                      <span className="variantCardPointGroup" key={point}>
+                        {index > 0 ? (
+                          <span aria-hidden="true" className="variantCardArrow">
+                            →
+                          </span>
+                        ) : null}
+                        <span className="variantCardPointItem">
+                          <span className="variantCardPoint">{point}</span>
+                        </span>
+                      </span>
                     ))}
                   </div>
                   <Link className="primaryButton" href="/onboarding/14">
