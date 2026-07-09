@@ -2707,7 +2707,7 @@ h1 {
 }
 
 .situationsBand .situationSquare.situationSquare--newStage .situationSlashWord::before {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 230, 0, 0.46);
 }
 
 .situationSquare--selfExpression .situationSlashLine {
@@ -2731,7 +2731,7 @@ h1 {
 }
 
 .situationSquare--selfExpression .situationSlashWord::before {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(184, 240, 111, 0.4);
 }
 
 .situationsBand .situationSquare.situationSquare--selfExpression .situationSlashBlock,
@@ -2762,7 +2762,7 @@ h1 {
 }
 
 .situationsBand .situationSquare.situationSquare--selfExpression .situationSlashWord::before {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(184, 240, 111, 0.4);
 }
 
 .situationSquare--renovationFear .situationSlashLine {
@@ -2786,7 +2786,7 @@ h1 {
 }
 
 .situationSquare--renovationFear .situationSlashWord::before {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(156, 199, 209, 0.42);
 }
 
 .situationsBand .situationSquare.situationSquare--renovationFear .situationSlashBlock,
@@ -2817,7 +2817,7 @@ h1 {
 }
 
 .situationsBand .situationSquare.situationSquare--renovationFear .situationSlashWord::before {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(156, 199, 209, 0.42);
 }
 
 .situationSquare--noDesignerBudget .situationSlashLine {
@@ -2841,7 +2841,7 @@ h1 {
 }
 
 .situationSquare--noDesignerBudget .situationSlashWord::before {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(244, 239, 220, 0.42);
 }
 
 .situationsBand .situationSquare.situationSquare--noDesignerBudget .situationSlashBlock,
@@ -2872,7 +2872,7 @@ h1 {
 }
 
 .situationsBand .situationSquare.situationSquare--noDesignerBudget .situationSlashWord::before {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(244, 239, 220, 0.42);
 }
 
 .situationSquare--newStage .situationSquareContent,
@@ -2906,9 +2906,43 @@ h1 {
 }
 
 .variantsBand {
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
+  --variants-bg: #050505;
+  --variants-panel: #11110f;
+  --variants-ink: #f7f4ed;
+  --variants-muted: rgba(247, 244, 237, 0.64);
+  --variants-line: rgba(247, 244, 237, 0.16);
+  --variants-card: #f4efe6;
+  --variants-card-ink: #111110;
+  --variants-accent: #bc361b;
+  position: relative;
+  background: #ddd8cf;
+  border-bottom: 1px solid rgba(17, 17, 16, 0.1);
+  color: #111110;
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
   overflow: hidden;
+}
+
+.variantsBand::before,
+.variantsBand::after {
+  position: absolute;
+  pointer-events: none;
+  content: "";
+}
+
+.variantsBand::before {
+  inset: 0;
+  background: none;
+  opacity: 0;
+}
+
+.variantsBand::after {
+  top: clamp(120px, 18vw, 220px);
+  right: max(-120px, -8vw);
+  width: clamp(180px, 36vw, 420px);
+  height: clamp(180px, 36vw, 420px);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.24);
+  filter: blur(42px);
 }
 
 .sectionTitle {
@@ -2942,9 +2976,62 @@ h1 {
   flex-direction: column;
 }
 
+.variantsBand .sectionTitle,
+.variantsBand .variantTabs,
+.variantsBand .variantViewport {
+  position: relative;
+  z-index: 1;
+}
+
+.variantsBand .sectionTitle p {
+  width: max-content;
+  max-width: 100%;
+  padding: 7px 12px;
+  border: 1px solid var(--variants-line);
+  border-radius: 999px;
+  background: rgba(247, 244, 237, 0.08);
+  color: rgba(247, 244, 237, 0.86);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.variantsBand .sectionTitle h2 {
+  color: #111110;
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(36px, 11vw, 96px);
+  font-weight: 800;
+  line-height: 0.88;
+  letter-spacing: -0.078em;
+}
+
 .variantsBand .sectionTitle h2,
 .howLinkedBand .sectionTitle h2 {
   max-width: 980px;
+}
+
+.variantsBand .variantTabs {
+  width: max-content;
+  max-width: 100%;
+  padding: 4px;
+  border: 1px solid rgba(17, 17, 16, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(18px);
+}
+
+.variantsBand .variantTab {
+  border-color: transparent;
+  background: transparent;
+  color: rgba(17, 17, 16, 0.64);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  box-shadow: none;
+}
+
+.variantsBand .variantTab.active {
+  border-color: #111110;
+  background: #111110;
+  color: #f7f4ed;
 }
 
 .situationsGrid,
@@ -3034,10 +3121,93 @@ h1 {
   box-sizing: border-box;
 }
 
+.variantsBand .variantViewport {
+  border-radius: clamp(24px, 5vw, 44px);
+}
+
+.variantsBand .variantScreen {
+  --variant-card-base: #302f47;
+  --variant-card-photo: url("/variants/green-kitchen-card.png");
+  position: relative;
+  overflow: hidden;
+  border-color: var(--variants-line);
+  border-radius: clamp(24px, 5vw, 44px);
+  background:
+    linear-gradient(120deg, rgba(247, 244, 237, 0.08), transparent 46%),
+    radial-gradient(circle at 78% 22%, rgba(188, 54, 27, 0.24), transparent 28%),
+    var(--variants-panel);
+  box-shadow:
+    inset 0 1px 0 rgba(247, 244, 237, 0.14),
+    0 36px 110px rgba(0, 0, 0, 0.42);
+}
+
+.variantsBand .variantScreen:nth-child(2) {
+  --variant-card-base: #3b2f47;
+  --variant-card-photo: url("/situations/self-expression-photo.png");
+}
+
+.variantsBand .variantScreen:nth-child(1) {
+  --variant-card-base: #8cbfad;
+  border-color: rgba(168, 213, 192, 0.55);
+  background:
+    linear-gradient(135deg, rgba(200, 230, 217, 0.72) 0%, transparent 42%),
+    linear-gradient(180deg, #c8e6d9 0%, #a8d5c0 52%, #8cbfad 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    0 28px 72px rgba(17, 17, 16, 0.12);
+}
+
+.variantsBand .variantScreen::before {
+  position: absolute;
+  inset: clamp(18px, 4vw, 44px);
+  border: 1px solid rgba(247, 244, 237, 0.1);
+  border-radius: clamp(20px, 4vw, 36px);
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(247, 244, 237, 0.08) 48%, transparent 100%),
+    linear-gradient(180deg, rgba(247, 244, 237, 0.06), transparent 54%);
+  content: "";
+  opacity: 0.72;
+}
+
+.variantsBand .variantScreen::after {
+  position: absolute;
+  right: clamp(18px, 6vw, 96px);
+  bottom: clamp(18px, 5vw, 72px);
+  width: clamp(120px, 28vw, 340px);
+  height: clamp(120px, 28vw, 340px);
+  border-radius: 32px;
+  background:
+    linear-gradient(135deg, rgba(188, 54, 27, 0.34), transparent 44%),
+    linear-gradient(180deg, rgba(247, 244, 237, 0.14), rgba(247, 244, 237, 0.03));
+  filter: blur(18px);
+  content: "";
+  opacity: 0.68;
+}
+
+.variantsBand .variantScreen:nth-child(1)::before {
+  border-color: rgba(255, 255, 255, 0.28);
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.18) 48%, transparent 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 54%);
+  opacity: 0.55;
+}
+
+.variantsBand .variantScreen:nth-child(1)::after {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 44%),
+    linear-gradient(180deg, rgba(200, 230, 217, 0.32), rgba(140, 191, 173, 0.08));
+}
+
 .situationScreenCopy,
 .variantCopy {
   max-width: none;
   min-width: 0;
+}
+
+.variantsBand .variantCopy,
+.variantsBand .variantCard {
+  position: relative;
+  z-index: 1;
 }
 
 .situationScreenCopy span,
@@ -3048,12 +3218,46 @@ h1 {
   font-size: 12px;
 }
 
+.variantsBand .variantCopy span {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  padding: 7px 11px;
+  border: 1px solid rgba(188, 54, 27, 0.5);
+  border-radius: 999px;
+  background: rgba(188, 54, 27, 0.18);
+  color: #ff6a45;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.variantsBand .variantScreen:nth-child(1) .variantCopy span {
+  border-color: rgba(140, 191, 173, 0.62);
+  background: rgba(255, 255, 255, 0.34);
+  color: #4f7f6d;
+}
+
+.variantsBand .variantScreen:nth-child(1) .variantCopy h3 {
+  color: #111110;
+}
+
+.variantsBand .variantScreen:nth-child(1) .variantCopy p {
+  color: rgba(17, 17, 16, 0.68);
+}
+
 .situationScreenCopy h3,
 .variantCopy h3 {
   max-width: none;
   color: var(--ink);
   font-size: clamp(28px, 8vw, 36px);
   line-height: 1.05;
+}
+
+.variantsBand .variantCopy h3 {
+  color: var(--variants-ink);
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-weight: 850;
+  letter-spacing: -0.07em;
 }
 
 .situationScreenCopy h3 {
@@ -3071,6 +3275,11 @@ h1 {
   color: var(--muted);
   font-size: 15px;
   line-height: 1.45;
+}
+
+.variantsBand .variantCopy p {
+  color: var(--variants-muted);
+  font-weight: 500;
 }
 
 .situationPills {
@@ -3122,6 +3331,20 @@ h1 {
   text-wrap: balance;
 }
 
+.variantsBand .variantQuestions em {
+  border-color: rgba(247, 244, 237, 0.2);
+  background: rgba(247, 244, 237, 0.09);
+  color: rgba(247, 244, 237, 0.9);
+  font-weight: 750;
+  letter-spacing: -0.018em;
+}
+
+.variantsBand .variantScreen:nth-child(1) .variantQuestions em {
+  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.28);
+  color: rgba(17, 17, 16, 0.82);
+}
+
 .situationPhone,
 .variantCard {
   justify-self: stretch;
@@ -3135,12 +3358,74 @@ h1 {
   box-shadow: var(--shadow);
 }
 
+.variantsBand .variantCard {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 448px;
+  border-color: rgba(247, 244, 237, 0.18);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(48, 47, 71, 0.08), rgba(48, 47, 71, 0.86)),
+    var(--variant-card-base);
+  color: var(--variants-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(247, 244, 237, 0.16),
+    0 30px 82px rgba(0, 0, 0, 0.42);
+}
+
+.variantsBand .variantCard::before {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(5, 5, 5, 0.02) 0%, rgba(5, 5, 5, 0.18) 42%, rgba(5, 5, 5, 0.84) 100%),
+    var(--variant-card-photo);
+  background-position: center;
+  background-size: cover;
+  content: "";
+  opacity: 0.82;
+  transform: scale(1.03);
+}
+
+.variantsBand .variantCard::after {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 28% 18%, rgba(247, 244, 237, 0.22), transparent 28%),
+    linear-gradient(135deg, rgba(188, 54, 27, 0.24), transparent 46%),
+    linear-gradient(180deg, transparent 0%, rgba(5, 5, 5, 0.74) 100%);
+  content: "";
+}
+
+.variantsBand .variantCard > * {
+  position: relative;
+  z-index: 1;
+}
+
 .phoneTop {
   width: 86px;
   height: 7px;
   margin: 0 auto 48px;
   border-radius: 999px;
   background: rgba(24, 24, 22, 0.18);
+}
+
+.variantsBand .phoneTop {
+  width: 72px;
+  height: 7px;
+  margin: 0 0 auto;
+  background: rgba(247, 244, 237, 0.72);
+}
+
+.variantsBand .variantCard strong {
+  margin-top: 130px;
+  color: var(--variants-ink);
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-weight: 850;
+  letter-spacing: -0.065em;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.32);
 }
 
 .situationPhone strong,
@@ -3155,6 +3440,12 @@ h1 {
   margin: 16px 0 28px;
   color: var(--card-muted);
   line-height: 1.38;
+}
+
+.variantsBand .variantCard p {
+  color: rgba(247, 244, 237, 0.78);
+  font-weight: 550;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.28);
 }
 
 .howLinkedBand {
@@ -3224,6 +3515,27 @@ h1 {
   background: var(--paper);
   color: var(--ink);
   font-weight: 800;
+}
+
+.variantsBand .phoneList span {
+  border: 1px solid rgba(247, 244, 237, 0.2);
+  background: rgba(247, 244, 237, 0.12);
+  color: var(--variants-ink);
+  font-weight: 850;
+  letter-spacing: -0.025em;
+  backdrop-filter: blur(14px);
+}
+
+.variantsBand .phoneList span:first-child {
+  border-color: rgba(188, 54, 27, 0.48);
+  background: rgba(188, 54, 27, 0.72);
+  color: var(--variants-ink);
+}
+
+.variantsBand .variantScreen:nth-child(1) .phoneList span:first-child {
+  border-color: rgba(140, 191, 173, 0.72);
+  background: rgba(140, 191, 173, 0.88);
+  color: #111110;
 }
 
 .postCard {
@@ -3403,6 +3715,22 @@ textarea {
   color: var(--paper);
   font-weight: 800;
   cursor: pointer;
+}
+
+.variantsBand .variantCard .primaryButton {
+  margin-top: 22px;
+  border-color: rgba(247, 244, 237, 0.88);
+  background: var(--variants-ink);
+  color: var(--variants-card-ink);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+}
+
+.variantsBand .variantScreen:nth-child(1) .variantCard .primaryButton {
+  border-color: rgba(17, 17, 16, 0.88);
+  background: #111110;
+  color: #f7f4ed;
 }
 
 .variantCard button.primaryButton {

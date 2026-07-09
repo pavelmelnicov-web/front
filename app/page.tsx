@@ -231,7 +231,6 @@ export default function Home() {
 
       <section className="variantsBand" id="variants">
         <div className="sectionTitle">
-          <p>Workbook versions</p>
           <h2>{workbookVariants[activeVariantIndex].headline}</h2>
         </div>
         <div className="variantTabs" role="tablist" aria-label="Workbook versions">
@@ -270,7 +269,6 @@ export default function Home() {
             {workbookVariants.map((item) => (
               <article className="variantScreen" key={item.id}>
                 <div className="variantCopy">
-                  <span>{item.kicker}</span>
                   <h3>{item.title}</h3>
                   <div className="variantQuestions">
                     {item.questions.map((question) => (
