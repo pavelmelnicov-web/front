@@ -1923,17 +1923,17 @@ h1 {
 }
 
 .situationSquare--newStage {
-  border-color: rgba(255, 230, 0, 0.46);
-  background: #21170f;
+  border-color: rgba(17, 17, 16, 0.1);
+  background: #ddd8cf;
   box-shadow:
-    0 2px 10px rgba(17, 17, 16, 0.1),
-    0 22px 54px rgba(60, 38, 24, 0.22);
+    0 4px 10px rgba(17, 17, 16, 0.06),
+    0 28px 64px rgba(17, 17, 16, 0.14);
 }
 
 .situationSquare--newStage .situationSquareBackdropWrap {
   background:
-    linear-gradient(180deg, rgba(35, 24, 15, 0.04) 0%, rgba(35, 24, 15, 0.26) 44%, rgba(35, 24, 15, 0.78) 100%),
-    linear-gradient(90deg, rgba(255, 230, 0, 0.1), transparent 42%),
+    linear-gradient(180deg, rgba(17, 17, 16, 0.08) 0%, rgba(17, 17, 16, 0.02) 34%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.24) 0%, transparent 48%),
     url("/situations/new-stage-photo.png");
   background-position: center center;
   background-size: 118%;
@@ -1942,16 +1942,16 @@ h1 {
 
 .situationSquare--newStage .situationSquareBackdropWrap::before {
   background:
-    linear-gradient(90deg, rgba(72, 40, 18, 0.42) 0%, transparent 26%, transparent 58%, rgba(109, 58, 24, 0.58) 100%),
-    radial-gradient(circle at 54% 36%, rgba(255, 230, 0, 0.14), transparent 30%);
-  filter: blur(12px);
-  opacity: 0.8;
+    linear-gradient(135deg, rgba(245, 242, 237, 0.12), transparent 62%),
+    radial-gradient(circle at 54% 36%, rgba(245, 242, 237, 0.12), transparent 30%);
+  filter: blur(14px);
+  opacity: 0.68;
 }
 
 .situationSquare--newStage .situationSquareBackdropWrap::after {
   background:
-    linear-gradient(180deg, rgba(17, 17, 16, 0.05) 0%, rgba(17, 17, 16, 0.36) 64%, rgba(17, 17, 16, 0.74) 100%),
-    linear-gradient(90deg, transparent 0%, rgba(255, 230, 0, 0.24) 40%, transparent 58%);
+    linear-gradient(180deg, rgba(17, 17, 16, 0.04) 0%, rgba(17, 17, 16, 0.28) 56%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.22) 0%, transparent 54%);
   filter: blur(16px);
   opacity: 0.66;
 }
@@ -1964,31 +1964,15 @@ h1 {
 
 .situationSquare--newStage .situationSquareScrim {
   background:
-    linear-gradient(180deg, rgba(17, 17, 16, 0.02) 0%, rgba(17, 17, 16, 0.18) 40%, rgba(17, 17, 16, 0.76) 100%);
+    linear-gradient(180deg, rgba(17, 17, 16, 0.08) 0%, rgba(17, 17, 16, 0.02) 34%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.24) 0%, transparent 48%);
 }
 
 .situationSquare--newStage .situationSquareContent {
   grid-template-rows: auto 1fr auto;
-  padding: clamp(15px, 3.2vw, 20px);
-  color: #ffe600;
-  text-shadow: 0 2px 18px rgba(17, 17, 16, 0.42);
-}
-
-.situationSquare--newStage .situationSquareContent::before {
-  content: "NEW CHAPTER";
-  align-self: start;
-  width: max-content;
-  max-width: 100%;
-  padding: 5px 10px;
-  border: 1px solid rgba(255, 230, 0, 0.72);
-  border-radius: 999px;
-  color: #ffe600;
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  animation: situationNewStageLabelPulse 3.8s ease-in-out infinite;
+  padding: clamp(18px, 3.6vw, 24px);
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
 }
 
 .situationSquare--newStage .situationSquareBody {
@@ -1997,21 +1981,23 @@ h1 {
 }
 
 .situationSquare--newStage .situationSquareBody strong {
-  max-width: 9ch;
-  color: #ffe600;
-  font-size: clamp(36px, 11vw, 58px);
-  font-weight: 900;
-  line-height: 0.82;
-  letter-spacing: -0.08em;
-  text-transform: uppercase;
+  max-width: 11ch;
+  color: #fff;
+  font-size: clamp(24px, 7.2vw, 36px);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-transform: none;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
 }
 
 .situationSquare--newStage .situationSquareBody small {
   max-width: 26ch;
   color: rgba(255, 255, 255, 0.86);
-  font-size: clamp(11px, 2vw, 13px);
-  font-weight: 600;
-  line-height: 1.25;
+  font-size: clamp(12px, 2.1vw, 14px);
+  font-weight: 400;
+  line-height: 1.38;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.24);
 }
 
 .situationSquare--selfExpression {
@@ -2108,6 +2094,78 @@ h1 {
   line-height: 1.25;
 }
 
+.situationSquare--selfExpression {
+  border-color: rgba(17, 17, 16, 0.1);
+  background: #ddd8cf;
+  box-shadow:
+    0 4px 10px rgba(17, 17, 16, 0.06),
+    0 28px 64px rgba(17, 17, 16, 0.14);
+}
+
+.situationSquare--selfExpression .situationSquareBackdropWrap {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.08) 0%, rgba(17, 17, 16, 0.02) 34%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.24) 0%, transparent 48%),
+    url("/situations/self-expression-photo.png");
+  background-position: center 42%;
+  background-size: 122%;
+  animation: situationSelfExpressionPhotoMove 18s ease-in-out infinite alternate;
+}
+
+.situationSquare--selfExpression .situationSquareBackdropWrap::before {
+  background:
+    linear-gradient(135deg, rgba(245, 242, 237, 0.12), transparent 62%),
+    radial-gradient(circle at 54% 36%, rgba(245, 242, 237, 0.12), transparent 30%);
+  filter: blur(14px);
+  opacity: 0.68;
+}
+
+.situationSquare--selfExpression .situationSquareBackdropWrap::after {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.04) 0%, rgba(17, 17, 16, 0.28) 56%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.22) 0%, transparent 54%);
+  filter: blur(16px);
+  opacity: 0.66;
+}
+
+.situationSquare--selfExpression .situationSquareScrim {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.08) 0%, rgba(17, 17, 16, 0.02) 34%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.24) 0%, transparent 48%);
+}
+
+.situationSquare--selfExpression .situationSquareContent {
+  grid-template-rows: auto 1fr auto;
+  padding: clamp(18px, 3.6vw, 24px);
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
+}
+
+.situationSquare--selfExpression .situationSquareBody {
+  justify-content: end;
+  gap: 8px;
+}
+
+.situationSquare--selfExpression .situationSquareBody strong {
+  max-width: 11ch;
+  color: #fff;
+  font-size: clamp(24px, 7.2vw, 36px);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-transform: none;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
+}
+
+.situationSquare--selfExpression .situationSquareBody small {
+  max-width: 26ch;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(12px, 2.1vw, 14px);
+  font-weight: 400;
+  line-height: 1.38;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.24);
+}
+
 .situationSquare--renovationFear {
   border-color: rgba(222, 232, 226, 0.46);
   background: #243840;
@@ -2202,6 +2260,78 @@ h1 {
   line-height: 1.25;
 }
 
+.situationSquare--renovationFear {
+  border-color: rgba(17, 17, 16, 0.1);
+  background: #ddd8cf;
+  box-shadow:
+    0 4px 10px rgba(17, 17, 16, 0.06),
+    0 28px 64px rgba(17, 17, 16, 0.14);
+}
+
+.situationSquare--renovationFear .situationSquareBackdropWrap {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.08) 0%, rgba(17, 17, 16, 0.02) 34%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.24) 0%, transparent 48%),
+    url("/situations/renovation-fear-photo.png");
+  background-position: 70% 48%;
+  background-size: 138%;
+  animation: situationRenovationPhotoMove 18s ease-in-out infinite alternate;
+}
+
+.situationSquare--renovationFear .situationSquareBackdropWrap::before {
+  background:
+    linear-gradient(135deg, rgba(245, 242, 237, 0.12), transparent 62%),
+    radial-gradient(circle at 54% 36%, rgba(245, 242, 237, 0.12), transparent 30%);
+  filter: blur(14px);
+  opacity: 0.68;
+}
+
+.situationSquare--renovationFear .situationSquareBackdropWrap::after {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.04) 0%, rgba(17, 17, 16, 0.28) 56%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.22) 0%, transparent 54%);
+  filter: blur(16px);
+  opacity: 0.66;
+}
+
+.situationSquare--renovationFear .situationSquareScrim {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.08) 0%, rgba(17, 17, 16, 0.02) 34%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.24) 0%, transparent 48%);
+}
+
+.situationSquare--renovationFear .situationSquareContent {
+  grid-template-rows: auto 1fr auto;
+  padding: clamp(18px, 3.6vw, 24px);
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
+}
+
+.situationSquare--renovationFear .situationSquareBody {
+  justify-content: end;
+  gap: 8px;
+}
+
+.situationSquare--renovationFear .situationSquareBody strong {
+  max-width: 11ch;
+  color: #fff;
+  font-size: clamp(24px, 7.2vw, 36px);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-transform: none;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
+}
+
+.situationSquare--renovationFear .situationSquareBody small {
+  max-width: 26ch;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(12px, 2.1vw, 14px);
+  font-weight: 400;
+  line-height: 1.38;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.24);
+}
+
 .situationSquare--noDesignerBudget {
   border-color: rgba(238, 232, 210, 0.44);
   background: #1f2824;
@@ -2294,6 +2424,78 @@ h1 {
   font-size: clamp(11px, 2vw, 13px);
   font-weight: 600;
   line-height: 1.25;
+}
+
+.situationSquare--noDesignerBudget {
+  border-color: rgba(17, 17, 16, 0.1);
+  background: #ddd8cf;
+  box-shadow:
+    0 4px 10px rgba(17, 17, 16, 0.06),
+    0 28px 64px rgba(17, 17, 16, 0.14);
+}
+
+.situationSquare--noDesignerBudget .situationSquareBackdropWrap {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.08) 0%, rgba(17, 17, 16, 0.02) 34%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.24) 0%, transparent 48%),
+    url("/situations/no-designer-budget-photo.png");
+  background-position: center 44%;
+  background-size: 124%;
+  animation: situationNoDesignerPhotoMove 18s ease-in-out infinite alternate;
+}
+
+.situationSquare--noDesignerBudget .situationSquareBackdropWrap::before {
+  background:
+    linear-gradient(135deg, rgba(245, 242, 237, 0.12), transparent 62%),
+    radial-gradient(circle at 54% 36%, rgba(245, 242, 237, 0.12), transparent 30%);
+  filter: blur(14px);
+  opacity: 0.68;
+}
+
+.situationSquare--noDesignerBudget .situationSquareBackdropWrap::after {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.04) 0%, rgba(17, 17, 16, 0.28) 56%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.22) 0%, transparent 54%);
+  filter: blur(16px);
+  opacity: 0.66;
+}
+
+.situationSquare--noDesignerBudget .situationSquareScrim {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 16, 0.08) 0%, rgba(17, 17, 16, 0.02) 34%, rgba(17, 17, 16, 0.72) 100%),
+    linear-gradient(90deg, rgba(17, 17, 16, 0.24) 0%, transparent 48%);
+}
+
+.situationSquare--noDesignerBudget .situationSquareContent {
+  grid-template-rows: auto 1fr auto;
+  padding: clamp(18px, 3.6vw, 24px);
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
+}
+
+.situationSquare--noDesignerBudget .situationSquareBody {
+  justify-content: end;
+  gap: 8px;
+}
+
+.situationSquare--noDesignerBudget .situationSquareBody strong {
+  max-width: 11ch;
+  color: #fff;
+  font-size: clamp(24px, 7.2vw, 36px);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-transform: none;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
+}
+
+.situationSquare--noDesignerBudget .situationSquareBody small {
+  max-width: 26ch;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(12px, 2.1vw, 14px);
+  font-weight: 400;
+  line-height: 1.38;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.24);
 }
 
 @keyframes situationNewStagePhotoMove {
@@ -2477,19 +2679,35 @@ h1 {
   text-transform: uppercase;
 }
 
-.situationSquare--newStage .situationSlashDivider,
-.situationSquare--newStage .situationSlashWord,
-.situationSquare--newStage .situationSlashWord.isActive {
+.situationsBand .situationSquare.situationSquare--newStage .situationSlashBlock,
+.situationsBand .situationSquare.situationSquare--newStage .situationSlashLine,
+.situationsBand .situationSquare.situationSquare--newStage .situationSlashDivider,
+.situationsBand .situationSquare.situationSquare--newStage .situationSlashWord,
+.situationsBand .situationSquare.situationSquare--newStage .situationSlashWord.isActive {
   color: #fff;
+  font-size: clamp(10px, 1.9vw, 12px) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
   opacity: 1;
+  text-transform: uppercase;
 }
 
-.situationSquare--newStage .situationSlashWord.isActive {
+.situationsBand .situationSquare.situationSquare--newStage .situationSlashBlock * {
+  color: #fff !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  letter-spacing: inherit !important;
+  line-height: inherit !important;
+  text-transform: inherit !important;
+}
+
+.situationsBand .situationSquare.situationSquare--newStage .situationSlashWord.isActive {
   background: transparent;
 }
 
-.situationSquare--newStage .situationSlashWord::before {
-  background: rgba(255, 255, 255, 0.18);
+.situationsBand .situationSquare.situationSquare--newStage .situationSlashWord::before {
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .situationSquare--selfExpression .situationSlashLine {
@@ -2504,6 +2722,7 @@ h1 {
 .situationSquare--selfExpression .situationSlashWord,
 .situationSquare--selfExpression .situationSlashWord.isActive {
   color: #fff;
+  font-weight: 800;
   opacity: 1;
 }
 
@@ -2512,6 +2731,37 @@ h1 {
 }
 
 .situationSquare--selfExpression .situationSlashWord::before {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.situationsBand .situationSquare.situationSquare--selfExpression .situationSlashBlock,
+.situationsBand .situationSquare.situationSquare--selfExpression .situationSlashLine,
+.situationsBand .situationSquare.situationSquare--selfExpression .situationSlashDivider,
+.situationsBand .situationSquare.situationSquare--selfExpression .situationSlashWord,
+.situationsBand .situationSquare.situationSquare--selfExpression .situationSlashWord.isActive {
+  color: #fff;
+  font-size: clamp(10px, 1.9vw, 12px) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  opacity: 1;
+  text-transform: uppercase;
+}
+
+.situationsBand .situationSquare.situationSquare--selfExpression .situationSlashBlock * {
+  color: #fff !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  letter-spacing: inherit !important;
+  line-height: inherit !important;
+  text-transform: inherit !important;
+}
+
+.situationsBand .situationSquare.situationSquare--selfExpression .situationSlashWord.isActive {
+  background: transparent;
+}
+
+.situationsBand .situationSquare.situationSquare--selfExpression .situationSlashWord::before {
   background: rgba(255, 255, 255, 0.16);
 }
 
@@ -2527,6 +2777,7 @@ h1 {
 .situationSquare--renovationFear .situationSlashWord,
 .situationSquare--renovationFear .situationSlashWord.isActive {
   color: #fff;
+  font-weight: 800;
   opacity: 1;
 }
 
@@ -2535,6 +2786,37 @@ h1 {
 }
 
 .situationSquare--renovationFear .situationSlashWord::before {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.situationsBand .situationSquare.situationSquare--renovationFear .situationSlashBlock,
+.situationsBand .situationSquare.situationSquare--renovationFear .situationSlashLine,
+.situationsBand .situationSquare.situationSquare--renovationFear .situationSlashDivider,
+.situationsBand .situationSquare.situationSquare--renovationFear .situationSlashWord,
+.situationsBand .situationSquare.situationSquare--renovationFear .situationSlashWord.isActive {
+  color: #fff;
+  font-size: clamp(10px, 1.9vw, 12px) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  opacity: 1;
+  text-transform: uppercase;
+}
+
+.situationsBand .situationSquare.situationSquare--renovationFear .situationSlashBlock * {
+  color: #fff !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  letter-spacing: inherit !important;
+  line-height: inherit !important;
+  text-transform: inherit !important;
+}
+
+.situationsBand .situationSquare.situationSquare--renovationFear .situationSlashWord.isActive {
+  background: transparent;
+}
+
+.situationsBand .situationSquare.situationSquare--renovationFear .situationSlashWord::before {
   background: rgba(255, 255, 255, 0.16);
 }
 
@@ -2550,6 +2832,7 @@ h1 {
 .situationSquare--noDesignerBudget .situationSlashWord,
 .situationSquare--noDesignerBudget .situationSlashWord.isActive {
   color: #fff;
+  font-weight: 800;
   opacity: 1;
 }
 
@@ -2559,6 +2842,52 @@ h1 {
 
 .situationSquare--noDesignerBudget .situationSlashWord::before {
   background: rgba(255, 255, 255, 0.16);
+}
+
+.situationsBand .situationSquare.situationSquare--noDesignerBudget .situationSlashBlock,
+.situationsBand .situationSquare.situationSquare--noDesignerBudget .situationSlashLine,
+.situationsBand .situationSquare.situationSquare--noDesignerBudget .situationSlashDivider,
+.situationsBand .situationSquare.situationSquare--noDesignerBudget .situationSlashWord,
+.situationsBand .situationSquare.situationSquare--noDesignerBudget .situationSlashWord.isActive {
+  color: #fff;
+  font-size: clamp(10px, 1.9vw, 12px) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  opacity: 1;
+  text-transform: uppercase;
+}
+
+.situationsBand .situationSquare.situationSquare--noDesignerBudget .situationSlashBlock * {
+  color: #fff !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  letter-spacing: inherit !important;
+  line-height: inherit !important;
+  text-transform: inherit !important;
+}
+
+.situationsBand .situationSquare.situationSquare--noDesignerBudget .situationSlashWord.isActive {
+  background: transparent;
+}
+
+.situationsBand .situationSquare.situationSquare--noDesignerBudget .situationSlashWord::before {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.situationSquare--newStage .situationSquareContent,
+.situationSquare--selfExpression .situationSquareContent,
+.situationSquare--renovationFear .situationSquareContent,
+.situationSquare--noDesignerBudget .situationSquareContent {
+  grid-template-rows: 1fr auto;
+}
+
+.situationSquare--newStage .situationSquareContent::before,
+.situationSquare--selfExpression .situationSquareContent::before,
+.situationSquare--renovationFear .situationSquareContent::before,
+.situationSquare--noDesignerBudget .situationSquareContent::before {
+  display: none;
+  content: none;
 }
 
 .situationsBand .sectionTitle {
