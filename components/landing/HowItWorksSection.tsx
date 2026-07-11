@@ -93,21 +93,21 @@ export function HowItWorksSection({ steps, intervalMs = 4800 }: HowItWorksSectio
       <div className="howLinkedPhoneColumn" aria-hidden="true">
         <div className="iphone17ProMax iphone17ProMax--flat">
           <div className="iphone17ProMaxScreen iphone17ProMaxScreen--appPreview">
-            <div className="iphone17ProMaxIsland" aria-hidden="true" />
             <div className="iphone17ProMaxScreens">
               {steps.map((step, index) => (
                 <article
                   className={index === activeIndex ? "iphone17ProMaxSlide isActive" : "iphone17ProMaxSlide"}
                   key={step.title}
                 >
-                  <Image
-                    alt={step.title}
-                    className="iphone17ProMaxSlideImage"
-                    fill
-                    priority={index === 0}
+                    <Image
+                      alt={step.title}
+                      className="iphone17ProMaxSlideImage"
+                      fill
+                      priority={index === 0}
                       sizes="(max-width: 768px) 88vw, 300px"
-                    src={step.screenSrc}
-                  />
+                      src={step.screenSrc}
+                      unoptimized
+                    />
                 </article>
               ))}
             </div>

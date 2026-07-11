@@ -517,31 +517,33 @@ const workbookVariants = [
   },
 ];
 
+const HOW_IT_WORKS_SCREEN_VERSION = "7d5760e";
+
 const connectionSteps = [
   {
     title: "Define your roles",
     body: "Identify the roles you play in life and the ones your home should support.",
-    screenSrc: "/how-it-works/01.png",
+    screenSrc: `/how-it-works/01.png?v=${HOW_IT_WORKS_SCREEN_VERSION}`,
   },
   {
     title: "Map your life scenarios",
     body: "Map the key moments and routines in your day to see how your space can support them.",
-    screenSrc: "/how-it-works/02.png",
+    screenSrc: `/how-it-works/02.png?v=${HOW_IT_WORKS_SCREEN_VERSION}`,
   },
   {
     title: "Define the states you want to feel",
     body: "Choose the emotions and states you want to experience at home — and why they matter to you.",
-    screenSrc: "/how-it-works/03.png",
+    screenSrc: `/how-it-works/03.png?v=${HOW_IT_WORKS_SCREEN_VERSION}`,
   },
   {
     title: "Choose the objects that activate your states",
     body: "Select the objects, materials and details that bring your desired states to life.",
-    screenSrc: "/how-it-works/04.png",
+    screenSrc: `/how-it-works/04.png?v=${HOW_IT_WORKS_SCREEN_VERSION}`,
   },
   {
     title: "Bring it all together",
     body: "Bring everything together into a cohesive concept that feels like you.",
-    screenSrc: "/how-it-works/05.png",
+    screenSrc: `/how-it-works/05.png?v=${HOW_IT_WORKS_SCREEN_VERSION}`,
   },
 ];
 
