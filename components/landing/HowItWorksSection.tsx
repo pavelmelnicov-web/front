@@ -86,8 +86,6 @@ export function HowItWorksSection({ steps, intervalMs = 4800 }: HowItWorksSectio
     activeIndex,
   });
 
-  const activeStep = steps[activeIndex] ?? steps[0];
-
   return (
     <div className="howLinkedLayout">
       <div className="howLinkedPhoneColumn" aria-hidden="true">
@@ -137,11 +135,6 @@ export function HowItWorksSection({ steps, intervalMs = 4800 }: HowItWorksSectio
             );
           })}
         </div>
-        <article aria-live="polite" className="howLinkedActiveCopy">
-          <span>{String(activeIndex + 1).padStart(2, "0")}</span>
-          <h3>{activeStep.title}</h3>
-          <p>{activeStep.body}</p>
-        </article>
       </div>
     </div>
   );

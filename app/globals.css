@@ -3672,16 +3672,38 @@ h1 {
   --linked-line: rgba(17, 17, 16, 0.1);
   --linked-card: #faf9f6;
   background: var(--linked-bg);
-  border-bottom: 1px solid var(--linked-line);
+  border-bottom: none;
   color: var(--linked-ink);
   overflow: hidden;
 }
 
 .howLinkedBand .sectionTitle h2 {
-  color: var(--linked-ink);
+  color: #111110;
   font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(36px, 11vw, 96px);
   font-weight: 800;
-  letter-spacing: -0.04em;
+  line-height: 0.88;
+  letter-spacing: -0.078em;
+}
+
+.howLinkedBand .sectionTitle .howLinkedEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: #111110;
+  font-size: clamp(10.8px, 2.64vw, 13.2px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: lowercase;
+}
+
+.howLinkedBand .sectionTitle .howLinkedEyebrowArrow {
+  color: #111110;
+  font-size: clamp(9.6px, 2.4vw, 12px);
+  font-weight: 500;
+  line-height: 1;
 }
 
 .howLinkedBand .linkStep {
@@ -3723,7 +3745,7 @@ h1 {
   width: min(100%, 300px);
   aspect-ratio: 430 / 932;
   padding: 8px;
-  border: 1.5px solid rgba(17, 17, 16, 0.12);
+  border: none;
   border-radius: 40px;
   background: #ffffff;
   box-shadow: none;
@@ -3791,8 +3813,8 @@ h1 {
 }
 
 .iphone17ProMax--flat .iphone17ProMaxSlideImage {
-  object-fit: cover;
-  object-position: top center;
+  object-fit: fill;
+  object-position: center center;
   padding: 0;
 }
 
@@ -5003,11 +5025,6 @@ textarea {
 
   .howLinkedActiveCopy {
     display: none;
-  }
-
-  .howLinkedBand .sectionTitle h2 {
-    font-size: clamp(40px, 4.5vw, 56px);
-    line-height: 0.98;
   }
 
   .linkFlow {

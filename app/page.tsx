@@ -319,7 +319,15 @@ export default function Home() {
 
       <section className="howLinkedBand" id="how-linked">
         <div className="sectionTitle">
-          <h2>How it works</h2>
+          <p className="howLinkedEyebrow">
+            <span aria-hidden="true" className="howLinkedEyebrowArrow">
+              →
+            </span>
+            <span>how it works</span>
+          </p>
+          <h2>
+            A step-by-step workbook to create a space that reflects who you are and how you want to live
+          </h2>
         </div>
         <HowItWorksSection steps={connectionSteps} />
       </section>
@@ -517,7 +525,7 @@ const workbookVariants = [
   },
 ];
 
-const HOW_IT_WORKS_SCREEN_VERSION = "7d5760e";
+const HOW_IT_WORKS_SCREEN_VERSION = "center01";
 
 const connectionSteps = [
   {
