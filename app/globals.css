@@ -3146,19 +3146,22 @@ h1 {
 }
 
 .variantsBand .variantScreen:nth-child(2) {
-  --variant-card-base: #3b2f47;
+  --variant-card-base: #c9783a;
   --variant-card-photo: url("/situations/self-expression-photo.png");
+  border: none;
+  background:
+    linear-gradient(135deg, rgba(240, 201, 160, 0.72) 0%, transparent 42%),
+    linear-gradient(180deg, #f0c9a0 0%, #e0944b 52%, #c9783a 100%);
+  box-shadow: 0 28px 72px rgba(17, 17, 16, 0.12);
 }
 
 .variantsBand .variantScreen:nth-child(1) {
   --variant-card-base: #8cbfad;
-  border-color: rgba(168, 213, 192, 0.55);
+  border: none;
   background:
     linear-gradient(135deg, rgba(200, 230, 217, 0.72) 0%, transparent 42%),
     linear-gradient(180deg, #c8e6d9 0%, #a8d5c0 52%, #8cbfad 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.42),
-    0 28px 72px rgba(17, 17, 16, 0.12);
+  box-shadow: 0 28px 72px rgba(17, 17, 16, 0.12);
 }
 
 .variantsBand .variantScreen::before {
@@ -3189,7 +3192,7 @@ h1 {
 }
 
 .variantsBand .variantScreen:nth-child(1)::before {
-  border-color: rgba(255, 255, 255, 0.28);
+  border: none;
   background:
     linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.18) 48%, transparent 100%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 54%);
@@ -3200,6 +3203,20 @@ h1 {
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 44%),
     linear-gradient(180deg, rgba(200, 230, 217, 0.32), rgba(140, 191, 173, 0.08));
+}
+
+.variantsBand .variantScreen:nth-child(2)::before {
+  border: none;
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.18) 48%, transparent 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 54%);
+  opacity: 0.55;
+}
+
+.variantsBand .variantScreen:nth-child(2)::after {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 44%),
+    linear-gradient(180deg, rgba(240, 201, 160, 0.32), rgba(201, 120, 58, 0.08));
 }
 
 .situationScreenCopy,
@@ -3246,6 +3263,20 @@ h1 {
 }
 
 .variantsBand .variantScreen:nth-child(1) .variantCopy p {
+  color: #111110;
+}
+
+.variantsBand .variantScreen:nth-child(2) .variantCopy span {
+  border-color: rgba(201, 120, 58, 0.62);
+  background: rgba(255, 255, 255, 0.34);
+  color: #9a5528;
+}
+
+.variantsBand .variantScreen:nth-child(2) .variantCopy h3 {
+  color: #111110;
+}
+
+.variantsBand .variantScreen:nth-child(2) .variantCopy p {
   color: #111110;
 }
 
@@ -3387,7 +3418,8 @@ h1 {
   text-transform: lowercase;
 }
 
-.variantsBand .variantScreen:nth-child(1) .variantCopy .variantSearchQuery {
+.variantsBand .variantScreen:nth-child(1) .variantCopy .variantSearchQuery,
+.variantsBand .variantScreen:nth-child(2) .variantCopy .variantSearchQuery {
   color: rgba(17, 17, 16, 0.86);
 }
 
@@ -3452,6 +3484,16 @@ h1 {
   font-weight: 400;
 }
 
+.variantsBand .variantScreen:nth-child(2) .variantSearchBar {
+  background: #f7f4ed;
+  box-shadow: none;
+}
+
+.variantsBand .variantScreen:nth-child(2) .variantSearchQuery {
+  color: rgba(17, 17, 16, 0.86);
+  font-weight: 400;
+}
+
 @media (max-width: 480px) {
   .variantSearchBar {
     min-height: 22px;
@@ -3479,6 +3521,12 @@ h1 {
 }
 
 .variantsBand .variantScreen:nth-child(1) .variantQuestions em {
+  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.28);
+  color: rgba(17, 17, 16, 0.82);
+}
+
+.variantsBand .variantScreen:nth-child(2) .variantQuestions em {
   border-color: rgba(255, 255, 255, 0.42);
   background: rgba(255, 255, 255, 0.28);
   color: rgba(17, 17, 16, 0.82);
@@ -3530,8 +3578,15 @@ h1 {
   transform: scale(1.03);
 }
 
-.variantsBand .variantScreen:nth-child(1) .variantCard::before {
+.variantsBand .variantScreen:nth-child(1) .variantCard::before,
+.variantsBand .variantScreen:nth-child(2) .variantCard::before {
   display: none;
+}
+
+.variantsBand .variantScreen:nth-child(1) .variantCard,
+.variantsBand .variantScreen:nth-child(2) .variantCard {
+  border: none;
+  box-shadow: 0 30px 82px rgba(0, 0, 0, 0.42);
 }
 
 .variantCardVideo {
@@ -3923,6 +3978,12 @@ textarea {
 }
 
 .variantsBand .variantScreen:nth-child(1) .variantCard .primaryButton {
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(247, 244, 237, 0.94);
+  color: #111110;
+}
+
+.variantsBand .variantScreen:nth-child(2) .variantCard .primaryButton {
   border-color: rgba(255, 255, 255, 0.72);
   background: rgba(247, 244, 237, 0.94);
   color: #111110;

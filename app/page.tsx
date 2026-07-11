@@ -277,7 +277,7 @@ export default function Home() {
                   <p>{item.description}</p>
                 </div>
                 <div className="variantCard" aria-hidden="true">
-                  {item.id === "system" ? (
+                  {item.id === "system" || item.id === "atmosphere" ? (
                     <video
                       autoPlay
                       className="variantCardVideo"
@@ -285,7 +285,11 @@ export default function Home() {
                       muted
                       playsInline
                       preload="metadata"
-                      src="/variants/men-version-card.mp4"
+                      src={
+                        item.id === "system"
+                          ? "/variants/men-version-card.mp4"
+                          : "/variants/women-version-card.mp4"
+                      }
                     />
                   ) : null}
                   <strong className="variantCardModel">{item.model}</strong>
@@ -510,7 +514,7 @@ const workbookVariants = [
     title: "Women start with questions",
     description:
       "This version starts from feeling: what state you want at home, what relationships and atmosphere should emerge in the space, and how to make home reflect you and feel like yours.",
-    model: "space as lived experience",
+    model: "space as experience",
     result: "state -> atmosphere -> lived experience",
     questions: [
       "what state do I want to feel at home",
