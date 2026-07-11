@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { HeroFloatCards } from "../components/landing/HeroFloatCards";
+import { HowItWorksSection } from "../components/landing/HowItWorksSection";
 import { IntroStackSection } from "../components/landing/IntroStackSection";
 import { SituationsSection } from "../components/landing/SituationsSection";
 import { VariantSearchCycler } from "../components/landing/VariantSearchCycler";
@@ -318,18 +319,9 @@ export default function Home() {
 
       <section className="howLinkedBand" id="how-linked">
         <div className="sectionTitle">
-          <p>How it works</p>
-          <h2>How it all connects</h2>
+          <h2>How it works</h2>
         </div>
-        <div className="linkFlow">
-          {connectionSteps.map((item, index) => (
-            <article className="linkStep" key={item.title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </article>
-          ))}
-        </div>
+        <HowItWorksSection steps={connectionSteps} />
       </section>
 
       <section className="testimonialsBand" id="testimonials">
