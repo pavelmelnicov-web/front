@@ -81,7 +81,7 @@ export function VariantSearchCycler({
 
   return (
     <div className="variantSearchBar" role="search" aria-label="Workbook question preview">
-      <Search aria-hidden="true" className="variantSearchIcon" size={11} strokeWidth={1.9} />
+      <Search aria-hidden="true" className="variantSearchIcon" size={10} strokeWidth={1.5} />
       <span className="variantSearchQuery" key={`${activeQuery}-${activeIndex}`} aria-live="polite">
         {activeQuery}
       </span>

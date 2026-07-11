@@ -3246,7 +3246,7 @@ h1 {
 }
 
 .variantsBand .variantScreen:nth-child(1) .variantCopy p {
-  color: rgba(17, 17, 16, 0.68);
+  color: #111110;
 }
 
 .situationScreenCopy h3,
@@ -3283,7 +3283,7 @@ h1 {
 
 .variantsBand .variantCopy p {
   color: var(--variants-muted);
-  font-weight: 500;
+  font-weight: 300;
 }
 
 .situationPills {
@@ -3306,18 +3306,21 @@ h1 {
 .variantSearchBar {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   width: 100%;
-  min-height: 30px;
-  padding: 0 6px;
+  min-height: 24px;
+  padding: 0 5px 0 7px;
   border: none;
   border-radius: 999px;
   background: #f7f4ed;
   box-shadow: none;
+  container-type: inline-size;
 }
 
 .variantSearchIcon {
   flex: 0 0 auto;
+  width: 10.35px;
+  height: 10.35px;
   color: rgba(17, 17, 16, 0.44);
 }
 
@@ -3331,14 +3334,61 @@ h1 {
   background: transparent !important;
   box-shadow: none !important;
   color: rgba(17, 17, 16, 0.86);
-  font-size: clamp(4.2px, 1.05vw, 5.2px);
-  font-weight: 200;
-  line-height: 1.05;
-  letter-spacing: -0.075em;
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(8.785px, 4.539cqi, 14.64px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.09em;
+  text-transform: lowercase;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
   animation: variantSearchQueryIn 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.variantCopy .variantSearchQuery {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  font-weight: 400;
+  letter-spacing: -0.09em;
+  text-transform: lowercase;
+}
+
+.variantsBand .variantCopy .variantSearchBar {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 5px 0 7px;
+  border: none;
+  border-radius: 999px;
+  background: #f7f4ed;
+  color: inherit;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.variantsBand .variantCopy .variantSearchQuery {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: rgba(17, 17, 16, 0.86);
+  font-weight: 400;
+  letter-spacing: -0.09em;
+  text-transform: lowercase;
+}
+
+.variantsBand .variantScreen:nth-child(1) .variantCopy .variantSearchQuery {
+  color: rgba(17, 17, 16, 0.86);
 }
 
 .variantSearchQuery::before,
@@ -3399,6 +3449,25 @@ h1 {
 
 .variantsBand .variantScreen:nth-child(1) .variantSearchQuery {
   color: rgba(17, 17, 16, 0.86);
+  font-weight: 400;
+}
+
+@media (max-width: 480px) {
+  .variantSearchBar {
+    min-height: 22px;
+    padding: 0 4px 0 6px;
+    gap: 4px;
+  }
+
+  .variantSearchIcon {
+    width: 9.2px;
+    height: 9.2px;
+  }
+
+  .variantsBand .variantCopy .variantSearchQuery {
+    font-size: clamp(8.05px, 4.319cqi, 11.72px);
+    letter-spacing: -0.1em;
+  }
 }
 
 .variantsBand .variantQuestions em {
@@ -3505,9 +3574,14 @@ h1 {
   display: none;
 }
 
-.variantsBand .variantCard strong {
-  margin-top: 0;
-  margin-bottom: 6px;
+.variantsBand .variantCard strong,
+.variantsBand .variantCard .variantCardModel {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  z-index: 2;
+  margin: 0;
   color: var(--variants-ink);
   font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(14px, 4vw, 18px);
@@ -3607,29 +3681,29 @@ h1 {
 
 .variantsBand .phoneList {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  width: 100%;
+  min-height: auto;
   margin: 0 0 14px;
+  padding: 0;
+  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
-.variantsBand .variantCardPointGroup {
+.variantsBand .variantCardFlowSegment {
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: 6px;
 }
 
-.variantsBand .variantCardPointItem {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  border-radius: 999px;
-  background: rgba(247, 244, 237, 0.94);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
-  backdrop-filter: blur(12px);
-}
-
+.variantsBand .phoneList .variantCardFlowSegment,
 .variantsBand .phoneList .variantCardPoint,
 .variantsBand .phoneList .variantCardArrow {
   padding: 0;
@@ -3641,20 +3715,22 @@ h1 {
 }
 
 .variantsBand .variantCardPoint {
-  color: #111110;
-  font-size: clamp(9px, 2.2vw, 11px);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(10.8px, 2.64vw, 13.2px);
   font-weight: 600;
   letter-spacing: -0.02em;
-  line-height: 1.2;
-  text-shadow: none;
+  line-height: 1;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.22);
   text-transform: lowercase;
+  white-space: nowrap;
 }
 
 .variantsBand .variantCardArrow {
-  color: rgba(247, 244, 237, 0.82);
-  font-size: clamp(8px, 2vw, 10px);
+  color: rgba(255, 255, 255, 0.58);
+  font-size: clamp(9.6px, 2.4vw, 12px);
   font-weight: 500;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .postCard {

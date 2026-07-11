@@ -288,19 +288,17 @@ export default function Home() {
                       src="/variants/men-version-card.mp4"
                     />
                   ) : null}
+                  <strong className="variantCardModel">{item.model}</strong>
                   <div className="phoneTop" />
-                  <strong>{item.model}</strong>
                   <div className="phoneList">
                     {item.points.map((point, index) => (
-                      <span className="variantCardPointGroup" key={point}>
+                      <span className="variantCardFlowSegment" key={point}>
                         {index > 0 ? (
                           <span aria-hidden="true" className="variantCardArrow">
                             →
                           </span>
                         ) : null}
-                        <span className="variantCardPointItem">
-                          <span className="variantCardPoint">{point}</span>
-                        </span>
+                        <span className="variantCardPoint">{point}</span>
                       </span>
                     ))}
                   </div>
