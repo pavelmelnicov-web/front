@@ -14,7 +14,7 @@ type HowItWorksSectionProps = {
   intervalMs?: number;
 };
 
-export function HowItWorksSection({ steps, intervalMs = 4800 }: HowItWorksSectionProps) {
+export function HowItWorksSection({ steps, intervalMs = 2840 }: HowItWorksSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [reduceMotion, setReduceMotion] = useState(false);
 
