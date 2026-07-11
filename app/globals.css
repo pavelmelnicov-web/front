@@ -1093,7 +1093,7 @@ h1 {
   min-height: 0;
   padding: 0;
   overflow: hidden;
-  border: 1px solid rgba(17, 17, 16, 0.12);
+  border: none;
   border-radius: clamp(14px, 2.4vw, 18px);
   background: #f4f3ef;
   color: var(--situations-ink);
@@ -1912,7 +1912,6 @@ h1 {
 
 .situationSquare:hover,
 .situationSquare:focus-visible {
-  border-color: rgba(17, 17, 16, 0.18);
   box-shadow:
     0 2px 6px rgba(17, 17, 16, 0.05),
     0 16px 36px rgba(17, 17, 16, 0.09);
@@ -1920,14 +1919,13 @@ h1 {
 }
 
 .situationSquare.selected {
-  border-color: rgba(17, 17, 16, 0.24);
   box-shadow:
     0 2px 8px rgba(17, 17, 16, 0.06),
     0 18px 40px rgba(17, 17, 16, 0.1);
 }
 
 .situationSquare--newStage {
-  border-color: rgba(17, 17, 16, 0.1);
+  border: none;
   background: #ddd8cf;
   box-shadow:
     0 4px 10px rgba(17, 17, 16, 0.06),
@@ -2005,7 +2003,7 @@ h1 {
 }
 
 .situationSquare--selfExpression {
-  border-color: rgba(35, 92, 67, 0.46);
+  border: none;
   background: #203a2d;
   box-shadow:
     0 2px 10px rgba(17, 17, 16, 0.1),
@@ -2099,7 +2097,7 @@ h1 {
 }
 
 .situationSquare--selfExpression {
-  border-color: rgba(17, 17, 16, 0.1);
+  border: none;
   background: #ddd8cf;
   box-shadow:
     0 4px 10px rgba(17, 17, 16, 0.06),
@@ -2171,7 +2169,7 @@ h1 {
 }
 
 .situationSquare--renovationFear {
-  border-color: rgba(222, 232, 226, 0.46);
+  border: none;
   background: #243840;
   box-shadow:
     0 2px 10px rgba(17, 17, 16, 0.1),
@@ -2265,7 +2263,7 @@ h1 {
 }
 
 .situationSquare--renovationFear {
-  border-color: rgba(17, 17, 16, 0.1);
+  border: none;
   background: #ddd8cf;
   box-shadow:
     0 4px 10px rgba(17, 17, 16, 0.06),
@@ -2337,7 +2335,7 @@ h1 {
 }
 
 .situationSquare--noDesignerBudget {
-  border-color: rgba(238, 232, 210, 0.44);
+  border: none;
   background: #1f2824;
   box-shadow:
     0 2px 10px rgba(17, 17, 16, 0.1),
@@ -2431,7 +2429,7 @@ h1 {
 }
 
 .situationSquare--noDesignerBudget {
-  border-color: rgba(17, 17, 16, 0.1);
+  border: none;
   background: #ddd8cf;
   box-shadow:
     0 4px 10px rgba(17, 17, 16, 0.06),
@@ -2711,7 +2709,7 @@ h1 {
 }
 
 .situationsBand .situationSquare.situationSquare--newStage .situationSlashWord::before {
-  background: rgba(255, 230, 0, 0.46);
+  background: #c9783a;
 }
 
 .situationSquare--selfExpression .situationSlashLine {
@@ -2735,7 +2733,7 @@ h1 {
 }
 
 .situationSquare--selfExpression .situationSlashWord::before {
-  background: rgba(184, 240, 111, 0.4);
+  background: #8cbfad;
 }
 
 .situationsBand .situationSquare.situationSquare--selfExpression .situationSlashBlock,
@@ -2766,7 +2764,7 @@ h1 {
 }
 
 .situationsBand .situationSquare.situationSquare--selfExpression .situationSlashWord::before {
-  background: rgba(184, 240, 111, 0.4);
+  background: #8cbfad;
 }
 
 .situationSquare--renovationFear .situationSlashLine {
@@ -2978,6 +2976,8 @@ h1 {
 .howLinkedBand .sectionTitle {
   align-items: flex-start;
   flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 20px;
 }
 
 .variantsBand .sectionTitle,
@@ -3017,7 +3017,7 @@ h1 {
   width: max-content;
   max-width: 100%;
   padding: 4px;
-  border: 1px solid rgba(17, 17, 16, 0.1);
+  border: none;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.32);
   backdrop-filter: blur(18px);
@@ -3731,6 +3731,7 @@ h1 {
   grid-template-columns: 1fr;
   gap: 28px;
   align-items: center;
+  margin-top: 12px;
 }
 
 .howLinkedPhoneColumn {
@@ -4741,6 +4742,11 @@ textarea {
     gap: 16px;
   }
 
+  .variantsBand .sectionTitle,
+  .howLinkedBand .sectionTitle {
+    margin-bottom: 24px;
+  }
+
   .sectionTitle h2,
   .workbookSide h2,
   .resultBand h2,
@@ -4906,6 +4912,13 @@ textarea {
     align-items: end;
     flex-direction: row;
     gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  .variantsBand .sectionTitle,
+  .howLinkedBand .sectionTitle {
+    align-items: flex-start;
+    flex-direction: column;
     margin-bottom: 28px;
   }
 

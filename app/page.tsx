@@ -320,10 +320,10 @@ export default function Home() {
       <section className="howLinkedBand" id="how-linked">
         <div className="sectionTitle">
           <p className="howLinkedEyebrow">
+            <span>how it works</span>
             <span aria-hidden="true" className="howLinkedEyebrowArrow">
               →
             </span>
-            <span>how it works</span>
           </p>
           <h2>
             A step-by-step workbook to create a space that reflects who you are and how you want to live
