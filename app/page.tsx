@@ -519,20 +519,29 @@ const workbookVariants = [
 
 const connectionSteps = [
   {
-    title: "You and roles",
-    body: "Space is built from you first—not from style: who you are in this place, how you live every day, and which roles home should support.",
+    title: "Define your roles",
+    body: "Identify the roles you play in life and the ones your home should support.",
+    screenSrc: "/how-it-works/01.png",
   },
   {
-    title: "Scenarios",
-    body: "Then you look at real repeating scenarios: where you work, rest, recover, connect, and spend time with yourself.",
+    title: "Map your life scenarios",
+    body: "Map the key moments and routines in your day to see how your space can support them.",
+    screenSrc: "/how-it-works/02.png",
   },
   {
-    title: "States",
-    body: "For each scenario it helps to name the state it should activate: focus, calm, energy, steadiness, closeness, or belonging.",
+    title: "Define the states you want to feel",
+    body: "Choose the emotions and states you want to experience at home — and why they matter to you.",
+    screenSrc: "/how-it-works/03.png",
   },
   {
-    title: "Objects and zones",
-    body: "Then objects, light, order, routes, and layout become tools: they either support the chosen states and scenarios—or drain you.",
+    title: "Choose the objects that activate your states",
+    body: "Select the objects, materials and details that bring your desired states to life.",
+    screenSrc: "/how-it-works/04.png",
+  },
+  {
+    title: "Bring it all together",
+    body: "Bring everything together into a cohesive concept that feels like you.",
+    screenSrc: "/how-it-works/05.png",
   },
 ];
 

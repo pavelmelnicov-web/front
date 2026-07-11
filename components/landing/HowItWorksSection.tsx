@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export type HowItWorksStep = {
   title: string;
   body: string;
+  screenSrc: string;
 };
 
 type HowItWorksSectionProps = {
@@ -78,63 +80,38 @@ export function HowItWorksSection({ steps, intervalMs = 4800 }: HowItWorksSectio
     return null;
   }
 
+  console.log("[how-it-works-section] Rendering phone screens", {
+    stepsCount: steps.length,
+    screenSources: steps.map((step) => step.screenSrc),
+    activeIndex,
+  });
+
   const activeStep = steps[activeIndex] ?? steps[0];
 
   return (
     <div className="howLinkedLayout">
       <div className="howLinkedPhoneColumn" aria-hidden="true">
-        <div className="iphone17ProMaxShadow" />
-        <div className="iphone17ProMax">
-          <div className="iphone17ProMaxAntenna iphone17ProMaxAntenna--top" />
-          <div className="iphone17ProMaxAntenna iphone17ProMaxAntenna--bottom" />
-          <div className="iphone17ProMaxButton iphone17ProMaxButton--action" />
-          <div className="iphone17ProMaxButton iphone17ProMaxButton--volumeUp" />
-          <div className="iphone17ProMaxButton iphone17ProMaxButton--volumeDown" />
-          <div className="iphone17ProMaxButton iphone17ProMaxButton--power" />
-          <div className="iphone17ProMaxBezel">
-            <div className="iphone17ProMaxScreen">
-              <div className="iphone17ProMaxIsland">
-                <span className="iphone17ProMaxIslandSensor" />
-                <span className="iphone17ProMaxIslandCamera" />
-              </div>
-              <div className="iphone17ProMaxStatus">
-                <span>9:41</span>
-                <span className="iphone17ProMaxStatusIcons" aria-hidden="true">
-                  <span className="iphone17ProMaxSignal">
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                  </span>
-                  <span className="iphone17ProMaxWifi" />
-                  <span className="iphone17ProMaxBattery">
-                    <i />
-                  </span>
-                </span>
-              </div>
-              <div className="iphone17ProMaxScreens">
-                {steps.map((step, index) => (
-                  <article
-                    className={index === activeIndex ? "iphone17ProMaxSlide isActive" : "iphone17ProMaxSlide"}
-                    key={step.title}
-                  >
-                    <span className="iphone17ProMaxSlideIndex">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <h3>{step.title}</h3>
-                    <p>{step.body}</p>
-                    <div className="iphone17ProMaxSlideCard">
-                      <span>Workbook step</span>
-                      <strong>{step.title}</strong>
-                    </div>
-                  </article>
-                ))}
-              </div>
-              <div className="iphone17ProMaxHomeIndicator" />
-              <div className="iphone17ProMaxScreenGloss" />
+        <div className="iphone17ProMax iphone17ProMax--flat">
+          <div className="iphone17ProMaxScreen iphone17ProMaxScreen--appPreview">
+            <div className="iphone17ProMaxIsland" aria-hidden="true" />
+            <div className="iphone17ProMaxScreens">
+              {steps.map((step, index) => (
+                <article
+                  className={index === activeIndex ? "iphone17ProMaxSlide isActive" : "iphone17ProMaxSlide"}
+                  key={step.title}
+                >
+                  <Image
+                    alt={step.title}
+                    className="iphone17ProMaxSlideImage"
+                    fill
+                    priority={index === 0}
+                      sizes="(max-width: 768px) 88vw, 300px"
+                    src={step.screenSrc}
+                  />
+                </article>
+              ))}
             </div>
           </div>
-          <div className="iphone17ProMaxFrameGloss" />
         </div>
       </div>
 
