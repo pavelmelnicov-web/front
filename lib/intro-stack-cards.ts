@@ -17,8 +17,8 @@ export const INTRO_IMAGE_QUALITY = 100;
 export const introStackCardVisuals: IntroStackCardVisual[] = [
   {
     id: "intro-01",
-    image: "/intro/card-01.jpg",
-    objectPosition: "center 42%",
+    image: "/intro/card-01-pinterest.png",
+    objectPosition: "center center",
   },
   {
     id: "intro-02",

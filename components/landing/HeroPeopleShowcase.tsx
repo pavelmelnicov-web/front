@@ -1,32 +1,32 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const HERO_PROFILE_INTERVAL_MS = 5200;
 
 const heroProfiles = [
   {
+    id: "creative-space",
+    imageSrc: "/hero-people/profile-04.png",
+    title: "Your character",
+    theme: "olive",
+  },
+  {
     id: "your-space",
-    imageSrc: "/hero-visual.jpg",
-    imageClassName: "heroPeoplePortraitImage--full",
-    eyebrow: "Your roles",
+    imageSrc: "/hero-people/profile-01.png",
     title: "Your space",
     theme: "blue",
   },
   {
     id: "mark",
-    imageSrc: "/testimonials/mark-r-avatar.png",
-    imageClassName: "",
-    eyebrow: "Your scenarios",
+    imageSrc: "/hero-people/profile-02.png",
     title: "Your rhythm",
     theme: "sage",
   },
   {
     id: "nika",
-    imageSrc: "/testimonials/nika-s-avatar.png",
-    imageClassName: "",
-    eyebrow: "Your objects",
+    imageSrc: "/hero-people/profile-03.png",
     title: "Your states",
     theme: "terracotta",
   },
@@ -57,6 +57,8 @@ const heroWorkbookCards = [
 ] as const;
 
 export function HeroPeopleShowcase() {
+  const stageRef = useRef<HTMLDivElement>(null);
+  const stageScrollTimeoutRef = useRef<number | null>(null);
   const [activeProfileIndex, setActiveProfileIndex] = useState(0);
   const [reduceMotion, setReduceMotion] = useState(false);
 
@@ -91,10 +93,23 @@ export function HeroPeopleShowcase() {
     const intervalId = window.setInterval(() => {
       setActiveProfileIndex((currentIndex) => {
         const nextIndex = (currentIndex + 1) % heroProfiles.length;
+        const stage = stageRef.current;
+
         console.log("[hero-people-showcase] Active profile changed automatically", {
           previousProfileId: heroProfiles[currentIndex].id,
           nextProfileId: heroProfiles[nextIndex].id,
+          stageWidth: stage?.clientWidth ?? 0,
         });
+
+        if (stage) {
+          stage.scrollTo({
+            left: nextIndex * stage.clientWidth,
+            behavior: "smooth",
+          });
+        } else {
+          console.warn("[hero-people-showcase] Automatic profile scroll skipped because stage is missing");
+        }
+
         return nextIndex;
       });
     }, HERO_PROFILE_INTERVAL_MS);
@@ -105,18 +120,77 @@ export function HeroPeopleShowcase() {
     };
   }, [reduceMotion]);
 
+  useEffect(() => {
+    return () => {
+      if (stageScrollTimeoutRef.current !== null) {
+        window.clearTimeout(stageScrollTimeoutRef.current);
+        console.log("[hero-people-showcase] Stage scroll synchronization timeout cleared");
+      }
+    };
+  }, []);
+
   function selectProfile(index: number) {
+    const stage = stageRef.current;
+
     console.log("[hero-people-showcase] Profile selected manually", {
       previousProfileId: heroProfiles[activeProfileIndex].id,
       nextProfileId: heroProfiles[index].id,
       nextProfileIndex: index,
+      stageWidth: stage?.clientWidth ?? 0,
     });
     setActiveProfileIndex(index);
+
+    if (!stage) {
+      console.warn("[hero-people-showcase] Manual profile scroll skipped because stage is missing");
+      return;
+    }
+
+    stage.scrollTo({
+      left: index * stage.clientWidth,
+      behavior: "smooth",
+    });
+  }
+
+  function handleStageScroll(event: React.UIEvent<HTMLDivElement>) {
+    const stage = event.currentTarget;
+
+    if (stageScrollTimeoutRef.current !== null) {
+      window.clearTimeout(stageScrollTimeoutRef.current);
+    }
+
+    stageScrollTimeoutRef.current = window.setTimeout(() => {
+      const width = stage.clientWidth;
+      if (width <= 0) {
+        console.warn("[hero-people-showcase] Stage scroll sync ignored because width is zero");
+        return;
+      }
+
+      const nextIndex = Math.max(
+        0,
+        Math.min(heroProfiles.length - 1, Math.round(stage.scrollLeft / width)),
+      );
+
+      console.log("[hero-people-showcase] Native profile swipe settled", {
+        scrollLeft: Math.round(stage.scrollLeft),
+        stageWidth: width,
+        previousProfileId: heroProfiles[activeProfileIndex].id,
+        nextProfileId: heroProfiles[nextIndex].id,
+        nextProfileIndex: nextIndex,
+      });
+
+      setActiveProfileIndex(nextIndex);
+    }, 90);
   }
 
   return (
     <div className="heroPeopleShowcase">
-      <div className="heroPeopleStage">
+      <div
+        aria-label="People and their spaces"
+        className="heroPeopleStage"
+        onScroll={handleStageScroll}
+        ref={stageRef}
+        role="region"
+      >
         {heroProfiles.map((profile, index) => {
           const isActive = index === activeProfileIndex;
 
@@ -133,31 +207,24 @@ export function HeroPeopleShowcase() {
               key={profile.id}
             >
               <div className="heroPeopleBackdrop">
-                <span>{profile.eyebrow}</span>
-                <strong>{profile.title}</strong>
-              </div>
-
-              <div className="heroPeoplePortrait">
                 <Image
                   alt=""
-                  className={["heroPeoplePortraitImage", profile.imageClassName]
-                    .filter(Boolean)
-                    .join(" ")}
+                  className="heroPeopleBackdropImage"
                   fill
                   onError={() => {
-                    console.error("[hero-people-showcase] Portrait failed to load", {
+                    console.error("[hero-people-showcase] Profile image failed to load", {
                       profileId: profile.id,
                       imageSrc: profile.imageSrc,
                     });
                   }}
                   onLoad={() => {
-                    console.log("[hero-people-showcase] Portrait loaded", {
+                    console.log("[hero-people-showcase] Profile image loaded", {
                       profileId: profile.id,
                       imageSrc: profile.imageSrc,
                     });
                   }}
                   priority={index === 0}
-                  sizes="(max-width: 640px) 44vw, 230px"
+                  sizes="(max-width: 640px) 69vw, 430px"
                   src={profile.imageSrc}
                   unoptimized
                 />

@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { INTRO_IMAGE_QUALITY, INTRO_SCROLL_STEP_VH, introStackCardVisuals } from "../../lib/intro-stack-cards";
+import { useEffect, useRef, useState } from "react";
+import { INTRO_IMAGE_QUALITY, introStackCardVisuals } from "../../lib/intro-stack-cards";
 
 type IntroItem = {
   title: string;
@@ -13,182 +13,65 @@ type IntroStackSectionProps = {
   items: IntroItem[];
 };
 
-type CardMotion = {
-  opacity: number;
-  scale: number;
-  translateY: number;
-  imageScale: number;
-  zIndex: number;
-  isActive: boolean;
-};
-
 const INTRO_CARD_ACCENTS = ["var(--accent)", "var(--sage)", "var(--blue)", "var(--rust)"] as const;
-
-const MOTION = {
-  enterPortion: 0.28,
-  activeUntil: 0.74,
-  exitPortion: 0.26,
-} as const;
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
 }
 
-function easeOutQuint(value: number) {
-  return 1 - Math.pow(1 - value, 5);
-}
-
-function getCardMotion(index: number, total: number, progress: number): CardMotion {
-  const segment = 1 / total;
-  const local = (progress - index * segment) / segment;
-
-  if (local < 0) {
-    return {
-      opacity: 0,
-      scale: 0.94,
-      translateY: 52,
-      imageScale: 1.03,
-      zIndex: index,
-      isActive: false,
-    };
-  }
-
-  if (local <= 1) {
-    const enterRaw =
-      index === 0 ? clamp(1 - local * 0.12, 0, 1) : easeOutQuint(clamp(local / MOTION.enterPortion, 0, 1));
-    const exitPrep = easeOutQuint(clamp((local - MOTION.activeUntil) / MOTION.exitPortion, 0, 1));
-    const enter = enterRaw * (1 - exitPrep * 0.08);
-
-    return {
-      opacity: enter,
-      scale: 0.94 + enter * 0.06 - exitPrep * 0.05,
-      translateY: (1 - enter) * 44 - exitPrep * 16,
-      imageScale: 1.02 - enter * 0.02 + exitPrep * 0.015,
-      zIndex: 20 + index,
-      isActive: local < MOTION.activeUntil,
-    };
-  }
-
-  const past = local - 1;
-  const depth = easeOutQuint(clamp(past, 0, 1));
-
-  return {
-    opacity: clamp(1 - depth * 0.78, 0.14, 1),
-    scale: clamp(1 - depth * 0.09, 0.84, 1),
-    translateY: -depth * 36,
-      imageScale: 1.01 + depth * 0.02,
-    zIndex: total - index,
-    isActive: false,
-  };
-}
-
 export function IntroStackSection({ items }: IntroStackSectionProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [progress, setProgress] = useState(0);
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  const updateProgress = useCallback(() => {
-    const node = sectionRef.current;
-    if (!node) {
-      console.warn("[intro-stack] Section ref is not available for scroll progress");
-      return;
-    }
-
-    const rect = node.getBoundingClientRect();
-    const viewport = window.innerHeight;
-    const scrollable = node.offsetHeight - viewport;
-
-    if (scrollable <= 0) {
-      console.log("[intro-stack] Scrollable height is zero, pinning progress to 0", {
-        offsetHeight: node.offsetHeight,
-        viewport,
-      });
-      setProgress(0);
-      return;
-    }
-
-    const distance = -rect.top;
-    const nextProgress = clamp(distance / scrollable, 0, 1);
-
-    setProgress((current) => {
-      if (Math.abs(current - nextProgress) < 0.0008) {
-        return current;
-      }
-
-      console.log("[intro-stack] Scroll progress updated", {
-        progress: Number(nextProgress.toFixed(3)),
-        distance: Math.round(distance),
-        scrollable: Math.round(scrollable),
-        scrollStepVh: INTRO_SCROLL_STEP_VH,
-      });
-      return nextProgress;
-    });
-  }, []);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const scrollTimeoutRef = useRef<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const applyPreference = () => {
-      const shouldReduce = media.matches;
-      console.log("[intro-stack] Motion preference resolved", { reduceMotion: shouldReduce });
-      setReduceMotion(shouldReduce);
-    };
-
-    applyPreference();
-    media.addEventListener("change", applyPreference);
-
-    return () => media.removeEventListener("change", applyPreference);
-  }, []);
-
-  useEffect(() => {
-    if (reduceMotion) {
-      console.log("[intro-stack] Reduced motion enabled, skipping scroll listener");
-      return;
-    }
-
-    console.log("[intro-stack] Attaching scroll listener", {
+    console.log("[intro-stack] Native horizontal swipe initialized", {
       itemCount: items.length,
-      scrollStepVh: INTRO_SCROLL_STEP_VH,
     });
-    updateProgress();
 
-    let frame = 0;
-    const onScroll = () => {
-      if (frame) {
+    return () => {
+      if (scrollTimeoutRef.current !== null) {
+        window.clearTimeout(scrollTimeoutRef.current);
+        console.log("[intro-stack] Swipe synchronization timeout cleared");
+      }
+    };
+  }, [items.length]);
+
+  function handleStageScroll(event: React.UIEvent<HTMLDivElement>) {
+    const stage = event.currentTarget;
+
+    if (scrollTimeoutRef.current !== null) {
+      window.clearTimeout(scrollTimeoutRef.current);
+    }
+
+    scrollTimeoutRef.current = window.setTimeout(() => {
+      const firstCard = stage.querySelector<HTMLElement>(".introStackCard");
+      if (!firstCard) {
+        console.warn("[intro-stack] Swipe synchronization skipped because no card was found");
         return;
       }
 
-      frame = window.requestAnimationFrame(() => {
-        frame = 0;
-        updateProgress();
+      const cardStep = firstCard.offsetWidth + 12;
+      const nextIndex = clamp(Math.round(stage.scrollLeft / cardStep), 0, items.length - 1);
+
+      console.log("[intro-stack] Native card swipe settled", {
+        previousIndex: activeIndex,
+        nextIndex,
+        scrollLeft: Math.round(stage.scrollLeft),
+        cardWidth: firstCard.offsetWidth,
+        cardStep,
       });
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-
-    return () => {
-      console.log("[intro-stack] Detaching scroll listener");
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) {
-        window.cancelAnimationFrame(frame);
-      }
-    };
-  }, [items.length, reduceMotion, updateProgress]);
-
-  const activeIndex = reduceMotion
-    ? items.length - 1
-    : clamp(Math.floor(progress * items.length), 0, items.length - 1);
+      setActiveIndex(nextIndex);
+    }, 90);
+  }
 
   return (
     <section
       className="introStackSection"
-      ref={sectionRef}
       id="intro"
       style={
         {
           "--intro-stack-count": items.length,
-          "--intro-scroll-step-vh": INTRO_SCROLL_STEP_VH,
         } as React.CSSProperties
       }
       aria-label="Why this workbook exists"
@@ -199,19 +82,15 @@ export function IntroStackSection({ items }: IntroStackSectionProps) {
           <h2 className="introStackTitle">Every answer opens a new way to live at home.</h2>
         </header>
 
-        <div className="introStackStage" aria-live="polite">
+        <div
+          aria-label="Reasons to start the workbook"
+          className="introStackStage"
+          onScroll={handleStageScroll}
+          ref={stageRef}
+          role="list"
+        >
           {items.map((item, index) => {
             const visual = introStackCardVisuals[index];
-            const motion = reduceMotion
-              ? {
-                  opacity: 1,
-                  scale: 1,
-                  translateY: index * 14,
-                  imageScale: 1,
-                  zIndex: items.length - index,
-                  isActive: index === items.length - 1,
-                }
-              : getCardMotion(index, items.length, progress);
 
             if (!visual) {
               console.warn("[intro-stack] Missing visual config for card", { index, title: item.title });
@@ -219,20 +98,12 @@ export function IntroStackSection({ items }: IntroStackSectionProps) {
 
             return (
               <article
-                className={[
-                  "introStackCard",
-                  motion.isActive ? "isActive" : "",
-                  index < activeIndex ? "isPast" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+                className={`introStackCard${index === activeIndex ? " isActive" : ""}`}
                 key={item.title}
+                role="listitem"
                 style={
                   {
                     "--intro-card-accent": INTRO_CARD_ACCENTS[index % INTRO_CARD_ACCENTS.length],
-                    opacity: motion.opacity,
-                    transform: `translate3d(0, ${motion.translateY}px, 0) scale(${motion.scale})`,
-                    zIndex: motion.zIndex,
                   } as React.CSSProperties
                 }
               >
@@ -249,7 +120,6 @@ export function IntroStackSection({ items }: IntroStackSectionProps) {
                       className="introStackCardImage"
                       style={{
                         objectPosition: visual.objectPosition,
-                        transform: `scale3d(${motion.imageScale}, ${motion.imageScale}, 1)`,
                       }}
                       onLoad={() => {
                         console.log("[intro-stack] Card image loaded", {
