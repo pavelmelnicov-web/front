@@ -1,20 +1,28 @@
 "use client";
 
 import { ArrowRight, Check, Send } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { CommunityTelegramInvite } from "../components/landing/CommunityTelegramInvite";
-import { HeroFloatCards } from "../components/landing/HeroFloatCards";
+import { HeroPeopleShowcase } from "../components/landing/HeroPeopleShowcase";
 import { HowItWorksSection } from "../components/landing/HowItWorksSection";
 import { IntroStackSection } from "../components/landing/IntroStackSection";
 import { SituationsSection } from "../components/landing/SituationsSection";
-import { TestimonialsSection } from "../components/landing/TestimonialsSection";
+import {
+  TestimonialsSection,
+  type TestimonialItem,
+} from "../components/landing/TestimonialsSection";
 import { VariantSearchCycler } from "../components/landing/VariantSearchCycler";
 import { api, ChatMessage, SessionPayload, Workbook } from "../lib/api";
 import { fallbackChat, fallbackWorkbook } from "../lib/fallback";
 
 type Answers = Record<string, string>;
+
+type VariantSwipeStart = {
+  x: number;
+  y: number;
+  startedAt: number;
+};
 
 export default function Home() {
   const [workbook, setWorkbook] = useState<Workbook>(fallbackWorkbook);
@@ -28,7 +36,12 @@ export default function Home() {
   const [openFaqId, setOpenFaqId] = useState(faqItems[0].id);
   const [isSaving, setIsSaving] = useState(false);
   const variantViewportRef = useRef<HTMLDivElement>(null);
+  const variantSwipeStartRef = useRef<VariantSwipeStart | null>(null);
+  const variantSwipeAxisRef = useRef<"horizontal" | "vertical" | null>(null);
+  const variantSwipeSuppressClickRef = useRef(false);
   const [variantSlideWidth, setVariantSlideWidth] = useState(0);
+  const [variantDragOffset, setVariantDragOffset] = useState(0);
+  const [isVariantDragging, setIsVariantDragging] = useState(false);
 
   useEffect(() => {
     console.log("[home] Loading landing page data");
@@ -86,6 +99,148 @@ export default function Home() {
     workbookVariants.findIndex((item) => item.id === version),
     0,
   );
+
+  function handleVariantTouchStart(event: React.TouchEvent<HTMLDivElement>) {
+    const touch = event.touches[0];
+    if (!touch) {
+      console.warn("[home] Variant swipe start ignored because touch data is missing");
+      return;
+    }
+
+    variantSwipeStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      startedAt: performance.now(),
+    };
+    variantSwipeAxisRef.current = null;
+    setVariantDragOffset(0);
+    setIsVariantDragging(true);
+
+    console.log("[home] Variant swipe started", {
+      activeVariantIndex,
+      version,
+      x: touch.clientX,
+      y: touch.clientY,
+    });
+  }
+
+  function handleVariantTouchMove(event: React.TouchEvent<HTMLDivElement>) {
+    const start = variantSwipeStartRef.current;
+    const touch = event.touches[0];
+    if (!start || !touch) {
+      return;
+    }
+
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+
+    if (!variantSwipeAxisRef.current && Math.max(Math.abs(deltaX), Math.abs(deltaY)) >= 8) {
+      variantSwipeAxisRef.current =
+        Math.abs(deltaX) > Math.abs(deltaY) ? "horizontal" : "vertical";
+
+      console.log("[home] Variant swipe axis resolved", {
+        axis: variantSwipeAxisRef.current,
+        deltaX: Math.round(deltaX),
+        deltaY: Math.round(deltaY),
+      });
+    }
+
+    if (variantSwipeAxisRef.current !== "horizontal") {
+      return;
+    }
+
+    const isDraggingPastStart = activeVariantIndex === 0 && deltaX > 0;
+    const isDraggingPastEnd =
+      activeVariantIndex === workbookVariants.length - 1 && deltaX < 0;
+    const resistance = isDraggingPastStart || isDraggingPastEnd ? 0.28 : 1;
+    const maximumOffset = Math.max(72, variantSlideWidth * 0.34);
+    const resistedOffset = deltaX * resistance;
+    const nextOffset = Math.max(-maximumOffset, Math.min(maximumOffset, resistedOffset));
+
+    setVariantDragOffset(nextOffset);
+  }
+
+  function handleVariantTouchEnd(event: React.TouchEvent<HTMLDivElement>) {
+    const start = variantSwipeStartRef.current;
+    const touch = event.changedTouches[0];
+
+    variantSwipeStartRef.current = null;
+    setIsVariantDragging(false);
+
+    if (!start || !touch || variantSwipeAxisRef.current !== "horizontal") {
+      variantSwipeAxisRef.current = null;
+      setVariantDragOffset(0);
+      console.log("[home] Variant swipe ended without horizontal navigation");
+      return;
+    }
+
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    const elapsedMs = Math.max(performance.now() - start.startedAt, 1);
+    const velocityX = deltaX / elapsedMs;
+    const distanceThreshold = Math.max(44, variantSlideWidth * 0.14);
+    const shouldNavigate =
+      Math.abs(deltaX) >= distanceThreshold || Math.abs(velocityX) >= 0.42;
+    const direction = deltaX < 0 ? 1 : -1;
+    const nextIndex = Math.max(
+      0,
+      Math.min(workbookVariants.length - 1, activeVariantIndex + direction),
+    );
+
+    console.log("[home] Variant swipe completed", {
+      activeVariantIndex,
+      deltaX: Math.round(deltaX),
+      deltaY: Math.round(deltaY),
+      elapsedMs: Math.round(elapsedMs),
+      velocityX: Number(velocityX.toFixed(3)),
+      distanceThreshold: Math.round(distanceThreshold),
+      shouldNavigate,
+      nextIndex,
+    });
+
+    variantSwipeAxisRef.current = null;
+    setVariantDragOffset(0);
+
+    if (!shouldNavigate || nextIndex === activeVariantIndex) {
+      return;
+    }
+
+    variantSwipeSuppressClickRef.current = true;
+    window.setTimeout(() => {
+      variantSwipeSuppressClickRef.current = false;
+    }, 350);
+
+    const nextVersion = workbookVariants[nextIndex].id;
+    console.log("[home] Variant changed by swipe", {
+      previousVersion: version,
+      nextVersion,
+    });
+    setVersion(nextVersion);
+  }
+
+  function handleVariantTouchCancel() {
+    console.log("[home] Variant swipe cancelled", {
+      activeVariantIndex,
+      version,
+    });
+    variantSwipeStartRef.current = null;
+    variantSwipeAxisRef.current = null;
+    setVariantDragOffset(0);
+    setIsVariantDragging(false);
+  }
+
+  function handleVariantClickCapture(event: React.MouseEvent<HTMLDivElement>) {
+    if (!variantSwipeSuppressClickRef.current) {
+      return;
+    }
+
+    console.log("[home] Click suppressed after variant swipe", {
+      target: event.target instanceof HTMLElement ? event.target.tagName : "unknown",
+    });
+    event.preventDefault();
+    event.stopPropagation();
+    variantSwipeSuppressClickRef.current = false;
+  }
 
   function toggleSituation(id: string) {
     console.log("[home] Toggling situation", { id });
@@ -153,18 +308,6 @@ export default function Home() {
     <main>
       <section className="hero">
         <div className="heroShowcase">
-          <Image
-            src="/hero-visual.jpg"
-            alt=""
-            fill
-            priority
-            quality={100}
-            unoptimized
-            sizes="100vw"
-            className="heroShowcaseImage"
-          />
-          <div className="heroShowcaseScrim" aria-hidden="true" />
-
           <nav className="heroNav" aria-label="Main">
             <Link className="heroNavGift" href="/onboarding/gift">
               Gift it
@@ -178,7 +321,7 @@ export default function Home() {
             <h1 className="heroShowcaseLogo">{workbook.brand}</h1>
           </div>
 
-          <HeroFloatCards />
+          <HeroPeopleShowcase />
         </div>
 
         <div className="heroIntro">
@@ -245,6 +388,11 @@ export default function Home() {
         </div>
         <div
           className="variantViewport"
+          onClickCapture={handleVariantClickCapture}
+          onTouchCancel={handleVariantTouchCancel}
+          onTouchEnd={handleVariantTouchEnd}
+          onTouchMove={handleVariantTouchMove}
+          onTouchStart={handleVariantTouchStart}
           ref={variantViewportRef}
           style={
             variantSlideWidth
@@ -253,9 +401,11 @@ export default function Home() {
           }
         >
           <div
-            className="variantTrack"
+            className={isVariantDragging ? "variantTrack isDragging" : "variantTrack"}
             style={{
-              transform: `translateX(-${activeVariantIndex * variantSlideWidth}px)`,
+              transform: `translateX(${
+                -activeVariantIndex * variantSlideWidth + variantDragOffset
+              }px)`,
             }}
           >
             {workbookVariants.map((item) => (
@@ -501,7 +651,7 @@ const connectionSteps = [
   },
 ];
 
-const testimonials = [
+const testimonials: TestimonialItem[] = [
   {
     id: "alina-k",
     avatarSrc: "/testimonials/alina-k-avatar.png",
