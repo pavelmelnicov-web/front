@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowRight, Check, ChevronDown, ChevronUp, Plus, Send } from "lucide-react";
+import { ArrowRight, Check, Send } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { CommunityTelegramInvite } from "../components/landing/CommunityTelegramInvite";
 import { HeroFloatCards } from "../components/landing/HeroFloatCards";
 import { HowItWorksSection } from "../components/landing/HowItWorksSection";
 import { IntroStackSection } from "../components/landing/IntroStackSection";
@@ -308,14 +309,8 @@ export default function Home() {
 
       <section className="howLinkedBand" id="how-linked">
         <div className="sectionTitle">
-          <p className="howLinkedEyebrow">
-            <span>how it works</span>
-            <span aria-hidden="true" className="howLinkedEyebrowArrow">
-              →
-            </span>
-          </p>
           <h2>
-            A step-by-step workbook to create a space that reflects who you are and how you want to live
+            How the step-by-step digital workbook works for how you want to live
           </h2>
         </div>
         <HowItWorksSection steps={connectionSteps} />
@@ -344,53 +339,25 @@ export default function Home() {
       <section className="communityBand" id="community">
         <div className="communityLayout">
           <div className="sectionTitle communityIntro">
-            <p className="communityEyebrow">
-              <span>community</span>
-              <span aria-hidden="true" className="communityEyebrowArrow">
-                →
-              </span>
-            </p>
             <h2>See how people reshape their space around themselves</h2>
           </div>
 
-          <div className="channelInvite">
-            <div className="channelInviteCopy">
-              <p className="channelInviteLabel">Join our Telegram channel</p>
-              <p>
-                Stories, updates, and real homes in progress from people using the workbook.
-              </p>
-            </div>
-            <a
-              className="primaryButton"
-              href="https://t.me/space_self"
-              onClick={() => {
-                console.log("[home] Community Telegram link clicked");
-              }}
-              rel="noreferrer"
-              target="_blank"
-            >
-              Join channel
-            </a>
-          </div>
+          <CommunityTelegramInvite />
         </div>
       </section>
 
       <section className="faqBand" id="faq">
         <div className="faqShell">
           <div className="faqIntro">
-            <p className="faqBadge">
-              <span aria-hidden="true" className="faqBadgeIcon">
-                <Plus size={12} strokeWidth={2.6} />
-              </span>
-              Frequently asked questions
-            </p>
-            <h2>
-              Frequently asked <span>questions</span>
-            </h2>
-            <p>
-              If you are not sure where to start, these answers explain the workbook format and help
-              you choose a first step.
-            </p>
+            <div className="faqIntroCopy">
+              <h2>Frequently asked questions</h2>
+            </div>
+            <div className="faqIntroAside">
+              <p>
+                If you are not sure where to start, these answers explain the workbook format and
+                help you choose a first step.
+              </p>
+            </div>
           </div>
 
           <div className="faqList">
@@ -413,7 +380,7 @@ export default function Home() {
                   >
                     <span className="faqQuestion">{item.question}</span>
                     <span aria-hidden="true" className="faqToggle">
-                      {isOpen ? <ChevronUp size={18} strokeWidth={2.4} /> : <ChevronDown size={18} strokeWidth={2.4} />}
+                      →
                     </span>
                   </button>
                   <div className="faqAnswer" aria-hidden={!isOpen}>
@@ -427,28 +394,32 @@ export default function Home() {
       </section>
 
       <footer className="siteFooter">
-        <div className="footerBrand">
-          <strong>{workbook.brand}</strong>
-          <p>
-            A digital workbook for people who want to change their home by understanding
-            themselves—not by copying someone else&apos;s pictures.
-          </p>
-        </div>
-        <nav className="footerLinks" aria-label="Footer navigation">
-          {footerColumns.map((column) => (
-            <div key={column.title}>
-              <h3>{column.title}</h3>
-              {column.links.map((link) => (
-                <a href={link.href} key={link.label}>
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          ))}
-        </nav>
-        <div className="footerBottom">
-          <span>© 2026 Space, Self.</span>
-          <span>Made for homes that help people live as themselves.</span>
+        <div className="footerShell">
+          <div className="footerBrand">
+            <h2 className="footerTitle">{workbook.brand}</h2>
+            <p className="footerDescription">
+              A digital workbook for people who want to change their home by understanding
+              themselves—not by copying someone else&apos;s pictures.
+            </p>
+          </div>
+
+          <nav className="footerLinks" aria-label="Footer navigation">
+            {footerColumns.map((column) => (
+              <div className="footerLinksColumn" key={column.title}>
+                <h3>{column.title}</h3>
+                {column.links.map((link) => (
+                  <a href={link.href} key={link.label}>
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            ))}
+          </nav>
+
+          <div className="footerBottom">
+            <span>© 2026 Space, Self.</span>
+            <span>Made for homes that help people live as themselves.</span>
+          </div>
         </div>
       </footer>
     </main>
