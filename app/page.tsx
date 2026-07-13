@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, MessageSquare, Plus, Send, Star } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, ChevronUp, Plus, Send } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -8,15 +8,15 @@ import { HeroFloatCards } from "../components/landing/HeroFloatCards";
 import { HowItWorksSection } from "../components/landing/HowItWorksSection";
 import { IntroStackSection } from "../components/landing/IntroStackSection";
 import { SituationsSection } from "../components/landing/SituationsSection";
+import { TestimonialsSection } from "../components/landing/TestimonialsSection";
 import { VariantSearchCycler } from "../components/landing/VariantSearchCycler";
-import { api, ChatMessage, CommunityPost, SessionPayload, Workbook } from "../lib/api";
-import { fallbackChat, fallbackPosts, fallbackWorkbook } from "../lib/fallback";
+import { api, ChatMessage, SessionPayload, Workbook } from "../lib/api";
+import { fallbackChat, fallbackWorkbook } from "../lib/fallback";
 
 type Answers = Record<string, string>;
 
 export default function Home() {
   const [workbook, setWorkbook] = useState<Workbook>(fallbackWorkbook);
-  const [posts, setPosts] = useState<CommunityPost[]>(fallbackPosts);
   const [chat, setChat] = useState<ChatMessage[]>(fallbackChat);
   const [version, setVersion] = useState<"system" | "atmosphere">("system");
   const [situations, setSituations] = useState<string[]>(["new-stage"]);
@@ -41,17 +41,6 @@ export default function Home() {
       .catch((error) => {
         console.error("[home] Workbook load failed, using fallback", { error });
         setWorkbook(fallbackWorkbook);
-      });
-
-    api
-      .getCommunity()
-      .then((data) => {
-        console.log("[home] Community posts loaded", { count: data.posts.length });
-        setPosts(data.posts);
-      })
-      .catch((error) => {
-        console.error("[home] Community load failed, using fallback", { error });
-        setPosts(fallbackPosts);
       });
 
     api
@@ -332,31 +321,7 @@ export default function Home() {
         <HowItWorksSection steps={connectionSteps} />
       </section>
 
-      <section className="testimonialsBand" id="testimonials">
-        <div className="sectionTitle">
-          <p>Testimonials</p>
-          <h2>Loved by people who reshaped their space around themselves</h2>
-        </div>
-        <div className="testimonialsGrid">
-          {testimonials.map((item) => (
-            <article className="testimonialCard" key={item.name}>
-              <div className="stars" aria-label="5 out of 5">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <Star fill="currentColor" key={index} size={16} />
-                ))}
-              </div>
-              <blockquote>{item.quote}</blockquote>
-              <div className="testimonialAuthor">
-                <span>{item.initials}</span>
-                <div>
-                  <strong>{item.name}</strong>
-                  <small>{item.role}</small>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      <TestimonialsSection items={testimonials} />
 
       {summary && (
         <section className="resultBand">
@@ -377,77 +342,87 @@ export default function Home() {
       )}
 
       <section className="communityBand" id="community">
-        <div className="sectionTitle">
-          <p>Community</p>
-          <h2>People who changed their space</h2>
-        </div>
-        <div className="postsGrid">
-          {posts.map((post) => (
-            <article className="postCard" key={post.id}>
-              <div className="postHeader">
-                <div className="postAvatar">{post.author[0]}</div>
-                <div>
-                  <strong>{post.author}</strong>
-                  <span>Telegram · 2h ago</span>
-                </div>
-              </div>
-              <p>{post.title}</p>
-              <small>{post.excerpt}</small>
-            </article>
-          ))}
-        </div>
-        <div className="channelInvite">
-          <div>
-            <p>Join our Telegram channel</p>
-            <strong>See how people reshape their space around themselves</strong>
+        <div className="communityLayout">
+          <div className="sectionTitle communityIntro">
+            <p className="communityEyebrow">
+              <span>community</span>
+              <span aria-hidden="true" className="communityEyebrowArrow">
+                →
+              </span>
+            </p>
+            <h2>See how people reshape their space around themselves</h2>
           </div>
-          <a className="primaryButton" href="https://t.me/space_self" target="_blank" rel="noreferrer">
-            Join channel
-          </a>
+
+          <div className="channelInvite">
+            <div className="channelInviteCopy">
+              <p className="channelInviteLabel">Join our Telegram channel</p>
+              <p>
+                Stories, updates, and real homes in progress from people using the workbook.
+              </p>
+            </div>
+            <a
+              className="primaryButton"
+              href="https://t.me/space_self"
+              onClick={() => {
+                console.log("[home] Community Telegram link clicked");
+              }}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Join channel
+            </a>
+          </div>
         </div>
       </section>
 
       <section className="faqBand" id="faq">
-        <div className="faqIntro">
-          <p className="eyebrow">FAQ</p>
-          <h2>Frequently asked questions</h2>
-          <p>
-            If you are not sure where to start, these answers explain the workbook format and help
-            you choose a first step.
-          </p>
-          <Link href="/onboarding/0">Start the workbook</Link>
-        </div>
-        <div className="faqList">
-          {faqItems.map((item) => {
-            const isOpen = openFaqId === item.id;
-            return (
-              <article
-                className={[
-                  "faqItem",
-                  isOpen ? "open" : "",
-                  item.featured ? "featured" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                key={item.id}
-              >
-                <button
-                  aria-expanded={isOpen}
-                  onClick={() => setOpenFaqId(isOpen ? "" : item.id)}
-                  type="button"
-                >
-                  <span>
-                    {item.featured && <em>important</em>}
-                    {item.question}
-                  </span>
-                  <Plus size={20} />
-                </button>
-                <div className="faqAnswer" aria-hidden={!isOpen}>
-                  <p>{item.answer}</p>
-                </div>
-              </article>
-            );
-          })}
+        <div className="faqShell">
+          <div className="faqIntro">
+            <p className="faqBadge">
+              <span aria-hidden="true" className="faqBadgeIcon">
+                <Plus size={12} strokeWidth={2.6} />
+              </span>
+              Frequently asked questions
+            </p>
+            <h2>
+              Frequently asked <span>questions</span>
+            </h2>
+            <p>
+              If you are not sure where to start, these answers explain the workbook format and help
+              you choose a first step.
+            </p>
+          </div>
+
+          <div className="faqList">
+            {faqItems.map((item) => {
+              const isOpen = openFaqId === item.id;
+              console.log("[home] Rendering FAQ item", { id: item.id, isOpen });
+
+              return (
+                <article className={isOpen ? "faqItem open" : "faqItem"} key={item.id}>
+                  <button
+                    aria-expanded={isOpen}
+                    onClick={() => {
+                      console.log("[home] FAQ item toggled", {
+                        id: item.id,
+                        wasOpen: isOpen,
+                      });
+                      setOpenFaqId(isOpen ? "" : item.id);
+                    }}
+                    type="button"
+                  >
+                    <span className="faqQuestion">{item.question}</span>
+                    <span aria-hidden="true" className="faqToggle">
+                      {isOpen ? <ChevronUp size={18} strokeWidth={2.4} /> : <ChevronDown size={18} strokeWidth={2.4} />}
+                    </span>
+                  </button>
+                  <div className="faqAnswer" aria-hidden={!isOpen}>
+                    <p>{item.answer}</p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -557,25 +532,43 @@ const connectionSteps = [
 
 const testimonials = [
   {
-    initials: "AK",
+    id: "alina-k",
+    avatarSrc: "/testimonials/alina-k-avatar.png",
+    workbookTone: "women",
     name: "Alina K.",
     role: "moving into a new apartment",
-    quote:
-      "I thought I needed a designer and a big renovation. After the workbook I knew which scenarios mattered, and I made the first changes over one weekend.",
+    headline: "I thought I needed a designer and a big renovation.",
+    body:
+      "After the workbook I knew which scenarios mattered, and I made the first changes over one weekend.",
   },
   {
-    initials: "MR",
+    id: "mark-r",
+    avatarSrc: "/testimonials/mark-r-avatar.png",
+    workbookTone: "men",
     name: "Mark R.",
     role: "working remotely from home",
-    quote:
-      "The most useful part was looking at home through roles and states. Work stopped taking over the whole apartment, and evenings felt like evenings again.",
+    headline: "The most useful part was looking at home through roles and states.",
+    body:
+      "Work stopped taking over the whole apartment, and evenings felt like evenings again.",
   },
   {
-    initials: "NS",
+    id: "nika-s",
+    avatarSrc: "/testimonials/nika-s-avatar.png",
+    workbookTone: "women",
     name: "Nika S.",
     role: "space for content and guests",
-    quote:
-      "The workbook helped me build a space that actually feels like me—not a Pinterest board. Guests pick up on it immediately now.",
+    headline: "The workbook helped me build a space that actually feels like me—not a Pinterest board.",
+    body: "Guests pick up on it immediately now.",
+  },
+  {
+    id: "kiano",
+    avatarSrc: "/testimonials/kiano-avatar.png",
+    workbookTone: "men",
+    name: "Kiano",
+    role: "reshaping home after a relationship change",
+    headline: "After the divorce, my apartment still felt like our old life.",
+    body:
+      "The workbook helped me decide what to keep, what to remove, and which states I wanted back in my own home.",
   },
 ];
 

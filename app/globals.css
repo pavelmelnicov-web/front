@@ -4055,73 +4055,178 @@ h1 {
 }
 
 .testimonialsBand {
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
+  --testimonials-bg: #f5f2ed;
+  --testimonials-ink: #111110;
+  --testimonials-muted: rgba(17, 17, 16, 0.68);
+  --testimonials-card: #ece9e4;
+  background: var(--testimonials-bg);
+  border-bottom: 1px solid rgba(17, 17, 16, 0.08);
+  color: var(--testimonials-ink);
+  overflow: hidden;
 }
 
-.testimonialsGrid {
+.testimonialsIntro {
   display: grid;
   grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: clamp(24px, 4vw, 40px);
+}
+
+.testimonialsIntroCopy h2 {
+  margin: 0;
+  max-width: 980px;
+  color: #111110;
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(36px, 11vw, 96px);
+  font-weight: 800;
+  line-height: 0.88;
+  letter-spacing: -0.078em;
+}
+
+.testimonialsIntroCopy h2 em {
+  font-style: normal;
+  font-weight: 800;
+}
+
+.testimonialsIntroAside p {
+  margin: 0;
+  max-width: 38ch;
+  color: #111110;
+  font-size: clamp(15px, 2vw, 18px);
+  line-height: 1.5;
+}
+
+.testimonialsRail {
+  display: flex;
   gap: 12px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  margin-inline: calc(-1 * var(--page-gutter));
+  padding: 2px var(--page-gutter) 6px;
+  scrollbar-width: none;
+}
+
+.testimonialsRail::-webkit-scrollbar {
+  display: none;
 }
 
 .testimonialCard {
+  position: relative;
+  isolation: isolate;
+  flex: 0 0 min(78vw, 300px);
+  min-height: 420px;
+  overflow: hidden;
+  border: none;
+  border-radius: 24px;
+  background: var(--testimonials-card);
+  scroll-snap-align: start;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.testimonialCardGlow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+
+.testimonialCard--men .testimonialCardGlow {
+  background:
+    radial-gradient(circle at 88% 96%, rgba(140, 191, 173, 0.96) 0%, rgba(168, 213, 192, 0.78) 30%, rgba(200, 230, 217, 0.92) 58%, transparent 78%),
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.42) 0%, transparent 52%);
+}
+
+.testimonialCard--women .testimonialCardGlow {
+  background:
+    radial-gradient(circle at 88% 96%, rgba(201, 120, 58, 0.94) 0%, rgba(224, 148, 75, 0.76) 28%, rgba(240, 201, 160, 0.92) 58%, transparent 78%),
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.42) 0%, transparent 52%);
+}
+
+.testimonialCardInner {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  min-height: auto;
-  padding: 20px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background:
-    linear-gradient(135deg, rgba(248, 243, 234, 0.08), transparent 46%),
-    var(--surface-raised);
-  box-shadow: var(--shadow);
+  height: 100%;
+  min-height: 420px;
+  padding: clamp(20px, 3vw, 28px);
 }
 
-.stars {
-  display: flex;
-  gap: 4px;
-  color: var(--accent);
-}
-
-.testimonialCard blockquote {
-  margin: 28px 0;
-  color: var(--ink);
-  font-size: clamp(22px, 2.4vw, 34px);
+.testimonialCardHeadline {
+  margin: 0;
+  color: #111110;
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(22px, 4.8vw, 34px);
   font-weight: 800;
-  line-height: 1.08;
+  line-height: 0.92;
+  letter-spacing: -0.06em;
 }
 
-.testimonialAuthor {
+.testimonialCardBody {
+  margin: 16px 0 0;
+  color: #111110;
+  font-size: clamp(14px, 1.8vw, 16px);
+  line-height: 1.45;
+}
+
+.testimonialCardAuthor {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-top: auto;
+  padding-top: 28px;
 }
 
-.testimonialAuthor > span {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
+.testimonialCardAvatar {
+  flex: 0 0 auto;
   border-radius: 50%;
-  background: var(--card);
-  color: var(--card-ink);
-  font-weight: 800;
+  object-fit: cover;
 }
 
-.testimonialAuthor strong,
-.testimonialAuthor small {
+.testimonialCardAuthor strong,
+.testimonialCardAuthor small {
   display: block;
 }
 
-.testimonialAuthor strong {
-  color: var(--ink);
+.testimonialCardAuthor strong {
+  color: var(--testimonials-ink);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
-.testimonialAuthor small {
+.testimonialCardAuthor small {
   margin-top: 4px;
-  color: var(--muted);
+  color: var(--testimonials-muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .testimonialCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 42px rgba(17, 17, 16, 0.12);
+  }
+
+  .testimonialCard:hover .testimonialCardGlow {
+    opacity: 1;
+  }
+}
+
+.testimonialCard:focus-within {
+  outline: 2px solid rgba(17, 17, 16, 0.18);
+  outline-offset: 2px;
+}
+
+.testimonialCard:focus-within .testimonialCardGlow {
+  opacity: 1;
 }
 
 .workbookShell {
@@ -4334,90 +4439,117 @@ textarea {
 }
 
 .communityBand {
-  background: var(--surface);
+  --community-bg: #f5f2ed;
+  --community-ink: #111110;
+  --community-muted: rgba(17, 17, 16, 0.68);
+  --community-line: rgba(17, 17, 16, 0.1);
+  background: var(--community-bg);
+  border-bottom: 1px solid var(--community-line);
+  color: var(--community-ink);
+  overflow: hidden;
 }
 
-.postsGrid {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.postCard {
-  min-height: 210px;
+.communityLayout {
   display: grid;
-  gap: 12px;
-  padding: 22px;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: rgba(248, 243, 234, 0.06);
+  gap: clamp(20px, 4vw, 32px);
 }
 
-.postHeader {
-  display: flex;
+.communityBand .sectionTitle {
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 0;
+}
+
+.communityEyebrow {
+  display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: 6px;
+  margin: 0;
+  color: var(--community-ink);
+  font-size: clamp(10.8px, 2.64vw, 13.2px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: lowercase;
 }
 
-.postAvatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--accent);
-  color: var(--paper);
+.communityEyebrowArrow {
+  color: var(--community-ink);
+  font-size: clamp(9.6px, 2.4vw, 12px);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.communityBand .sectionTitle h2 {
+  max-width: 980px;
+  margin: 0;
+  color: var(--community-ink);
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(36px, 11vw, 96px);
   font-weight: 800;
-}
-
-.postCard strong {
-  display: block;
-  color: var(--ink);
-}
-
-.postCard span {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.postCard p {
-  color: var(--ink);
-  font-size: 18px;
-  line-height: 1.4;
-}
-
-.postCard small {
-  color: var(--muted);
-  display: block;
-  line-height: 1.5;
+  line-height: 0.88;
+  letter-spacing: -0.078em;
 }
 
 .channelInvite {
-  grid-column: 1 / -1;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
-  padding: 26px;
-  margin-top: 18px;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: rgba(248, 243, 234, 0.08);
+  gap: 20px;
+  padding: clamp(22px, 4vw, 32px);
+  border: none;
+  border-radius: 24px;
+  background: #111110;
+  box-shadow: 0 28px 72px rgba(17, 17, 16, 0.14);
 }
 
-.channelInvite p {
-  margin: 0 0 8px;
-  color: var(--muted);
+.channelInviteCopy {
+  display: grid;
+  gap: 10px;
+  max-width: 52ch;
 }
 
-.channelInvite strong {
-  display: block;
-  color: var(--ink);
-  font-size: 22px;
-  line-height: 1.2;
+.channelInviteLabel {
+  margin: 0;
+  color: rgba(247, 244, 237, 0.72);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.channelInviteCopy p:not(.channelInviteLabel) {
+  margin: 0;
+  color: #f7f4ed;
+  font-size: clamp(18px, 2.4vw, 24px);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
 }
 
 .channelInvite .primaryButton {
   width: auto;
   min-width: 180px;
+  flex: 0 0 auto;
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(247, 244, 237, 0.94);
+  color: #111110;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+}
+
+@media (max-width: 640px) {
+  .channelInvite {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .channelInvite .primaryButton {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 .chatBand {
@@ -4473,13 +4605,30 @@ textarea {
 }
 
 .faqBand {
+  --faq-page-bg: #ebe8f2;
+  --faq-shell-bg: #ffffff;
+  --faq-accent: #6d5ce7;
+  --faq-accent-soft: rgba(109, 92, 231, 0.14);
+  --faq-ink: #111110;
+  --faq-muted: #6f6c78;
+  --faq-item-bg: #f6f7f9;
+  padding: clamp(28px, 5vw, 48px) var(--page-gutter);
+  border-top: none;
+  background: var(--faq-page-bg);
+  color: var(--faq-ink);
+}
+
+.faqShell {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 28px;
   align-items: start;
-  border-top: 1px solid var(--line);
-  background: var(--card);
-  color: var(--card-ink);
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 40px);
+  border-radius: 24px;
+  background: var(--faq-shell-bg);
+  box-shadow: 0 24px 64px rgba(17, 17, 16, 0.06);
 }
 
 .faqIntro {
@@ -4487,62 +4636,73 @@ textarea {
   top: auto;
 }
 
-.faqIntro h2 {
-  max-width: 620px;
-  margin: 0 0 18px;
-  color: var(--card-ink);
-  font-size: clamp(40px, 6vw, 88px);
-  line-height: 0.94;
-}
-
-.faqIntro p:not(.eyebrow) {
-  max-width: 520px;
-  color: var(--card-muted);
-  font-size: 18px;
-  line-height: 1.42;
-}
-
-.faqIntro a {
+.faqBadge {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  margin-top: 18px;
-  padding: 0 18px;
+  gap: 10px;
+  margin: 0 0 18px;
+  padding: 8px 14px 8px 10px;
   border-radius: 999px;
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--faq-accent-soft);
+  color: var(--faq-accent);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.faqBadgeIcon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 8px;
+  background: var(--faq-accent);
+  color: #ffffff;
+}
+
+.faqIntro h2 {
+  max-width: 11ch;
+  margin: 0 0 18px;
+  color: var(--faq-ink);
+  font-family: var(--font-ui), "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(34px, 8vw, 56px);
   font-weight: 800;
-  text-decoration: none;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+.faqIntro h2 span {
+  display: block;
+  color: var(--faq-accent);
+}
+
+.faqIntro p:not(.faqBadge) {
+  max-width: 34ch;
+  margin: 0;
+  color: var(--faq-muted);
+  font-size: clamp(15px, 2vw, 17px);
+  line-height: 1.55;
 }
 
 .faqList {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .faqItem {
   position: relative;
-  border: 1px solid rgba(24, 24, 22, 0.14);
-  border-radius: 8px;
-  background: #fffaf0;
+  border: 1px solid rgba(17, 17, 16, 0.04);
+  border-radius: 18px;
+  background: var(--faq-item-bg);
   overflow: hidden;
+  transition:
+    background 220ms ease,
+    box-shadow 220ms ease;
 }
 
-.faqItem.featured {
-  border-color: rgba(16, 16, 15, 0.34);
-  background:
-    linear-gradient(135deg, rgba(217, 255, 95, 0.38), transparent 42%),
-    #fffaf0;
-  box-shadow: 0 18px 50px rgba(16, 16, 15, 0.12);
-}
-
-.faqItem.featured::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 7px;
-  background: var(--accent);
+.faqItem.open {
+  background: #f3f4f7;
+  box-shadow: 0 10px 28px rgba(17, 17, 16, 0.05);
 }
 
 .faqItem button {
@@ -4551,41 +4711,39 @@ textarea {
   justify-content: space-between;
   gap: 18px;
   width: 100%;
-  min-height: 76px;
-  padding: 20px 22px;
+  min-height: 72px;
+  padding: 18px 20px;
   border: 0;
   background: transparent;
-  color: var(--card-ink);
+  color: var(--faq-ink);
   text-align: left;
 }
 
-.faqItem button span {
+.faqQuestion {
+  font-size: clamp(17px, 2.2vw, 20px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.faqToggle {
   display: grid;
-  gap: 8px;
-  font-size: clamp(20px, 2vw, 28px);
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.faqItem button em {
-  width: max-content;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: var(--paper);
-  color: var(--accent);
-  font-size: 11px;
-  font-style: normal;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.faqItem button svg {
+  place-items: center;
   flex: 0 0 auto;
-  transition: transform 220ms ease;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--faq-accent-soft);
+  color: var(--faq-accent);
+  transition:
+    background 220ms ease,
+    color 220ms ease,
+    transform 220ms ease;
 }
 
-.faqItem.open button svg {
-  transform: rotate(45deg);
+.faqItem.open .faqToggle {
+  background: var(--faq-accent);
+  color: #ffffff;
 }
 
 .faqAnswer {
@@ -4602,12 +4760,13 @@ textarea {
   min-height: 0;
   margin: 0;
   overflow: hidden;
-  color: var(--card-muted);
-  line-height: 1.5;
+  color: var(--faq-muted);
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .faqItem.open .faqAnswer p {
-  padding: 0 22px 22px;
+  padding: 0 20px 20px;
 }
 
 .siteFooter {
@@ -4696,8 +4855,7 @@ textarea {
   }
 
   .situationsGrid,
-  .postsGrid,
-  .testimonialsGrid {
+  .postsGrid {
     grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
@@ -4740,7 +4898,8 @@ textarea {
   }
 
   .variantsBand .sectionTitle,
-  .howLinkedBand .sectionTitle {
+  .howLinkedBand .sectionTitle,
+  .communityBand .sectionTitle {
     margin-bottom: 24px;
   }
 
@@ -4887,14 +5046,32 @@ textarea {
     grid-template-columns: repeat(4, 1fr);
   }
 
-  .testimonialsGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .testimonialsIntro {
+    grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
+    gap: clamp(24px, 4vw, 56px);
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+
+  .testimonialsIntroCopy h2 {
+    max-width: 980px;
+  }
+
+  .testimonialsRail {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
+    overflow: visible;
+    margin-inline: 0;
+    padding: 0;
   }
 
   .testimonialCard {
-    min-height: 360px;
-    padding: 24px;
+    flex: unset;
+    min-height: 480px;
+  }
+
+  .testimonialCardInner {
+    min-height: 480px;
   }
 
   .footerLinks {
@@ -4913,7 +5090,8 @@ textarea {
   }
 
   .variantsBand .sectionTitle,
-  .howLinkedBand .sectionTitle {
+  .howLinkedBand .sectionTitle,
+  .communityBand .sectionTitle {
     align-items: flex-start;
     flex-direction: column;
     margin-bottom: 28px;
@@ -4929,7 +5107,8 @@ textarea {
   }
 
   .variantsBand .sectionTitle h2,
-  .howLinkedBand .sectionTitle h2 {
+  .howLinkedBand .sectionTitle h2,
+  .communityBand .sectionTitle h2 {
     max-width: 980px;
   }
 
@@ -5072,14 +5251,29 @@ textarea {
     gap: 36px;
   }
 
-  .faqBand {
-    grid-template-columns: minmax(260px, 0.82fr) minmax(0, 1.18fr);
-    gap: clamp(28px, 6vw, 88px);
+  .communityLayout {
+    gap: clamp(24px, 4vw, 36px);
+  }
+
+  .channelInvite {
+    align-items: center;
+    padding: clamp(28px, 4vw, 40px);
+  }
+
+  .faqShell {
+    grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(28px, 5vw, 72px);
+    padding: clamp(32px, 4vw, 48px);
   }
 
   .faqIntro {
     position: sticky;
     top: 24px;
+  }
+
+  .faqIntro h2 {
+    max-width: 10ch;
+    font-size: clamp(40px, 4.5vw, 58px);
   }
 
   .siteFooter {
