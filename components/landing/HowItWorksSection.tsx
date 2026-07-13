@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type HowItWorksStep = {
   title: string;
@@ -15,6 +15,8 @@ type HowItWorksSectionProps = {
 };
 
 export function HowItWorksSection({ steps, intervalMs = 2840 }: HowItWorksSectionProps) {
+  const screenViewportRef = useRef<HTMLDivElement>(null);
+  const screenScrollTimeoutRef = useRef<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [reduceMotion, setReduceMotion] = useState(false);
 
@@ -52,11 +54,24 @@ export function HowItWorksSection({ steps, intervalMs = 2840 }: HowItWorksSectio
     const intervalId = window.setInterval(() => {
       setActiveIndex((current) => {
         const next = (current + 1) % steps.length;
+        const viewport = screenViewportRef.current;
+
         console.log("[how-it-works-section] Active step changed", {
           previousIndex: current,
           nextIndex: next,
           title: steps[next]?.title,
+          viewportWidth: viewport?.clientWidth ?? 0,
         });
+
+        if (viewport) {
+          viewport.scrollTo({
+            left: next * viewport.clientWidth,
+            behavior: "smooth",
+          });
+        } else {
+          console.warn("[how-it-works-section] Automatic screen scroll skipped because viewport is missing");
+        }
+
         return next;
       });
     }, intervalMs);
@@ -67,12 +82,65 @@ export function HowItWorksSection({ steps, intervalMs = 2840 }: HowItWorksSectio
     };
   }, [intervalMs, reduceMotion, steps]);
 
+  useEffect(() => {
+    return () => {
+      if (screenScrollTimeoutRef.current !== null) {
+        window.clearTimeout(screenScrollTimeoutRef.current);
+        console.log("[how-it-works-section] Screen scroll synchronization timeout cleared");
+      }
+    };
+  }, []);
+
   function handleStepSelect(index: number) {
+    const viewport = screenViewportRef.current;
+
     console.log("[how-it-works-section] Step selected manually", {
       index,
       title: steps[index]?.title,
+      viewportWidth: viewport?.clientWidth ?? 0,
     });
     setActiveIndex(index);
+
+    if (!viewport) {
+      console.warn("[how-it-works-section] Manual screen scroll skipped because viewport is missing");
+      return;
+    }
+
+    viewport.scrollTo({
+      left: index * viewport.clientWidth,
+      behavior: "smooth",
+    });
+  }
+
+  function handleScreenScroll(event: React.UIEvent<HTMLDivElement>) {
+    const viewport = event.currentTarget;
+
+    if (screenScrollTimeoutRef.current !== null) {
+      window.clearTimeout(screenScrollTimeoutRef.current);
+    }
+
+    screenScrollTimeoutRef.current = window.setTimeout(() => {
+      const width = viewport.clientWidth;
+      if (width <= 0) {
+        console.warn("[how-it-works-section] Screen scroll sync ignored because viewport width is zero");
+        return;
+      }
+
+      const nextIndex = Math.max(
+        0,
+        Math.min(steps.length - 1, Math.round(viewport.scrollLeft / width)),
+      );
+
+      console.log("[how-it-works-section] Native phone swipe settled", {
+        scrollLeft: Math.round(viewport.scrollLeft),
+        viewportWidth: width,
+        previousIndex: activeIndex,
+        nextIndex,
+        title: steps[nextIndex]?.title,
+      });
+
+      setActiveIndex(nextIndex);
+    }, 90);
   }
 
   if (!steps.length) {
@@ -88,10 +156,16 @@ export function HowItWorksSection({ steps, intervalMs = 2840 }: HowItWorksSectio
 
   return (
     <div className="howLinkedLayout">
-      <div className="howLinkedPhoneColumn" aria-hidden="true">
+      <div className="howLinkedPhoneColumn">
         <div className="iphone17ProMax iphone17ProMax--flat">
           <div className="iphone17ProMaxScreen iphone17ProMaxScreen--appPreview">
-            <div className="iphone17ProMaxScreens">
+            <div
+              aria-label="Workbook screens"
+              className="iphone17ProMaxScreens"
+              onScroll={handleScreenScroll}
+              ref={screenViewportRef}
+              role="region"
+            >
               {steps.map((step, index) => (
                 <article
                   className={index === activeIndex ? "iphone17ProMaxSlide isActive" : "iphone17ProMaxSlide"}

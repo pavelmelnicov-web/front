@@ -18,12 +18,6 @@ import { fallbackChat, fallbackWorkbook } from "../lib/fallback";
 
 type Answers = Record<string, string>;
 
-type VariantSwipeStart = {
-  x: number;
-  y: number;
-  startedAt: number;
-};
-
 export default function Home() {
   const [workbook, setWorkbook] = useState<Workbook>(fallbackWorkbook);
   const [chat, setChat] = useState<ChatMessage[]>(fallbackChat);
@@ -36,12 +30,8 @@ export default function Home() {
   const [openFaqId, setOpenFaqId] = useState(faqItems[0].id);
   const [isSaving, setIsSaving] = useState(false);
   const variantViewportRef = useRef<HTMLDivElement>(null);
-  const variantSwipeStartRef = useRef<VariantSwipeStart | null>(null);
-  const variantSwipeAxisRef = useRef<"horizontal" | "vertical" | null>(null);
-  const variantSwipeSuppressClickRef = useRef(false);
+  const variantScrollTimeoutRef = useRef<number | null>(null);
   const [variantSlideWidth, setVariantSlideWidth] = useState(0);
-  const [variantDragOffset, setVariantDragOffset] = useState(0);
-  const [isVariantDragging, setIsVariantDragging] = useState(false);
 
   useEffect(() => {
     console.log("[home] Loading landing page data");
@@ -90,6 +80,15 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (variantScrollTimeoutRef.current !== null) {
+        window.clearTimeout(variantScrollTimeoutRef.current);
+        console.log("[home] Variant scroll synchronization timeout cleared");
+      }
+    };
+  }, []);
+
   const progress = useMemo(() => {
     const filled = workbook.steps.filter((step) => answers[step.id]?.trim()).length;
     return Math.round((filled / workbook.steps.length) * 100);
@@ -100,146 +99,71 @@ export default function Home() {
     0,
   );
 
-  function handleVariantTouchStart(event: React.TouchEvent<HTMLDivElement>) {
-    const touch = event.touches[0];
-    if (!touch) {
-      console.warn("[home] Variant swipe start ignored because touch data is missing");
-      return;
-    }
+  function handleVariantTabSelect(
+    nextVersion: "system" | "atmosphere",
+    nextIndex: number,
+  ) {
+    const node = variantViewportRef.current;
 
-    variantSwipeStartRef.current = {
-      x: touch.clientX,
-      y: touch.clientY,
-      startedAt: performance.now(),
-    };
-    variantSwipeAxisRef.current = null;
-    setVariantDragOffset(0);
-    setIsVariantDragging(true);
-
-    console.log("[home] Variant swipe started", {
-      activeVariantIndex,
-      version,
-      x: touch.clientX,
-      y: touch.clientY,
-    });
-  }
-
-  function handleVariantTouchMove(event: React.TouchEvent<HTMLDivElement>) {
-    const start = variantSwipeStartRef.current;
-    const touch = event.touches[0];
-    if (!start || !touch) {
-      return;
-    }
-
-    const deltaX = touch.clientX - start.x;
-    const deltaY = touch.clientY - start.y;
-
-    if (!variantSwipeAxisRef.current && Math.max(Math.abs(deltaX), Math.abs(deltaY)) >= 8) {
-      variantSwipeAxisRef.current =
-        Math.abs(deltaX) > Math.abs(deltaY) ? "horizontal" : "vertical";
-
-      console.log("[home] Variant swipe axis resolved", {
-        axis: variantSwipeAxisRef.current,
-        deltaX: Math.round(deltaX),
-        deltaY: Math.round(deltaY),
-      });
-    }
-
-    if (variantSwipeAxisRef.current !== "horizontal") {
-      return;
-    }
-
-    const isDraggingPastStart = activeVariantIndex === 0 && deltaX > 0;
-    const isDraggingPastEnd =
-      activeVariantIndex === workbookVariants.length - 1 && deltaX < 0;
-    const resistance = isDraggingPastStart || isDraggingPastEnd ? 0.28 : 1;
-    const maximumOffset = Math.max(72, variantSlideWidth * 0.34);
-    const resistedOffset = deltaX * resistance;
-    const nextOffset = Math.max(-maximumOffset, Math.min(maximumOffset, resistedOffset));
-
-    setVariantDragOffset(nextOffset);
-  }
-
-  function handleVariantTouchEnd(event: React.TouchEvent<HTMLDivElement>) {
-    const start = variantSwipeStartRef.current;
-    const touch = event.changedTouches[0];
-
-    variantSwipeStartRef.current = null;
-    setIsVariantDragging(false);
-
-    if (!start || !touch || variantSwipeAxisRef.current !== "horizontal") {
-      variantSwipeAxisRef.current = null;
-      setVariantDragOffset(0);
-      console.log("[home] Variant swipe ended without horizontal navigation");
-      return;
-    }
-
-    const deltaX = touch.clientX - start.x;
-    const deltaY = touch.clientY - start.y;
-    const elapsedMs = Math.max(performance.now() - start.startedAt, 1);
-    const velocityX = deltaX / elapsedMs;
-    const distanceThreshold = Math.max(44, variantSlideWidth * 0.14);
-    const shouldNavigate =
-      Math.abs(deltaX) >= distanceThreshold || Math.abs(velocityX) >= 0.42;
-    const direction = deltaX < 0 ? 1 : -1;
-    const nextIndex = Math.max(
-      0,
-      Math.min(workbookVariants.length - 1, activeVariantIndex + direction),
-    );
-
-    console.log("[home] Variant swipe completed", {
-      activeVariantIndex,
-      deltaX: Math.round(deltaX),
-      deltaY: Math.round(deltaY),
-      elapsedMs: Math.round(elapsedMs),
-      velocityX: Number(velocityX.toFixed(3)),
-      distanceThreshold: Math.round(distanceThreshold),
-      shouldNavigate,
-      nextIndex,
-    });
-
-    variantSwipeAxisRef.current = null;
-    setVariantDragOffset(0);
-
-    if (!shouldNavigate || nextIndex === activeVariantIndex) {
-      return;
-    }
-
-    variantSwipeSuppressClickRef.current = true;
-    window.setTimeout(() => {
-      variantSwipeSuppressClickRef.current = false;
-    }, 350);
-
-    const nextVersion = workbookVariants[nextIndex].id;
-    console.log("[home] Variant changed by swipe", {
+    console.log("[home] Variant tab selected", {
       previousVersion: version,
       nextVersion,
+      nextIndex,
+      viewportWidth: node?.clientWidth ?? 0,
     });
+
     setVersion(nextVersion);
-  }
 
-  function handleVariantTouchCancel() {
-    console.log("[home] Variant swipe cancelled", {
-      activeVariantIndex,
-      version,
-    });
-    variantSwipeStartRef.current = null;
-    variantSwipeAxisRef.current = null;
-    setVariantDragOffset(0);
-    setIsVariantDragging(false);
-  }
-
-  function handleVariantClickCapture(event: React.MouseEvent<HTMLDivElement>) {
-    if (!variantSwipeSuppressClickRef.current) {
+    if (!node) {
+      console.warn("[home] Variant tab could not scroll because viewport ref is missing");
       return;
     }
 
-    console.log("[home] Click suppressed after variant swipe", {
-      target: event.target instanceof HTMLElement ? event.target.tagName : "unknown",
+    node.scrollTo({
+      left: nextIndex * node.clientWidth,
+      behavior: "smooth",
     });
-    event.preventDefault();
-    event.stopPropagation();
-    variantSwipeSuppressClickRef.current = false;
+  }
+
+  function handleVariantScroll(event: React.UIEvent<HTMLDivElement>) {
+    const node = event.currentTarget;
+
+    if (variantScrollTimeoutRef.current !== null) {
+      window.clearTimeout(variantScrollTimeoutRef.current);
+    }
+
+    variantScrollTimeoutRef.current = window.setTimeout(() => {
+      const width = node.clientWidth;
+      if (width <= 0) {
+        console.warn("[home] Variant scroll sync ignored because viewport width is zero");
+        return;
+      }
+
+      const nextIndex = Math.max(
+        0,
+        Math.min(workbookVariants.length - 1, Math.round(node.scrollLeft / width)),
+      );
+      const nextVersion = workbookVariants[nextIndex].id;
+
+      console.log("[home] Variant native scroll settled", {
+        scrollLeft: Math.round(node.scrollLeft),
+        viewportWidth: width,
+        nextIndex,
+        nextVersion,
+      });
+
+      setVersion((currentVersion) => {
+        if (currentVersion === nextVersion) {
+          return currentVersion;
+        }
+
+        console.log("[home] Variant changed by native horizontal swipe", {
+          previousVersion: currentVersion,
+          nextVersion,
+        });
+        return nextVersion;
+      });
+    }, 90);
   }
 
   function toggleSituation(id: string) {
@@ -369,15 +293,12 @@ export default function Home() {
           <h2>{workbookVariants[activeVariantIndex].headline}</h2>
         </div>
         <div className="variantTabs" role="tablist" aria-label="Workbook versions">
-          {workbookVariants.map((item) => (
+          {workbookVariants.map((item, index) => (
             <button
               aria-selected={version === item.id}
               className={version === item.id ? "variantTab active" : "variantTab"}
               key={item.id}
-              onClick={() => {
-                console.log("[home] Variant tab selected", { version: item.id });
-                setVersion(item.id);
-              }}
+              onClick={() => handleVariantTabSelect(item.id, index)}
               role="tab"
               type="button"
             >
@@ -388,11 +309,7 @@ export default function Home() {
         </div>
         <div
           className="variantViewport"
-          onClickCapture={handleVariantClickCapture}
-          onTouchCancel={handleVariantTouchCancel}
-          onTouchEnd={handleVariantTouchEnd}
-          onTouchMove={handleVariantTouchMove}
-          onTouchStart={handleVariantTouchStart}
+          onScroll={handleVariantScroll}
           ref={variantViewportRef}
           style={
             variantSlideWidth
@@ -400,14 +317,7 @@ export default function Home() {
               : undefined
           }
         >
-          <div
-            className={isVariantDragging ? "variantTrack isDragging" : "variantTrack"}
-            style={{
-              transform: `translateX(${
-                -activeVariantIndex * variantSlideWidth + variantDragOffset
-              }px)`,
-            }}
-          >
+          <div className="variantTrack">
             {workbookVariants.map((item) => (
               <article className="variantScreen" key={item.id}>
                 <div className="variantCopy">
