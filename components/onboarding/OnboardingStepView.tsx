@@ -14,7 +14,11 @@ import {
   isOnboardingFinishStep,
   isRegularOnboardingStep,
 } from "../../lib/onboarding/navigation";
-import { OnboardingFlow } from "../../lib/onboarding/types";
+import {
+  GIFT_ONBOARDING_STEPS,
+  OnboardingFlow,
+  REGULAR_ONBOARDING_STEPS,
+} from "../../lib/onboarding/types";
 import { useOnboardingState } from "../../lib/onboarding/use-onboarding-state";
 import { canContinueOnboardingStep } from "../../lib/onboarding/validation";
 import { OnboardingStepContent } from "./OnboardingStepContent";
@@ -56,12 +60,39 @@ export function OnboardingStepView({ flow, step }: OnboardingStepViewProps) {
     () => canContinueOnboardingStep(flow, step, state),
     [flow, step, state],
   );
+  const flowSteps = flow === "gift" ? GIFT_ONBOARDING_STEPS : REGULAR_ONBOARDING_STEPS;
+  const currentStepIndex = flowSteps.indexOf(step as never);
+  const visibleStepNumber = Math.max(currentStepIndex + 1, 1);
+  const progressPercent = Math.max(
+    0,
+    Math.min(100, (visibleStepNumber / flowSteps.length) * 100),
+  );
+  const onboardingPageClassName =
+    flow === "regular" && step === 5
+      ? "onboardingPage onboardingPage--how"
+      : "onboardingPage";
 
   function toggleSubSituation(value: string) {
+    const matchingSituation = workbook.situations.find((item) => item.examples.includes(value));
+    const nextSelectedSubSituations = state.selectedSubSituations.includes(value)
+      ? state.selectedSubSituations.filter((item) => item !== value)
+      : [...state.selectedSubSituations, value];
+
+    const inferredSituationId = inferSelectedSituationId(
+      workbook.situations,
+      nextSelectedSubSituations,
+    );
+
+    console.log("[onboarding] Situation signal toggled", {
+      value,
+      matchingSituationId: matchingSituation?.id ?? null,
+      nextSelectedSubSituations,
+      inferredSituationId,
+    });
+
     updateState({
-      selectedSubSituations: state.selectedSubSituations.includes(value)
-        ? state.selectedSubSituations.filter((item) => item !== value)
-        : [...state.selectedSubSituations, value],
+      selectedSubSituations: nextSelectedSubSituations,
+      selectedSituationId: inferredSituationId,
     });
   }
 
@@ -116,16 +147,31 @@ export function OnboardingStepView({ flow, step }: OnboardingStepViewProps) {
   }
 
   return (
-    <main className="onboardingPage">
+    <main className={onboardingPageClassName}>
       <section className="onboardingCard onboardingCardPage">
         <div className="onboardingHeader">
-          <div>
-            <span>Onboarding</span>
+          <div className="onboardingHeaderBrand">
+            <span>Space, Self.</span>
             <strong>{flow === "gift" ? "Gift the workbook" : "Start exploring"}</strong>
           </div>
-          <button type="button" onClick={handleClose} aria-label="Close onboarding">
-            ✕
-          </button>
+          <div className="onboardingHeaderActions">
+            <span className="onboardingStepCount">
+              Step {visibleStepNumber} of {flowSteps.length}
+            </span>
+            <button type="button" onClick={handleClose} aria-label="Close onboarding">
+              ×
+            </button>
+          </div>
+        </div>
+        <div
+          aria-label={`Onboarding progress: ${Math.round(progressPercent)}%`}
+          aria-valuemax={100}
+          aria-valuemin={0}
+          aria-valuenow={Math.round(progressPercent)}
+          className="onboardingProgress"
+          role="progressbar"
+        >
+          <span style={{ width: `${progressPercent}%` }} />
         </div>
         <div className="onboardingBody">
           <OnboardingStepContent
@@ -148,4 +194,31 @@ export function OnboardingStepView({ flow, step }: OnboardingStepViewProps) {
       </section>
     </main>
   );
+}
+
+function inferSelectedSituationId(
+  situations: Workbook["situations"],
+  selectedSignals: string[],
+) {
+  if (selectedSignals.length === 0) {
+    return "";
+  }
+
+  const rankedSituations = situations
+    .map((situation) => ({
+      id: situation.id,
+      score: situation.examples.filter((example) => selectedSignals.includes(example)).length,
+    }))
+    .sort((left, right) => right.score - left.score);
+
+  const bestMatch = rankedSituations[0];
+
+  if (!bestMatch || bestMatch.score <= 0) {
+    console.warn("[onboarding] Could not infer situation from selected signals", {
+      selectedSignals,
+    });
+    return "";
+  }
+
+  return bestMatch.id;
 }

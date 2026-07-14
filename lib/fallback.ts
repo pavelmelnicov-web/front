@@ -28,7 +28,7 @@ export const fallbackWorkbook: Workbook = {
       id: "new-stage",
       title: "I am moving or starting a new chapter",
       description: "The old space no longer fits.",
-      examples: ["new apartment", "remote work", "relocation"],
+      examples: ["new apartment", "breakup or divorce", "new partner", "remote work", "relocation"],
     },
     {
       id: "self-expression",
@@ -40,13 +40,13 @@ export const fallbackWorkbook: Workbook = {
       id: "renovation-fear",
       title: "I want a renovation but fear mistakes",
       description: "You want clarity on what you actually need before spending big.",
-      examples: ["style", "needs", "outcome"],
+      examples: ["afraid of wrong choices", "unclear renovation priorities", "need a plan before spending"],
     },
     {
       id: "no-designer-budget",
       title: "I do not have budget for a designer",
       description: "You need a clear way to start on your own.",
-      examples: ["no project", "no renovation", "start now"],
+      examples: ["designer is expensive", "project is expensive", "renovation is expensive"],
     },
   ],
   steps: [

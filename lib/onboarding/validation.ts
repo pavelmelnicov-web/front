@@ -15,10 +15,8 @@ export function canContinueOnboardingStep(flow: OnboardingFlow, step: number, st
       case 0:
         return state.name.trim().length > 1 && Number(state.age) > 0;
       case 2:
-        return Boolean(state.selectedSituationId);
-      case 3:
         return state.selectedSubSituations.length > 0;
-      case 4:
+      case 3:
         return Boolean(state.selectedGender);
       case 14:
         return isValidCardPayment(state);

@@ -645,29 +645,28 @@ const faqItems = [
 
 const footerColumns = [
   {
-    title: "Workbook",
+    title: "Explore",
     links: [
-      { label: "Start", href: "#workbook" },
-      { label: "Situations", href: "#situations" },
-      { label: "Versions", href: "#variants" },
-      { label: "How it connects", href: "#how-linked" },
+      { label: "Before you start", href: "#intro" },
+      { label: "Why people choose it", href: "#situations" },
+      { label: "Workbook versions", href: "#variants" },
+    ],
+  },
+  {
+    title: "Learn more",
+    links: [
+      { label: "How it works", href: "#how-linked" },
+      { label: "Testimonials", href: "#testimonials" },
+      { label: "Community", href: "#community" },
       { label: "FAQ", href: "#faq" },
     ],
   },
   {
-    title: "Community",
+    title: "Get started",
     links: [
-      { label: "Stories", href: "#community" },
-      { label: "Live chat", href: "#chat" },
-      { label: "Testimonials", href: "#testimonials" },
-    ],
-  },
-  {
-    title: "Contact",
-    links: [
-      { label: "hello@space-self.local", href: "mailto:hello@space-self.local" },
-      { label: "Telegram", href: "https://t.me/" },
-      { label: "Instagram", href: "https://instagram.com/" },
+      { label: "Start workbook", href: "/onboarding/0" },
+      { label: "Gift the workbook", href: "/onboarding/gift" },
+      { label: "Join us on Telegram", href: "https://t.me/space_self" },
     ],
   },
 ];
