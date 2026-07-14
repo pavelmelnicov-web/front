@@ -200,7 +200,7 @@ export function HowItWorksSection({ steps, intervalMs = 2840 }: HowItWorksSectio
                 role="tab"
                 type="button"
               >
-                <span className="howLinkedStepIndex">{String(index + 1).padStart(2, "0")}</span>
+                <span className="howLinkedStepIndex">step {index + 1}</span>
                 <span className="howLinkedStepCopy">
                   <strong>{step.title}</strong>
                   <em>{step.body}</em>
