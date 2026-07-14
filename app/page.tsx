@@ -233,9 +233,6 @@ export default function Home() {
       <section className="hero">
         <div className="heroShowcase">
           <nav className="heroNav" aria-label="Main">
-            <Link className="heroNavGift" href="/onboarding/gift">
-              Gift it
-            </Link>
             <Link className="heroNavStart" href="/onboarding/0">
               Start
             </Link>
